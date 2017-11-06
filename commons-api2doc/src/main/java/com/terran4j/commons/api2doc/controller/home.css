@@ -1,0 +1,83 @@
+@CHARSET "UTF-8";
+
+.doc-end {
+	clear: both;
+	display: none;
+}
+
+.doc-app {
+	width: 100%;
+}
+
+.doc-top {
+	width: 100%;
+	height: 80px;
+	border-bottom-color: rgb(221, 221, 221);
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: rgb(221, 221, 221);
+}
+
+.doc-icon {
+	float: left;
+	position: relative;
+	text-align: center;
+	margin-left: 20px;
+	background-position: center center;
+}
+
+.doc-icon-img {
+	width: 70px;
+	height: 70px;
+}
+
+.doc-title {
+	float: left;
+	position: relative;
+	font-size: 31.5px;
+	font-weight: bold;
+	line-height: 70px;
+	height: 70px;
+	margin-left: 20px;
+	text-align: center;
+	vertical-align: middle;
+	overflow:hidden;
+}
+
+.doc-homelink {
+
+}
+
+.doc-body, .doc-left, .doc-middle {
+	/** height: 1024px; **/
+}
+
+.doc-body {
+	width: 100%;
+}
+
+.doc-left {
+	width: 18%;
+	margin-right: 20px;
+	float: left;
+	position: relative;
+	padding-top: 10px;
+	border-right-color: rgb(221, 221, 221);
+	border-right-width: 1px;
+	border-right-style: solid;
+	overflow-y: auto;
+	display: block;
+	background-color: #eef1f6;
+	margin-right: 20px;
+}
+
+.doc-middle {
+	width: 60%;
+	float: left;
+}
+
+.doc-iframe {
+    /** height: 100%; **/
+	width: 100%;
+	overflow: visible;
+}
