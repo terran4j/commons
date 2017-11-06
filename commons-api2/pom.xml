@@ -11,7 +11,7 @@
 
     <parent>
         <artifactId>terran4j-commons-parent</artifactId>
-        <groupId>terran4j</groupId>
+        <groupId>com.github.terran4j</groupId>
         <version>Virgo.0.0-SNAPSHOT</version>
         <relativePath>../commons-parent/pom.xml</relativePath>
     </parent>

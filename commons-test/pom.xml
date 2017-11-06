@@ -10,7 +10,7 @@
     <name>terran4j-commons-test</name>
 
     <parent>
-        <groupId>terran4j</groupId>
+        <groupId>com.github.terran4j</groupId>
         <artifactId>terran4j-commons-parent</artifactId>
         <version>Virgo.0.0-SNAPSHOT</version>
         <relativePath>../commons-parent/pom.xml</relativePath>
@@ -20,11 +20,11 @@
     <dependencies>
         <!-- terran4j工具类库 -->
         <dependency>
-            <groupId>terran4j</groupId>
+            <groupId>com.github.terran4j</groupId>
             <artifactId>terran4j-commons-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>terran4j</groupId>
+            <groupId>com.github.terran4j</groupId>
             <artifactId>terran4j-commons-http-invoker</artifactId>
         </dependency>
 
