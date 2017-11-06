@@ -1,0 +1,29 @@
+
+## 缺少命令名。
+log
+
+## 错误的命令组名。
+log2 setLevel
+
+
+## 错误的命令名。
+log setLevel2
+
+## 缺少必需选项。
+log setLevel
+
+## 缺少必需选项。
+log setLevel -n "com.terran4j"
+
+## 错误的选项键。
+log setLevel -m "com.terran4j"
+
+## 错误的选项名。
+log setLevel --logName "com.terran4j"
+
+## 正确的命令（用键的方式）
+log setLevel -n "com.terran4j" -l warn 
+
+## 正确的命令（用名称的方式）
+log setLevel --loggerName "com.terran4j" -logLevel warn 
+

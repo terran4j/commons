@@ -1,0 +1,20 @@
+{
+	"locals": {
+		"total": "0"
+	},
+	"actions": [
+		{
+			"id": "plus",
+			"name": "两数相加",
+			"url": "${url}/calculator/plus",
+			"method": "POS",
+			"params": {
+				"a": "${total}",
+				"b": "${input}"
+			},
+			"writes": [
+				{ "to": "locals", "key": "total", "value": "${result}" }
+			]
+		}
+	]
+}
