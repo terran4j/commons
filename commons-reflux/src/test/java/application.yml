@@ -1,0 +1,7 @@
+
+service:
+  name: Web Socket Communication Service 
+
+server:
+  wsURL: ws://localhost:8080/websocket/connect
+
