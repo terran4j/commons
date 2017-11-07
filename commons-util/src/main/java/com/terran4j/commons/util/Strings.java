@@ -93,7 +93,7 @@ public class Strings {
      * 
      * @param clazz 与文本文件在相同包下的类。
      * @param fileName 广西文件的名称。
-     * @return
+     * @return 文件中的字符串。
      */
     public static String getString(Class<?> clazz, String fileName) {
         String path = null;
@@ -134,8 +134,8 @@ public class Strings {
     /**
      * 将字符串转化成一个输入流对象。
      * 
-     * @param str
-     * @return
+     * @param str 字符串
+     * @return 对应的输入流
      */
     public static InputStream toInputStream(String str) {
         if (str == null) {
@@ -199,9 +199,9 @@ public class Strings {
     /**
      * 根据类对象， 获取同包下的文件的资源路径。
      * 
-     * @param clazz
-     * @param fileName
-     * @return
+     * @param clazz 类对象
+     * @param fileName 与类同包下的文件名
+     * @return 文件中的字符串内容。
      */
     public static String getClassPath(final Class<?> clazz, String fileName) {
         Package classPackage = clazz.getPackage();
@@ -213,7 +213,8 @@ public class Strings {
     }
 
     /**
-     * 将一个带变量的文本内容（后续称之为“模板内容”），按给定的变量值格式化为具体的文本内容。<br>
+     * 将一个带变量的文本内容（后续称之为“模板内容”），
+     * 按给定的变量值格式化为具体的文本内容。<br>
      * 模板内容可以用 ${ 与 } 包裹起来作为变量。<br>
      * 比如：<br>
      * 模板内容为：str = "尊敬的${name}您好，XXXXX";<br>
@@ -250,8 +251,8 @@ public class Strings {
     }
 
     /**
-     * 与 format(String str, final Map<String, Object> args) 方法作用一样，
-     * 唯一的区别是变量值是从<code>ValueSource<String, String></code>对象中取。<br>
+     * 与 format(String str, final Map args) 方法作用一样，
+     * 唯一的区别是变量值是从<code>ValueSource</code>对象中取。<br>
      * 
      * @param str 模板内容。
      * @param values 变量值。
@@ -262,10 +263,13 @@ public class Strings {
     }
 
     /**
-     * 与 format(String str, final Map<String, Object> args) 方法作用一样， 但可以更灵活可定制化，区别是: <br>
-     * 1. 变量值是从<code>ValueSource<String, String></code>对象中取。<br>
-     * 2. 可以用 begin 和 end 来自定义变量在模板内容中的表达格式，如： begin = "#[", end = "]" 表示变量是 #[name] 这类的格式，而不是传统的
-     * ${name} 。 3. 可以收集哪些变量没有被替换掉的，没有被替换掉的被放在一个叫 notMatched 的List类型的参数中。
+     * 与 format(String str, final Map args) 方法作用一样， 但可以更灵活可定制化，
+     * 区别是: <br>
+     * 1. 变量值是从<code>ValueSource</code>对象中取。<br>
+     * 2. 可以用 begin 和 end 来自定义变量在模板内容中的表达格式，如：
+     * begin = "#[", end = "]" 表示变量是 #[name] 这类的格式，而不是传统的 ${name} 。<br>
+     * 3. 可以收集哪些变量没有被替换掉的，没有被替换掉的被放在一个叫
+     * notMatched 的List类型的参数中。<br>
      * 
      * @param str 模板内容。
      * @param values 变量值。
@@ -472,9 +476,9 @@ public class Strings {
     /**
      * 检测指定的 path 是否匹配 regexPaths 。
      * 
-     * @param path
-     * @param regexPaths
-     * @return
+     * @param path 路径。
+     * @param regexPaths 需要匹配的路径。
+     * @return 匹配的路径。
      */
     public static boolean match(String path, String... regexPaths) {
         PathMatcher pathMatch = new AntPathMatcher();
@@ -496,10 +500,10 @@ public class Strings {
     
     /**
      * 将字符串分割成 Map 形式。
-     * @param content
-     * @param split
-     * @param joiner
-     * @return
+     * @param content 字符串内容
+     * @param split 分割符
+     * @param joiner key与value之间的连接符。
+     * @return map对象。
      */
     public static Map<String, String> toMap(String content, String split, String joiner) {
         String[] array = splitWithTrim(content, split);

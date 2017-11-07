@@ -4,9 +4,9 @@ public class Arrays {
 
 	/**
 	 * 将两个String数组合并成一个，第2个数组直接连在第1个数组的后面，不会重排序。
-	 * @param array1
-	 * @param array2
-	 * @return
+	 * @param array1 第 1 个数组对象
+	 * @param array2 第 2 个数组对象
+	 * @return 合并后的数组对象
 	 */
 	public static String[] concat(String[] array1, String[] array2) {
 		if (array1 == null && array2 == null) {

@@ -102,7 +102,7 @@ public class AsymmetricKeys {
 	
 	/**
 	 * 随机生成密钥对
-	 * @throws BusinessException 
+	 * @throws BusinessException 生成出错。
 	 */
 	public AsymmetricKeys() throws BusinessException {
 		super();

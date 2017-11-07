@@ -160,8 +160,9 @@ public abstract class LoopExecuteTask implements Runnable {
 
 	/**
 	 * 执行操作（一次循环里面的内容）。
-	 * @return 是否继续循环执行， true表示继续下一次的循环执行，false表示sleep一段时间再进入下一次的循环执行
-	 * @throws Exception
+	 * @return 是否继续循环执行， true表示继续下一次的循环执行，
+	 * false表示sleep一段时间再进入下一次的循环执行
+	 * @throws Exception 执行出错。
 	 */
 	protected abstract boolean execute() throws Exception;
 	

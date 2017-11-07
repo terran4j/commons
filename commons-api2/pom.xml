@@ -8,6 +8,7 @@
     <artifactId>terran4j-commons-api2</artifactId>
     <packaging>jar</packaging>
     <name>terran4j-commons-api2</name>
+    <url>https://github.com/terran4j/commons</url>
 
     <parent>
         <artifactId>terran4j-commons-parent</artifactId>

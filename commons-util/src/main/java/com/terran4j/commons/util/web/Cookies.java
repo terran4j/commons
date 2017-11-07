@@ -56,23 +56,15 @@ public class Cookies {
      * setCookie
      * 
      * @param response
-     *            response
+     *            response 请求的返回对象。
      * @param cookieValues
-     *            cookieValues
+     *            cookieValues 要写入的 cookie 值。
      */
     public static void setCookie(HttpServletResponse response,
             Map<String, String> cookieValues) {
         setCookie(response, cookieValues, -1);
     }
 
-    /**
-     * setCookie
-     * 
-     * @param response
-     *            response
-     * @param cookieValues
-     *            cookieValues
-     */
     public static void setCookie(HttpServletResponse response, String key,
             String value, int maxAge) {
         if (StringUtils.isEmpty(key)) {

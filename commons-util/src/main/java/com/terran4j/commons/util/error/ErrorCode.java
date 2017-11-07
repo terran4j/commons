@@ -11,10 +11,6 @@ import com.terran4j.commons.util.Strings;
  */
 public interface ErrorCode {
 
-	/**
-	 * 
-	 * @return
-	 */
 	int getValue();
 	
 	String getName();

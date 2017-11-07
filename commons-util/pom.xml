@@ -5,6 +5,7 @@
 	<artifactId>terran4j-commons-util</artifactId>
 	<packaging>jar</packaging>
 	<name>terran4j-commons-util</name>
+	<url>https://github.com/terran4j/commons</url>
 
 	<parent>
 		<groupId>com.github.terran4j</groupId>

@@ -5,6 +5,7 @@
 	<artifactId>terran4j-commons-api2doc</artifactId>
 	<packaging>jar</packaging>
 	<name>terran4j-commons-api2doc</name>
+	<url>https://github.com/terran4j/commons</url>
 
     <parent>
 		<groupId>com.github.terran4j</groupId>

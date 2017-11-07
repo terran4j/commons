@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 
 	<name>terran4j-commons-http-invoker</name>
-	<url>https://git.oschina.net/terran4j-public/commons/tree/master/commons-http-invoker</url>
+	<url>https://github.com/terran4j/commons</url>
 
 	<parent>
 		<groupId>com.github.terran4j</groupId>

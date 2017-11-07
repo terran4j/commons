@@ -118,8 +118,8 @@ public class Jsons {
     /**
      * 格式化
      * 
-     * @param uglyJsonText
-     * @return
+     * @param uglyJsonText 未格式化的 json 串。
+     * @return 格式化的 json 串。
      */
     public static String format(String uglyJsonText) {
         JsonElement je = parser.parse(uglyJsonText);

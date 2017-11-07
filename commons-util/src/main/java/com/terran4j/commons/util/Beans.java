@@ -127,9 +127,10 @@ public class Beans {
 
 	/**
 	 * 根据 Properties 中的属性值，给 javabean 对象自动赋值。
+	 * @param <T> JaveBean 的类型。
 	 * @param props 属性
 	 * @param clazz javabean的类。
-	 * @return javabean对象。
+	 * @return JaveBean 对象。
 	 */
 	public static <T> T from(Properties props, Class<T> clazz) {
 		try {
@@ -347,9 +348,9 @@ public class Beans {
 	
 	/**
 	 * 
-	 * @param dest
-	 * @param orig
-	 * @throws BusinessException
+	 * @param dest 目标对象。
+	 * @param orig 源对象。
+	 * @throws BusinessException 拷贝出错。
 	 */
 	public static void copy(Object dest, Object orig) throws BusinessException {
 		if (orig == null) {

@@ -21,6 +21,7 @@ public class IPAddresses {
 
 	/**
 	 * 获取本地ip地址，有可能会有多个地址, 若有多个网卡则会搜集多个网卡的ip地址
+	 * @return 所有的网络地址。
 	 */
 	public static Set<InetAddress> resolveLocalAddresses() {
 		Set<InetAddress> addrs = new HashSet<InetAddress>();
@@ -91,9 +92,9 @@ public class IPAddresses {
 	}
 	
 	/**
-	 * 将ip转换为定长8个字符的16进制表示形式：255.255.255.255 -> FFFFFFFF
-	 * @param ip
-	 * @return
+	 * 将ip转换为定长8个字符的16进制表示形式，如：255.255.255.255 成 FFFFFFFF
+	 * @param ip IP地址原始字符串
+	 * @return IP地址16进制字符串
 	 */
 	public static String hex2IP(String ip) {
 		StringBuilder sb = new StringBuilder();

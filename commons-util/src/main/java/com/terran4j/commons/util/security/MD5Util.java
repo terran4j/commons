@@ -47,7 +47,7 @@ public class MD5Util {
 	 * @param secretKey
 	 *            密钥。
 	 * @return 签名串。
-	 * @throws BusinessException
+	 * @throws BusinessException 签名出错。
 	 */
 	public static String signature(Map<String, String> data, String secretKey) throws BusinessException {
 

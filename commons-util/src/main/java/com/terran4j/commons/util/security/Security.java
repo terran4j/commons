@@ -13,8 +13,8 @@ public class Security {
 
 	/**
 	 * 创建一对非对称密钥。
-	 * @return 非对称密钥
-	 * @throws BusinessException
+	 * @return 非对称密钥。
+	 * @throws BusinessException 创建出错。
 	 */
 	public static final AsymmetricKeys createAsymmetricKeys() throws BusinessException {
 		return new AsymmetricKeys();

@@ -11,7 +11,7 @@ public class Maths {
 	 * @param value 原值。
 	 * @param min 最小值。
 	 * @param max 最大值。
-	 * @return
+	 * @return 范围内的值。
 	 */
 	public static final int limitIn(int value, Integer min, Integer max) {
 		if (min != null && max != null && min > max) {

@@ -8,6 +8,7 @@
     <artifactId>terran4j-commons-dsql</artifactId>
     <packaging>jar</packaging>
     <name>terran4j-commons-dsql</name>
+    <url>https://github.com/terran4j/commons</url>
 
     <parent>
         <groupId>com.github.terran4j</groupId>
