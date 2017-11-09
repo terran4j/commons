@@ -216,25 +216,26 @@ public class RetrofitCodeWriter {
 		}
 		method.setParams(params);
 
+		// 确定返回类型的描述。
 		String returnClass = null;
-        List<ApiResultObject> results = doc.getResults();
-        if (results != null && results.size() > 0) {
-            ApiResultObject result = results.get(0);
-            ApiDataType dataType = result.getDataType();
-            if (dataType != null) {
-                if (dataType == ApiDataType.ARRAY) {
-                    returnClass = "List<" + result.getSourceType().getSimpleName() + ">";
-                } else {
-                    returnClass = result.getSourceType().getSimpleName();
-                }
-            }
-        }
-        if (returnClass == null) {
-            Class<?> returnType = doc.getSourceMethod().getReturnType();
-            if (returnType != null && returnType != void.class) {
-                returnClass = returnType.getSimpleName();
-            }
-        }
+		List<ApiResultObject> results = doc.getResults();
+		if (results != null && results.size() > 0) {
+			ApiResultObject result = results.get(0);
+			ApiDataType dataType = result.getDataType();
+			if (dataType != null) {
+				if (dataType == ApiDataType.ARRAY) {
+					returnClass = "List<" + result.getSourceType().getSimpleName() + ">";
+				} else {
+					returnClass = result.getSourceType().getSimpleName();
+				}
+			}
+		}
+		if (returnClass == null) {
+			Class<?> returnType = doc.getSourceMethod().getReturnType();
+			if (returnType != null && returnType != void.class) {
+				returnClass = returnType.getSimpleName();
+			}
+		}
         method.setReturnClass(returnClass);
 
 		return method;

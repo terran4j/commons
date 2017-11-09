@@ -229,17 +229,16 @@ public class ApiResultObject extends ApiObject {
 			return result;
 		}
 
-		// 加入到列表中。
+		// 根据类型生成字段集的 id 和 name 。
 		String groupId = getGroupId(elementType);
 		result.setGroupId(groupId);
-		
+		String groupName = elementType.getSimpleName();
+		result.setGroupName(groupName);
+
+		// 加入到结果字段集中。
 		if (totalResults.containsKey(groupId)) {
 			return result;
 		} else {
-			if (totalResults.size() > 0) {
-				String groupName = elementType.getSimpleName();
-				result.setGroupName(groupName);
-			}
 			totalResults.add(groupId, result);
 		}
 

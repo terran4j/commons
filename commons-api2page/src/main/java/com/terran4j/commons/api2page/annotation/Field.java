@@ -1,4 +1,4 @@
-package com.terran4j.commons.api2;
+package com.terran4j.commons.api2page.annotation;
 
 import java.lang.annotation.*;
 
@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
-public @interface ApiInfo {
+public @interface Field {
 
     /**
      * API元素的id。<br>
@@ -17,20 +17,6 @@ public @interface ApiInfo {
      * @return
      */
     String id() default "";
-
-    /**
-     * 是否忽略此API元素。
-     *
-     * @return
-     */
-    boolean ignore() default false;
-
-    /**
-     * 设置API子元素的排序。
-     *
-     * @return
-     */
-    String[] orders() default {};
 
     /**
      * API元素的名称。

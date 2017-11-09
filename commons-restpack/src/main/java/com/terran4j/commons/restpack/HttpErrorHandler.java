@@ -2,6 +2,7 @@ package com.terran4j.commons.restpack;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class HttpErrorHandler {
 		if (logger.isInfoEnabled()) {
 			logger.info("missing param: {}", e.getParameterName());
 		}
-		return HttpResult.fail(new BusinessException(CommonErrorCode.NULL_PARAM).put("key", e.getParameterName()));
+		return HttpResult.fail(new BusinessException(ErrorCodes.NULL_PARAM).put("key", e.getParameterName()));
 	}
 
 }

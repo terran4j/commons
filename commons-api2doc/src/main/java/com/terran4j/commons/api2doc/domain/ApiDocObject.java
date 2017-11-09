@@ -17,6 +17,8 @@ public class ApiDocObject extends ApiObject {
 
 	private RequestMethod[] methods;
 
+	private String returnTypeDesc;
+
 	private List<ApiResultObject> results;
 
 	private final KeyedList<String, ApiParamObject> params = new KeyedList<>();
@@ -82,5 +84,13 @@ public class ApiDocObject extends ApiObject {
 	public void setFolder(ApiFolderObject folder) {
 		this.folder = folder;
 	}
-	
+
+    public String getReturnTypeDesc() {
+        return returnTypeDesc;
+    }
+
+    public void setReturnTypeDesc(String returnTypeDesc) {
+        this.returnTypeDesc = returnTypeDesc;
+    }
+
 }

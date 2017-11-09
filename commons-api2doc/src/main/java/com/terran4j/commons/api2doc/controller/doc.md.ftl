@@ -1,8 +1,18 @@
 
+
 <#if doc.comment??>
 **API简介** 
 - ${doc.comment}
 </#if>
+
+<br/>
+
+**客户端API类**
+- ${folderClasses}
+
+
+**客户端API方法**
+- ${doc.id}
 
 <br/>
 
@@ -39,10 +49,12 @@ ${doc.sample}
 
 <#if doc.results?? && (doc.results?size > 0) >
 
+**返回值**
+- [${doc.returnTypeDesc}](#${doc.results[0].groupId}) （参见下面的类型说明）
+
 <#list doc.results as result>
 <#if result.groupId??><span id="${result.groupId}"><br /></span></#if>
-**<#if result.groupName??>${result.groupName}字段说明：<#else>返回字段</#if>**
-
+**${result.groupName!}类型说明：**
 
 | 参数名 | 类型   | 说明 | 示例值 |
 |:---- |----- |-----  |----- |
@@ -53,6 +65,7 @@ ${doc.sample}
 </#list>
 </#if>
 
+<br/>
 
 <#if doc.errors?? && (doc.errors?size > 0) >
 **错误码**

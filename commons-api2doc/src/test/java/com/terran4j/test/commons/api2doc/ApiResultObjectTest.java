@@ -3,7 +3,9 @@ package com.terran4j.test.commons.api2doc;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import com.terran4j.commons.api2doc.domain.ApiDataType;
 import com.terran4j.commons.util.value.KeyedList;
+import com.terran4j.demo.commons.api2doc.User;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ReflectionUtils;
 
 import com.terran4j.commons.api2doc.domain.ApiResultObject;
+
+import javax.validation.constraints.AssertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ApiResultObjectTest {
@@ -35,19 +39,27 @@ public class ApiResultObjectTest {
 		return new HashMap<String, Object>();
 	}
 
-	@Test
-	public void testParseResultType() throws Exception {
+	public final List<User> getUsers() {
+	    return new ArrayList<>();
+    }
+
+    @Test
+    public void testParseResultType() throws Exception {
         log.info("testParseResultType");
-        Method method = ReflectionUtils.findMethod(getClass(), "getMap");
+        Method method = ReflectionUtils.findMethod(getClass(), "getUsers");
         Assert.assertNotNull(method);
         KeyedList<String, ApiResultObject> totalResults = new KeyedList<>();
         ApiResultObject object = ApiResultObject.parseResultType(method, totalResults);
-
-	}
+        Assert.assertNotNull(object);
+        Assert.assertEquals(1, totalResults.size());
+        Assert.assertTrue(object == totalResults.get(0));
+        Assert.assertTrue(ApiDataType.ARRAY == object.getDataType());
+        Assert.assertTrue(User.class == object.getSourceType());
+    }
 
 	@Test
-	public void testGetReturnArrayClass() throws Exception {
-		log.info("testGetReturnArrayClass");
+	public void testGetArrayElementClass() throws Exception {
+		log.info("testGetArrayElementClass");
 		Method method = ReflectionUtils.findMethod(getClass(), "getList");
 		Assert.assertNotNull(method);
 		Class<?> clazz = ApiResultObject.getArrayElementClass(method);

@@ -3,6 +3,7 @@ package com.terran4j.commons.test.restpack;
 import java.util.Date;
 
 import com.google.gson.JsonObject;
+import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +50,7 @@ public class RestPackDemoController {
 	@RequestMapping(value = "/error", method = RequestMethod.GET)
     public void toError(@RequestParam(value = "msg") String msg) throws BusinessException {
 	    log.info("error, msg = {}", msg);
-	    throw new BusinessException(CommonErrorCode.INVALID_PARAM)
+	    throw new BusinessException(ErrorCodes.INVALID_PARAM)
 	    		.setMessage("无效的输入: ${msg}").put("msg", msg);
     }
 	

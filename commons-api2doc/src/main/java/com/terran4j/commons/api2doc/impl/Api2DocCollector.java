@@ -3,11 +3,8 @@ package com.terran4j.commons.api2doc.impl;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.net.URL;
 import java.util.*;
 
-import com.google.common.base.Joiner;
-import com.terran4j.commons.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -16,15 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
-import org.springframework.core.type.classreading.MetadataReader;
-import org.springframework.core.type.classreading.MetadataReaderFactory;
-import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -304,6 +294,28 @@ public class Api2DocCollector implements BeanPostProcessor {
 		KeyedList<String, ApiResultObject> totalResults = new KeyedList<>();
 		ApiResultObject.parseResultType(method, totalResults);
 		doc.setResults(totalResults.getAll());
+
+        // 确定返回类型的描述。
+        String returnTypeDesc = null;
+        List<ApiResultObject> results = doc.getResults();
+        if (results != null && results.size() > 0) {
+            ApiResultObject result = results.get(0);
+            ApiDataType dataType = result.getDataType();
+            if (dataType != null) {
+                if (dataType == ApiDataType.ARRAY) {
+                    returnTypeDesc = result.getSourceType().getSimpleName() + "[]";
+                } else {
+                    returnTypeDesc = result.getSourceType().getSimpleName();
+                }
+            }
+        }
+        if (returnTypeDesc == null) {
+            Class<?> returnType = doc.getSourceMethod().getReturnType();
+            if (returnType != null && returnType != void.class) {
+                returnTypeDesc = returnType.getSimpleName();
+            }
+        }
+		doc.setReturnTypeDesc(returnTypeDesc);
 
 		// 收集错误码信息。
 		ApiErrors errorCodes = method.getAnnotation(ApiErrors.class);

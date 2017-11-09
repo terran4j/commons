@@ -120,11 +120,11 @@ public class Api2DocController {
     }
 
     /**
-     * http://localhost:8080/api2doc/overview.html
+     * http://localhost:8080/api2doc/welcome.html
      * 文档首页内容。
      */
     @RequestMapping(value = "/welcome.html", method = RequestMethod.GET)
-    public void overview(HttpServletResponse response) throws Exception {
+    public void welcome(HttpServletResponse response) throws Exception {
         writeMdByPath("welcome.md", response);
     }
 
@@ -319,8 +319,12 @@ public class Api2DocController {
 
     private void writeMd(String md, String title, HttpServletResponse response)
             throws Exception {
+
         if (log.isInfoEnabled()) {
             log.info("render md:\n{}", md);
+        }
+        if (StringUtils.isEmpty(md)) {
+            return;
         }
         String content = markdownService.md2Html(md);
 
@@ -343,6 +347,12 @@ public class Api2DocController {
             Map<String, Object> model = new HashMap<String, Object>();
             model.put("folder", folder);
             model.put("doc", doc);
+
+            String folderId = folder.getId();
+            String upFirst = folderId.substring(0, 1).toUpperCase() +folderId.substring(1);
+            String folderClasses = upFirst + "Service / " + upFirst + "Retrofit";
+            model.put("folderClasses", folderClasses);
+
             String content = freeMarker.build(mdTemplate, model);
             return content;
         } catch (IOException | TemplateException e) {

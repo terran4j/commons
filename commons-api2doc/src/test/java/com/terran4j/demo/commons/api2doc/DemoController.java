@@ -27,7 +27,6 @@ public class DemoController {
 	
 	public DemoController() {
 		super();
-		log.info("create object: DemoController.");
 	}
 
 	/**
@@ -38,11 +37,13 @@ public class DemoController {
 	@Api2Doc(order = 5)
 	@ApiComment("绑定设备到当前账号上。")
 	@ApiError(value = ErrorCodes.DUPLICATE_KEY, comment = "设备编号重复")
-	@ApiError(value = ErrorCodes.INVALID_PARAM, comment = "没有传入参数：code，设备编号必须指定!")
+	@ApiError(value = ErrorCodes.INVALID_PARAM,
+			comment = "没有传入参数：code，设备编号必须指定!")
 	@RequestMapping(name = "绑定设备", value = "/bind",
 			method = RequestMethod.POST)
 	public UserPage bind(
-			@ApiComment(value = "设备唯一编号，可以是设备 IMEI 等。", sample = "IMEI-SDFHIW2839482") //
+			@ApiComment(value = "设备唯一编号，可以是设备 IMEI 等。",
+                    sample = "IMEI-SDFHIW2839482")
 			@RequestParam("code") String code)
 			throws BusinessException {
 		return null;

@@ -1,5 +1,6 @@
 package com.terran4j.commons.restpack;
 
+import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -91,7 +92,7 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 			if (log.isInfoEnabled()) {
 				log.info("miss param, key = {}, type = {}", paramKey, paramType);
 			}
-			return new BusinessException(CommonErrorCode.NULL_PARAM).put("key", paramKey);
+			return new BusinessException(ErrorCodes.NULL_PARAM).put("key", paramKey);
 		}
 
 		// Error 没有办法拦截，这里只能日志记录异常信息。
