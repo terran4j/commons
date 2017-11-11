@@ -151,7 +151,8 @@ public class ApiResultObject extends ApiObject {
 			KeyedList<String, ApiResultObject> totalResults) {
 
 		if (method == null) {
-			throw new NullPointerException("parseResultType, but method is null.");
+//			throw new NullPointerException("parseResultType, but method is null.");
+			return null;
 		}
 
 		if (totalResults == null) {
@@ -248,10 +249,18 @@ public class ApiResultObject extends ApiObject {
 				continue;
 			}
 
+			String fieldName = prop.getName();
 			Method subMethod = prop.getReadMethod();
 
 			// 处理子类型。
-			ApiResultObject childPropResult = parseResultType(subMethod, totalResults);
+			ApiResultObject childPropResult = null;
+			try{
+                childPropResult = parseResultType(subMethod, totalResults);
+            } catch (Exception e) {
+			    String msg = String.format("解析类[ %s ]的属性[ %s ]出错： %s",
+                        elementType.getName(), fieldName, e.getMessage());
+			    throw new RuntimeException(msg);
+            }
 
 			// 补充子类型信息。
 			if (childPropResult != null) {

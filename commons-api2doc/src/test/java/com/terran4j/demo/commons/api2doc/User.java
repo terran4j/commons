@@ -21,6 +21,10 @@ public class User {
 	@ApiComment(value = "用户状态", sample = "open")
 	private UserState state;
 
+	@Api2Doc(order = 40)
+	@ApiComment(value = "是否已删除", sample = "true")
+	private Boolean deleted;
+
 	public Long getId() {
 		return id;
 	}
@@ -53,4 +57,11 @@ public class User {
 		this.state = state;
 	}
 
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
 }
