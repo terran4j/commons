@@ -1,8 +1,7 @@
-package com.terran4j.commons.test.restpack;
+package com.terran4j.demo.restpack;
 
 import java.util.Date;
 
-import com.google.gson.JsonObject;
 import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.terran4j.commons.restpack.RestPackController;
 import com.terran4j.commons.util.error.BusinessException;
-import com.terran4j.commons.util.error.CommonErrorCode;
 
 @RestPackController
 @RequestMapping("/demo/restpack")

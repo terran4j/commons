@@ -58,7 +58,7 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 			// 将原始返回值包裹在 HttpResult 对象中。
 			result = HttpResult.success();
 			if (body != null) {
-				clearIgnoreFields(body);
+                RestPackUtils.clearIgnoreFields(body);
 				result.setData(body);
 			}
 		}
@@ -70,26 +70,6 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 			log.info("request '{}' end, response:\n{}", MDC.get("requestPath"), result);
 		}
 		return result;
-	}
-
-	private void clearIgnoreFields(Object body) {
-	    if (body == null) {
-	        return;
-        }
-
-        Field[] ignoreFields = Classes.getFields(RestPackIgnore.class, body.getClass());
-        if (ignoreFields == null || ignoreFields.length == 0) {
-            return;
-        }
-
-        for (Field ignoreField : ignoreFields) {
-            String name = ignoreField.getName();
-            try {
-                Beans.setFieldValue(body, name, null);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException("清除 RestPackIgnore 字段值出错： " + e.getMessage(), e);
-            }
-        }
 	}
 	
 

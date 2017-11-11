@@ -1,4 +1,4 @@
-package com.terran4j.commons.test.restpack;
+package com.terran4j.demo.restpack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

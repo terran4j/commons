@@ -1,4 +1,4 @@
-package com.terran4j.commons.test.restpack;
+package com.terran4j.demo.restpack;
 
 import com.terran4j.commons.restpack.RestPackIgnore;
 import com.terran4j.commons.util.Strings;
@@ -15,6 +15,9 @@ public class HelloBean {
 
 	@RestPackIgnore
 	private Boolean deleted = false;
+
+    @RestPackIgnore
+	private long count = 1;
 
 	public final String getName() {
 		return name;
