@@ -210,6 +210,26 @@ public class Beans {
 		}
 		return (T) fieldValue;
 	}
+
+	@SuppressWarnings("unchecked")
+	public static void setFieldValue(Object bean, String fieldName, Object value)
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		if (bean == null) {
+			throw new NullPointerException("bean is null.");
+		}
+		if (fieldName == null) {
+			throw new NullPointerException("fieldName is null.");
+		}
+
+		Class<?> clazz = bean.getClass();
+		Method setMethod = getSetMethod(clazz, fieldName);
+		if (setMethod == null) {
+		    String msg = String.format("field[%s] has not a setter method in class: %s", fieldName, clazz);
+            throw new NoSuchMethodException(msg);
+        }
+
+        setMethod.invoke(bean, value);
+	}
 	
 	public static Map<String, Method> getAllSetMethods(Class<?> clazz) {
 		if (clazz == null) {

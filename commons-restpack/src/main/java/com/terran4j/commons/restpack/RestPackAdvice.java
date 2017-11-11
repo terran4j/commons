@@ -1,5 +1,7 @@
 package com.terran4j.commons.restpack;
 
+import com.terran4j.commons.util.Beans;
+import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.CommonErrorCode;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * 本类负责将原始返回值、或异常类包裹在 HttpResult 对象中。
@@ -53,6 +58,7 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 			// 将原始返回值包裹在 HttpResult 对象中。
 			result = HttpResult.success();
 			if (body != null) {
+				clearIgnoreFields(body);
 				result.setData(body);
 			}
 		}
@@ -64,6 +70,26 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 			log.info("request '{}' end, response:\n{}", MDC.get("requestPath"), result);
 		}
 		return result;
+	}
+
+	private void clearIgnoreFields(Object body) {
+	    if (body == null) {
+	        return;
+        }
+
+        Field[] ignoreFields = Classes.getFields(RestPackIgnore.class, body.getClass());
+        if (ignoreFields == null || ignoreFields.length == 0) {
+            return;
+        }
+
+        for (Field ignoreField : ignoreFields) {
+            String name = ignoreField.getName();
+            try {
+                Beans.setFieldValue(body, name, null);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                throw new RuntimeException("清除 RestPackIgnore 字段值出错： " + e.getMessage(), e);
+            }
+        }
 	}
 	
 

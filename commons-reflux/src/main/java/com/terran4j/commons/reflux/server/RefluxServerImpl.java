@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 
+import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,7 @@ public class RefluxServerImpl implements RefluxServer {
 	
 	public ClientConnectionInfo onOpen(String clientId, RefluxServerEndpoint conn) throws BusinessException {
 		if (StringUtils.isEmpty(clientId)) {
-			throw new BusinessException(CommonErrorCode.NULL_PARAM)
+			throw new BusinessException(ErrorCodes.NULL_PARAM)
 					.put("clientId", clientId);
 		}
 		

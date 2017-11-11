@@ -38,7 +38,7 @@ public class SendAndReceiveTest {
 	@Autowired
 	private RefluxServer refluxServer;
 	
-	@Value("${server.wsURL}")
+	@Value("${server.wsURL:ws://localhost:8080/websocket/connect}")
 	private String serverURL;
 	
 	private String clientId = null;

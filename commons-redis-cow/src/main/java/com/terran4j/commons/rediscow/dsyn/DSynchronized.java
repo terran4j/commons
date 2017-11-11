@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
  * 也就意味着所有实例的所有线程，只要执行到这个方法就会竞争同一把锁，相当于方法级别上的同步。<br>
  * </p>
  * 
- * <p>
  * 因此，建议精确定义 value 属性，如下所示：<br>
  * 
  * <pre class=code>
@@ -34,13 +33,12 @@ import java.lang.annotation.Target;
  * 	// ...
  * }
  * </pre>
- * 
+ *
  * "'increment-' + #name" 是 Spring 的 EL 表达式，#name 表示从参数 name 中取值。<br>
  * 注意，只会从打了@Param注解的参数中取值。<br>
  * 比如调用方法时参数 name = "neo"，则锁的 key 为 "increment-neo"，只有遇到同样 key 的线程才会竞争锁。<br>
  * 因此，合理定义 value 属性，可以大大减少竞争锁的情况。
- * </p>
- * 
+ *
  * @author wei.jiang
  *
  */

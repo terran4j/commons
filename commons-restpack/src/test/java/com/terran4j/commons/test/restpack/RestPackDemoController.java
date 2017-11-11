@@ -71,7 +71,8 @@ public class RestPackDemoController {
 	 * @throws BusinessException
 	 */
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public HelloBean hello(@RequestParam(value = "name") String name) throws BusinessException {
+    public HelloBean hello(@RequestParam(value = "name") String name)
+			throws BusinessException {
 	    log.info("hello, name = {}", name);
 	    HelloBean bean = new HelloBean();
 	    bean.setName(name);

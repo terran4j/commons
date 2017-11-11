@@ -315,7 +315,6 @@
                 <version>1.5.4</version>
             </dependency>
 
-
         </dependencies>
     </dependencyManagement>
 
@@ -336,27 +335,22 @@
         </dependency>
     </dependencies>
 
-    <!-- 部署到私服 -->
-    <!--
+
     <distributionManagement>
-        <repository>
-            <id>terran4j-releases</id>
-            <name>terran4j-releases</name>
-            <url>${terran4j.releases.url}</url>
-        </repository>
+        <!-- SNAPSHOT版本，部署到私服  -->
         <snapshotRepository>
             <id>terran4j-snapshots</id>
             <name>terran4j-snapshots</name>
             <url>${terran4j.snapshots.url}</url>
         </snapshotRepository>
-    </distributionManagement>
-    -->
-
-    <distributionManagement>
+        <!--
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        -->
+
+        <!-- 正式版本，部署到中央仓库 -->
         <repository>
             <id>ossrh</id>
             <name>Maven Central Staging Repository</name>

@@ -1,12 +1,11 @@
-
 mvn clean install deploy -f commons/commons-parent
 mvn clean install deploy -f commons/commons-util
-mvn clean install deploy -f commons/commons-jfinger -DskipTests
-mvn clean install deploy -f commons/commons-restpack -DskipTests
+mvn clean install deploy -f commons/commons-jfinger
+mvn clean install deploy -f commons/commons-restpack
 mvn clean install deploy -f commons/commons-api2doc
-mvn clean install deploy -f commons/commons-redis-cow -DskipTests
-mvn clean install deploy -f commons/commons-http-invoker -DskipTests
-mvn clean install deploy -f commons/commons-reflux -DskipTests
-mvn clean install deploy -f commons/commons-test -DskipTests
+mvn clean install deploy -f commons/commons-redis-cow
+mvn clean install deploy -f commons/commons-http-invoker
+mvn clean install deploy -f commons/commons-reflux
+mvn clean install deploy -f commons/commons-test
 mvn clean install deploy -f commons/commons-dsql
 

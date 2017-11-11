@@ -32,31 +32,26 @@ public class RedisCowConfiguration {
 
 	private static final Logger log = LoggerFactory.getLogger(RedisCowConfiguration.class);
 
-	@Value("${spring.redis.host}")
+	@Value("${spring.redis.host:127.0.0.1}")
 	private String host;
 
-	@Value("${spring.redis.port}")
+	@Value("${spring.redis.port:6379}")
 	private int port;
 
-	@Value("${spring.redis.pool.max-idle}")
+	@Value("${spring.redis.pool.max-idle:8}")
 	private int maxIdle;
 
-	@Value("${spring.redis.pool.min-idle}")
+	@Value("${spring.redis.pool.min-idle:0}")
 	private int minIdle;
 
-	@Value("${spring.redis.pool.max-wait}")
-	private long maxWait;
-
-	@Value("${spring.redis.pool.max-active}")
+	@Value("${spring.redis.pool.max-active:8}")
 	private int maxActive;
+
+	@Value("${spring.redis.pool.max-wait:-1}")
+	private long maxWait;
 
 	@Value("${spring.redis.defaultExpiration:30}")
 	private int defaultExpiration;
-
-//	@Bean RedisTemplateCacheService
-//	public CacheService cacheService(Jedis jedis) {
-//		return new JedisCacheService(jedis);
-//	}
 	
 	@Bean 
 	public CacheService cacheService(RedisTemplate<String, String> redisTemplate) {

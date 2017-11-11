@@ -1,5 +1,8 @@
 package com.terran4j.commons.test.restpack;
 
+import com.terran4j.commons.restpack.RestPackIgnore;
+import com.terran4j.commons.util.Strings;
+
 import java.util.Date;
 
 public class HelloBean {
@@ -9,6 +12,9 @@ public class HelloBean {
 	private String message;
 	
 	private Date time;
+
+	@RestPackIgnore
+	private Boolean deleted = false;
 
 	public final String getName() {
 		return name;
@@ -34,9 +40,17 @@ public class HelloBean {
 		this.time = time;
 	}
 
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	@Override
 	public String toString() {
-		return "Hello [name=" + name + ", message=" + message + ", time=" + time + "]";
+		return Strings.toString(this);
 	}
 	
 }
