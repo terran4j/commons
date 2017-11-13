@@ -96,21 +96,6 @@ public class ApiResultObjectTest {
         }
     }
 
-    public final List<String> getList() {
-        return new ArrayList<String>();
-    }
-
-    public final Set<String> getSet() {
-        return new HashSet<String>();
-    }
-
-    public final String[] getArray() {
-        return new String[0];
-    }
-
-    public final Map<String, Object> getMap() {
-        return new HashMap<String, Object>();
-    }
 
     public final List<User> getUsers() {
         return new ArrayList<>();
@@ -172,6 +157,23 @@ public class ApiResultObjectTest {
         Assert.assertEquals("long", current.getTypeName());
     }
 
+
+    public final List<String> getList() {
+        return new ArrayList<String>();
+    }
+
+    public final Set<String> getSet() {
+        return new HashSet<String>();
+    }
+
+    public final String[] getArray() {
+        return new String[0];
+    }
+
+    public final Map<String, Object> getMap() {
+        return new HashMap<String, Object>();
+    }
+
     @Test
     public void testGetArrayElementClass() throws Exception {
         log.info("testGetArrayElementClass");
@@ -191,4 +193,64 @@ public class ApiResultObjectTest {
         Assert.assertEquals(String.class, clazz);
     }
 
+    public static class NotOrderBean {
+
+        private String abc;
+
+        private String abd;
+
+        private String b1;
+
+        private String b2;
+
+        public String getAbc() {
+            return abc;
+        }
+
+        public void setAbc(String abc) {
+            this.abc = abc;
+        }
+
+        public String getAbd() {
+            return abd;
+        }
+
+        public void setAbd(String abd) {
+            this.abd = abd;
+        }
+
+        public String getB1() {
+            return b1;
+        }
+
+        public void setB1(String b1) {
+            this.b1 = b1;
+        }
+
+        public String getB2() {
+            return b2;
+        }
+
+        public void setB2(String b2) {
+            this.b2 = b2;
+        }
+    }
+
+    public NotOrderBean getNotOrderBean() {
+        return null;
+    }
+
+    @Test
+    public void testParseResultTypeWithNotOrder() throws Exception {
+        log.info("testParseResultTypeWithNotOrder");
+        Method method = ReflectionUtils.findMethod(getClass(), "getNotOrderBean");
+        Assert.assertNotNull(method);
+        ApiResultObject object = ApiResultObject.parseResultType(method, null);
+        Assert.assertNotNull(object);
+        Assert.assertEquals(4, object.getChildren().size());
+        Assert.assertEquals("abc", object.getChildren().get(0).getId());
+        Assert.assertEquals("abd", object.getChildren().get(1).getId());
+        Assert.assertEquals("b1", object.getChildren().get(2).getId());
+        Assert.assertEquals("b2", object.getChildren().get(3).getId());
+    }
 }

@@ -90,6 +90,11 @@ public class JavaBeanCodeWriter {
 
 			String type = toTypeName(child);
 			field.setType(type);
+
+			String fieldComment = child.getComment();
+			if (StringUtils.hasText(fieldComment)) {
+			    field.setComment(fieldComment.trim());
+            }
 			
 			Class<?> sourceType = child.getSourceType();
 			CodeUtils.addImport(sourceType, imports);
@@ -146,6 +151,8 @@ public class JavaBeanCodeWriter {
 
 		private String name;
 
+		private String comment;
+
 		private String getMethod;
 
 		private String setMethod;
@@ -164,6 +171,14 @@ public class JavaBeanCodeWriter {
 
 		public void setName(String name) {
 			this.name = name;
+		}
+
+		public String getComment() {
+			return comment;
+		}
+
+		public void setComment(String comment) {
+			this.comment = comment;
 		}
 
 		public String getGetMethod() {

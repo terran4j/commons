@@ -8,31 +8,29 @@ import java.util.Date;
 
 public class User {
 
-    @Api2Doc(order = 10)
     @ApiComment(value = "账号id", sample = "123")
     private Long id;
 
-    @Api2Doc(order = 20)
     @ApiComment(value = "账号用户名", sample = "terran4j")
     private String username;
 
-    @Api2Doc(order = 30)
     @ApiComment(value = "账号密码", sample = "sdfi23skvs")
     private String password;
 
-    @Api2Doc(order = 30)
     @ApiComment(value = "用户状态", sample = "open")
     private UserState state;
 
-    @Api2Doc(order = 40)
     @ApiComment(value = "是否已删除", sample = "true")
     @RestPackIgnore
     private Boolean deleted;
 
-    @Api2Doc(order = 50)
-    @ApiComment(value = "创建时间")
+    @ApiComment(value = "创建时间\n也是注册时间。")
     private Date createTime;
 
+    /**
+     * 获取创建时间
+     * @return 创建时间
+     */
     public Date getCreateTime() {
         return createTime;
     }

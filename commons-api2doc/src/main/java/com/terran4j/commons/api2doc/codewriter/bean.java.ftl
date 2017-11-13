@@ -18,11 +18,21 @@ import ${import};
 public class ${class} {
 
 <#list fields as field>
-	private ${field.type} ${field.name};
+    <#if field.comment ??>
+    /**
+     * ${field.comment}
+     */
+    </#if>
+    private ${field.type} ${field.name};
 
 </#list>
 
 <#list fields as field>
+    <#if field.comment ??>
+    /**
+     * @return ${field.comment}
+     */
+    </#if>
 	public ${field.type} ${field.getMethod}() {
 		return ${field.name};
 	}
