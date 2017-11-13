@@ -199,7 +199,7 @@ public class ApiResultObject extends ApiObject {
 
         // 数组类型，找到它的元素的具体类型，然后处理具体类型。
         if (dataType.isArrayType()) {
-            typeName = typeName + "[]";
+//            typeName = typeName + "[]";
 
             elementType = getArrayElementClass(method);
             if (elementType == null) {

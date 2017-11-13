@@ -141,6 +141,37 @@ public class ApiResultObjectTest {
         Assert.assertNull(object.getChild("deleted"));
     }
 
+    public static class DateBean {
+
+        @Api2Doc
+        @ApiComment(value = "当前日期")
+        private Date current;
+
+        public Date getCurrent() {
+            return current;
+        }
+
+        public void setCurrent(Date current) {
+            this.current = current;
+        }
+    }
+
+    public DateBean getDateBean() {
+        return new DateBean();
+    }
+
+    @Test
+    public void testParseResultTypeWithDate() throws Exception {
+        log.info("testParseResultTypeWithDate");
+        Method method = ReflectionUtils.findMethod(getClass(), "getDateBean");
+        Assert.assertNotNull(method);
+        KeyedList<String, ApiResultObject> totalResults = new KeyedList<>();
+        ApiResultObject object = ApiResultObject.parseResultType(method, totalResults);
+        Assert.assertNotNull(object);
+        ApiResultObject current = object.getChild("current");
+        Assert.assertEquals("long", current.getTypeName());
+    }
+
     @Test
     public void testGetArrayElementClass() throws Exception {
         log.info("testGetArrayElementClass");

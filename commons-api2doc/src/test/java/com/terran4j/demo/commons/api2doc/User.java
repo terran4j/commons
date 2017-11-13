@@ -4,6 +4,8 @@ import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.restpack.RestPackIgnore;
 
+import java.util.Date;
+
 public class User {
 
     @Api2Doc(order = 10)
@@ -26,6 +28,18 @@ public class User {
     @ApiComment(value = "是否已删除", sample = "true")
     @RestPackIgnore
     private Boolean deleted;
+
+    @Api2Doc(order = 50)
+    @ApiComment(value = "创建时间")
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public Long getId() {
         return id;
