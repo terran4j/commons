@@ -17,10 +17,10 @@ import com.terran4j.commons.util.error.ErrorCodes;
 
 import java.util.Map;
 
-@Api2Doc("demo")
-@ApiComment("设备相关接口，包括绑定/解绑设备、切换主设备、设置设备名称等接口")
-@RestPackController
-@RequestMapping(name = "设备相关接口", value = "/api/demo/v1")
+//@Api2Doc("demo")
+//@ApiComment("设备相关接口，包括绑定/解绑设备、切换主设备、设置设备名称等接口")
+//@RestPackController
+//@RequestMapping(name = "设备相关接口", value = "/api/demo/v1")
 public class DemoController {
 	
 	private static final Logger log = LoggerFactory.getLogger(DemoController.class);

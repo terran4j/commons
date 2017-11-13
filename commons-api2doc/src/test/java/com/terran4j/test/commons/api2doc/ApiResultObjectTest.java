@@ -4,6 +4,7 @@ import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.domain.ApiDataType;
 import com.terran4j.commons.api2doc.domain.ApiResultObject;
+import com.terran4j.commons.restpack.RestPackIgnore;
 import com.terran4j.commons.util.value.KeyedList;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,6 +52,7 @@ public class ApiResultObjectTest {
 
         @Api2Doc(order = 40)
         @ApiComment(value = "是否已删除", sample = "true")
+        @RestPackIgnore
         private Boolean deleted;
 
         public Long getId() {
@@ -126,6 +128,17 @@ public class ApiResultObjectTest {
         Assert.assertTrue(object == totalResults.get(0));
         Assert.assertTrue(ApiDataType.ARRAY == object.getDataType());
         Assert.assertTrue(User.class == object.getSourceType());
+    }
+
+    @Test
+    public void testParseResultTypeWithIgnore() throws Exception {
+        log.info("testParseResultTypeWithIgnore");
+        Method method = ReflectionUtils.findMethod(getClass(), "getUsers");
+        Assert.assertNotNull(method);
+        KeyedList<String, ApiResultObject> totalResults = new KeyedList<>();
+        ApiResultObject object = ApiResultObject.parseResultType(method, totalResults);
+        Assert.assertNotNull(object);
+        Assert.assertNull(object.getChild("deleted"));
     }
 
     @Test
