@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
+import com.terran4j.commons.api2doc.controller.ApiObjectComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -85,7 +86,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 	 * @param beanName
 	 * @return
 	 */
-	ApiFolderObject toApiFolder(Object bean, String beanName) throws BusinessException {
+	public ApiFolderObject toApiFolder(Object bean, String beanName) throws BusinessException {
 
 		Class<?> clazz = Classes.getTargetClass(bean);
 		Controller controller = AnnotationUtils.findAnnotation(clazz, Controller.class);
@@ -192,6 +193,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 		String[] basePaths = getPath(classMapping);
 
 		// 根据方法生成 API 文档。
+		List<ApiDocObject> docs = new ArrayList<>();
 		for (Method method : api2DocMethos) {
 			ApiDocObject doc = getApiDoc(method, basePaths, beanName, classApi2Doc);
 			if (doc == null) {
@@ -207,11 +209,13 @@ public class Api2DocCollector implements BeanPostProcessor {
 				throw new BeanDefinitionStoreException(msg);
 			}
 
-			folder.addDoc(doc);
+			docs.add(doc);
 			if (log.isInfoEnabled()) {
 				log.info("add doc: {}/{}", folder.getId(), docId);
 			}
 		}
+		Collections.sort(docs, new ApiObjectComparator());
+		folder.addDocs(docs);
 
 		return folder;
 	}

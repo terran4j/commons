@@ -38,6 +38,15 @@ public class ApiFolderObject extends ApiObject {
         return docs.get(id);
     }
 
+    public final void addDocs(List<ApiDocObject> docList) {
+        if (docList == null) {
+            return;
+        }
+        for (ApiDocObject doc : docList) {
+            addDoc(doc);
+        }
+    }
+
     public final void addDoc(ApiDocObject doc) {
         if (doc == null) {
             throw new NullPointerException();
