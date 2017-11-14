@@ -65,11 +65,12 @@ public class JavaBeanCodeWriterTest {
 		KeyedList<String, ApiResultObject> totalResults = new KeyedList<>();
 		ApiResultObject user = ApiResultObject.parseResultType(method, totalResults);
 		
-		Map<String, Object> model = javaBeanCodeWriter.getModel(user, "User", null);
+		Map<String, Object> model = javaBeanCodeWriter.getModel(
+		        user, "User", null);
 		@SuppressWarnings("unchecked")
 		Set<String> imports = (Set<String>)model.get("imports");
 		log.info("imports: {}", imports);
-		Assert.assertTrue(imports.contains(Date.class.getName()));
+		Assert.assertFalse(imports.contains(Date.class.getName()));
 		
 		MemoryCodeOutput out = new MemoryCodeOutput();
 		javaBeanCodeWriter.writeCode(user, "User", out, null);

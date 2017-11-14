@@ -118,7 +118,7 @@ public class RestPackUtils {
                 }
                 try {
                     Beans.setFieldValue(bean, fieldName, null);
-                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                } catch (Exception e) {
                     throw new RuntimeException("清除 RestPackIgnore 字段值出错： " + e.getMessage(), e);
                 }
             } else {

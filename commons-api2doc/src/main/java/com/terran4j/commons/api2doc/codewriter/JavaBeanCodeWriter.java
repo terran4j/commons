@@ -2,11 +2,7 @@ package com.terran4j.commons.api2doc.codewriter;
 
 import static java.util.Locale.ENGLISH;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 
@@ -95,8 +91,9 @@ public class JavaBeanCodeWriter {
 			if (StringUtils.hasText(fieldComment)) {
 			    field.setComment(fieldComment.trim());
             }
-			
-			Class<?> sourceType = child.getSourceType();
+
+            // Date 自动转成 Long 类型了。
+			Class<?> sourceType = getSourceType(child);
 			CodeUtils.addImport(sourceType, imports);
 
 			boolean isBooleanClass = (child.getDataType() == ApiDataType.BOOLEAN);
@@ -135,9 +132,17 @@ public class JavaBeanCodeWriter {
 		return name.substring(0, 1).toUpperCase(ENGLISH) + name.substring(1);
 	}
 
+	private Class<?> getSourceType(ApiResultObject result) {
+        Class<?> sourceType = result.getSourceType();
+        if (sourceType == Date.class || sourceType == java.sql.Date.class) {
+            sourceType = Long.class;
+        }
+        return sourceType;
+    }
+
 	private String toTypeName(ApiResultObject result) {
 		ApiDataType dataType = result.getDataType();
-		Class<?> sourceType = result.getSourceType();
+		Class<?> sourceType = getSourceType(result);;
 		String typeName = sourceType.getSimpleName();
 		if (dataType.isArrayType()) {
 			typeName = typeName + "[]";

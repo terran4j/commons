@@ -374,7 +374,9 @@
             </resource>
         </resources>
         <plugins>
-            <plugin><!-- 生成 java 源代码包。 -->
+
+            <!-- 生成 java 源代码包。 -->
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <executions>
@@ -386,6 +388,9 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- 暂时不要用这些插件，需要发布 release 版时再用。 -->
+            <!--
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -424,6 +429,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
         </plugins>
     </build>
 
