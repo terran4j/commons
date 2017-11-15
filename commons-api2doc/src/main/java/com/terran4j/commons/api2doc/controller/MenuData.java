@@ -1,85 +1,84 @@
 package com.terran4j.commons.api2doc.controller;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
-import com.terran4j.commons.api2doc.domain.ApiObject;
 import com.terran4j.commons.util.Strings;
 
 import java.util.List;
 
 public class MenuData {
 
-	private boolean folder;
+    private boolean folder;
 
-	private int order = Api2Doc.DEFAULT_ORDER;
+    private int order = Api2Doc.DEFAULT_ORDER;
 
-	private String id;
-	
-	private String index;
+    private String id;
 
-	private String name;
-	
-	private String url;
+    private String index;
 
-	private List<MenuData> children;
+    private String name;
 
-	public int getOrder() {
-		return order;
-	}
+    private String url;
 
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    private List<MenuData> children;
 
-	public final boolean isFolder() {
-		return folder;
-	}
+    public int getOrder() {
+        return order;
+    }
 
-	public final void setFolder(boolean folder) {
-		this.folder = folder;
-	}
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
-	public final String getId() {
-		return id;
-	}
+    public final boolean isFolder() {
+        return folder;
+    }
 
-	public final void setId(String id) {
-		this.id = id;
-	}
-	
-	public final String getIndex() {
-		return index;
-	}
+    public final void setFolder(boolean folder) {
+        this.folder = folder;
+    }
 
-	public final void setIndex(String index) {
-		this.index = index;
-	}
+    public final String getId() {
+        return id;
+    }
 
-	public final String getName() {
-		return name;
-	}
+    public final void setId(String id) {
+        this.id = id;
+    }
 
-	public final void setName(String name) {
-		this.name = name;
-	}
+    public final String getIndex() {
+        return index;
+    }
 
-	public final List<MenuData> getChildren() {
-		return children;
-	}
+    public final void setIndex(String index) {
+        this.index = index;
+    }
 
-	public final void setChildren(List<MenuData> children) {
-		this.children = children;
-	}
+    public final String getName() {
+        return name;
+    }
 
-	public final String getUrl() {
-		return url;
-	}
+    public final void setName(String name) {
+        this.name = name;
+    }
 
-	public final void setUrl(String url) {
-		this.url = url;
-	}
+    public final List<MenuData> getChildren() {
+        return children;
+    }
 
-	public final String toString() {
-	    return Strings.toString(this);
+    public final void setChildren(List<MenuData> children) {
+        this.children = children;
+    }
+
+    public final String getUrl() {
+        return url;
+    }
+
+    public final void setUrl(String url) {
+        this.url = url;
+    }
+
+    public final String toString() {
+        return Strings.toString(this);
     }
 
 }

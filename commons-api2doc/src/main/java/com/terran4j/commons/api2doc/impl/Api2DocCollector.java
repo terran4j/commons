@@ -430,20 +430,30 @@ public class Api2DocCollector implements BeanPostProcessor {
 			return ApiDataType.BOOLEAN;
 		}
 
-		if (paramType.equals(String.class) // 
-				|| paramType.equals(Date.class) || paramType.equals(java.sql.Date.class) //
-				|| paramType.equals(Character.class) || paramType.equals(StringBuffer.class) //
-				|| paramType.equals(StringBuilder.class)) { //
-			return ApiDataType.STRING;
-		}
+        if (paramType.equals(Integer.class)
+                || paramType.equals(Short.class) || paramType.equals(Byte.class)) {
+            return ApiDataType.INT;
+        }
 
-		if (paramType.equals(Integer.class) || paramType.equals(Long.class) //
-				|| paramType.equals(Float.class) || paramType.equals(Double.class) //
-				|| paramType.equals(Short.class) || paramType.equals(Byte.class)) {
+		// Date 类型返回为 long 格式。
+		if (paramType.equals(Date.class) || paramType.equals(java.sql.Date.class)
+                || paramType.equals(Long.class)) {
+		    return ApiDataType.LONG;
+        }
+
+		if (paramType.equals(Float.class) || paramType.equals(Double.class)) {
 			return ApiDataType.NUMBER;
 		}
 
-		Classes.isInterface(paramType, Collection.class);
+        if (paramType.equals(String.class)  || paramType.equals(Character.class)
+                || paramType.equals(StringBuffer.class) //
+                || paramType.equals(StringBuilder.class)) { //
+            return ApiDataType.STRING;
+        }
+
+		if (Classes.isInterface(paramType, Collection.class)) {
+		    return ApiDataType.ARRAY;
+        }
 
 		return ApiDataType.OBJECT;
 	}

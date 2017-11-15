@@ -2,7 +2,10 @@ package com.terran4j.commons.api2doc.controller;
 
 import com.terran4j.commons.api2doc.domain.ApiDocObject;
 import com.terran4j.commons.api2doc.domain.ApiFolderObject;
+import com.terran4j.commons.api2doc.domain.ApiParamLocation;
+import com.terran4j.commons.api2doc.domain.ApiParamObject;
 import com.terran4j.commons.api2doc.impl.Api2DocService;
+import com.terran4j.commons.api2doc.impl.Api2DocUtils;
 import com.terran4j.commons.api2doc.impl.ClasspathFreeMarker;
 import com.terran4j.commons.api2doc.impl.MarkdownService;
 import com.terran4j.commons.util.IOUtils;
@@ -35,6 +38,9 @@ public class Api2DocController {
 
     @Value("${service.name:}")
     private String serviceName;
+
+    @Value("${server.url:http://localhost:8080}")
+    private String serverURL;
 
     @Value("${api2doc.title:}")
     private String api2docTitle;
@@ -302,13 +308,17 @@ public class Api2DocController {
 
         ApiFolderObject folder = apiDocService.getFolder(folderId);
         if (folder == null) {
-            log.warn("ApiFolder NOT Found: {}", folderId);
+            if (log.isWarnEnabled()) {
+                log.warn("ApiFolder NOT Found: {}", folderId);
+            }
             return;
         }
 
         ApiDocObject doc = folder.getDoc(id);
         if (doc == null) {
-            log.warn("ApiDoc NOT Found: {}", folderId);
+            if (log.isWarnEnabled()) {
+                log.warn("ApiDoc NOT Found: {}", folderId);
+            }
             return;
         }
 
@@ -347,6 +357,11 @@ public class Api2DocController {
             Map<String, Object> model = new HashMap<String, Object>();
             model.put("folder", folder);
             model.put("doc", doc);
+
+            String docURL = Api2DocUtils.toURL(doc, serverURL);
+            if (StringUtils.hasText(docURL)) {
+                model.put("docURL", docURL);
+            }
 
             String folderId = folder.getId();
             String upFirst = folderId.substring(0, 1).toUpperCase() +folderId.substring(1);

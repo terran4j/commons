@@ -36,6 +36,11 @@
 </#list>
 </#if>
 
+<#if docURL ??>
+**URL示例**
+ - [${docURL}](${docURL})
+</#if>
+
 <br/>
 
 <#if doc.sample??>

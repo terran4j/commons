@@ -8,6 +8,7 @@ import com.terran4j.commons.api2doc.domain.ApiFolderObject;
 import com.terran4j.commons.api2doc.domain.ApiParamLocation;
 import com.terran4j.commons.api2doc.domain.ApiParamObject;
 import com.terran4j.commons.api2doc.impl.Api2DocService;
+import com.terran4j.commons.restpack.EnableRestPack;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EnableApi2Doc
+@EnableRestPack
 @SpringBootApplication
 public class Api2DocDemoApp {
 
