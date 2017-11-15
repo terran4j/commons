@@ -19,7 +19,7 @@ public class HttpResult {
 	
 	public static final String KEY_message = "message";
 	
-	public static final int SUCCESS_CODE = 0;
+	public static final String SUCCESS_CODE = "success";
 
 	private String requestId;
 
@@ -30,7 +30,7 @@ public class HttpResult {
 	
 	private long spendTime;
 
-	private int resultCode;
+	private String resultCode;
 
 	private Object data;
 	
@@ -59,14 +59,14 @@ public class HttpResult {
 			msg = errorCode.getName().replace('.', ' ');
 		}
 		HttpResult response = new HttpResult();
-		response.setResultCode(errorCode.getValue());
+		response.setResultCode(errorCode.getName());
 		response.setMessage(msg);
 		return response;
 	}
 
 	public static HttpResult fail(BusinessException e) {
 		HttpResult response = new HttpResult();
-		response.setResultCode(e.getErrorCode().getValue());
+		response.setResultCode(e.getErrorCode().getName());
 		response.setMessage(e.getMessage());
 		
 		Map<String, Object> errProps = e.getProps();
@@ -102,11 +102,11 @@ public class HttpResult {
 		this.serverTime = serverTime;
 	}
 
-	public int getResultCode() {
+	public String getResultCode() {
 		return resultCode;
 	}
 
-	public void setResultCode(int resultCode) {
+	public void setResultCode(String resultCode) {
 		this.resultCode = resultCode;
 	}
 

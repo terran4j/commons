@@ -15,7 +15,7 @@ public class ResourceErrorCode implements ErrorCode {
 	
 	public ResourceErrorCode(String name, Locale locale) {
 		super();
-		this.value = name.hashCode();
+		this.value = Math.abs(name.hashCode());
 		this.name = name;
 		
 		ResourceBundlesProperties props = null;

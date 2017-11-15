@@ -39,8 +39,6 @@ public class RestPackAspect {
 
     private static final ThreadLocal<Long> bufferBeginTime = new ThreadLocal<>();
 
-    private static final ThreadLocal<Exception> bufferException = new ThreadLocal<>();
-
     public static final boolean isRestPack() {
         return bufferRequestId.get() != null;
     }
@@ -51,10 +49,6 @@ public class RestPackAspect {
 
     public static final Long getBeginTime() {
         return bufferBeginTime.get();
-    }
-
-    public static final Exception getException() {
-        return bufferException.get();
     }
 
     public RestPackAspect() {
@@ -129,7 +123,7 @@ public class RestPackAspect {
         if (log.isInfoEnabled()) {
             log.info("handle throwed exception[{}]: {}", e.getClass().getName(), e.getMessage());
         }
-        bufferException.set(e);
+        ExceptionHolder.set(e);
     }
 
     String generateRequestId() {
@@ -139,6 +133,6 @@ public class RestPackAspect {
     static void clearThreadLocal() {
         bufferRequestId.remove();
         bufferBeginTime.remove();
-        bufferException.remove();
+        ExceptionHolder.remove();
     }
 }
