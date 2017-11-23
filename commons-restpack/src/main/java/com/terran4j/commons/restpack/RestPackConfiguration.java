@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.ArrayList;
@@ -26,6 +27,10 @@ import java.util.List;
 public class RestPackConfiguration extends WebMvcConfigurerAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(RestPackConfiguration.class);
+
+    private static final String PATH_PATERRN = "/**";
+
+    private static final String PATH_LOCATION = "classpath:/static/";
 
     private static ObjectMapper objectMapper = null;
 
@@ -76,10 +81,6 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
         // 未知的属性不参与反序列化。
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-//        // 加了 @RestPackIgnore 注解的字段，不参与序列化。
-//        objectMapper.addMixIn(Object.class, RestPackIgnore.class);
-
-
         if (log.isInfoEnabled()) {
             log.info("created ObjectMapper for RestPack.");
         }
@@ -118,4 +119,13 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
         converters.add(0, restPackConverter);
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        /**
+         * 一旦启用了 @EnableWebMvc，则 Spring Boot 中内置的 MVC 规则就不好使了。
+         * 因此这里手工添加静态资源映射关系。
+         **/
+        registry.addResourceHandler(PATH_PATERRN).addResourceLocations(PATH_LOCATION);
+        super.addResourceHandlers(registry);
+    }
 }
