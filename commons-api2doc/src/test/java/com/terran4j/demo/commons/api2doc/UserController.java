@@ -39,6 +39,7 @@ public class UserController {
 
 		list.add(user);
 
+//		return ResponseMocker.mockObject(new ArrayList<User>());
 		return list;
 	}
 

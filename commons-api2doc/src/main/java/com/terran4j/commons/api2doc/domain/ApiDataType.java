@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.terran4j.commons.util.Jsons;
+import javafx.beans.binding.ObjectExpression;
 
 import java.util.Date;
 
@@ -18,6 +19,11 @@ public enum ApiDataType {
         @Override
         public String getDefault() {
             return "false";
+        }
+
+        @Override
+        public Object parseValue(String text) {
+            return Boolean.parseBoolean(text);
         }
 
         @Override
@@ -43,6 +49,11 @@ public enum ApiDataType {
         }
 
         @Override
+        public Object parseValue(String text) {
+            return Integer.parseInt(text);
+        }
+
+        @Override
         public boolean isSimpleType() {
             return true;
         }
@@ -62,6 +73,11 @@ public enum ApiDataType {
         @Override
         public String getDefault() {
             return "0";
+        }
+
+        @Override
+        public Object parseValue(String text) {
+            return Long.parseLong(text);
         }
 
         @Override
@@ -87,6 +103,11 @@ public enum ApiDataType {
         }
 
         @Override
+        public Object parseValue(String text) {
+            return Double.parseDouble(text);
+        }
+
+        @Override
         public boolean isSimpleType() {
             return true;
         }
@@ -106,6 +127,11 @@ public enum ApiDataType {
         @Override
         public String getDefault() {
             return "my-string";
+        }
+
+        @Override
+        public Object parseValue(String text) {
+            return text;
         }
 
         @Override
@@ -131,6 +157,11 @@ public enum ApiDataType {
         }
 
         @Override
+        public Object parseValue(String text) {
+            throw new UnsupportedOperationException("array can't parse from text: " + text);
+        }
+
+        @Override
         public boolean isSimpleType() {
             return false;
         }
@@ -150,6 +181,11 @@ public enum ApiDataType {
         @Override
         public String getDefault() {
             return "{}";
+        }
+
+        @Override
+        public Object parseValue(String text) {
+            throw new UnsupportedOperationException("object can't parse from text: " + text);
         }
 
         @Override
@@ -179,6 +215,8 @@ public enum ApiDataType {
     }
 
     public abstract String getDefault();
+
+    public abstract Object parseValue(String text);
 
     public abstract boolean isSimpleType();
 

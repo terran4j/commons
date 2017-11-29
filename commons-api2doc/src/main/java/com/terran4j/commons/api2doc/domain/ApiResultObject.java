@@ -262,7 +262,7 @@ public class ApiResultObject extends ApiObject {
 
         // 有子类型，补充子类型信息。
         for (PropertyDescriptor prop : props) {
-            if (isFilter(prop, clazz, elementType)) {
+            if (isFilter(prop, elementType)) {
                 continue;
             }
 
@@ -380,8 +380,8 @@ public class ApiResultObject extends ApiObject {
     }
 
 
-    private static final boolean isFilter(
-            PropertyDescriptor prop, Class<?> fieldType, Class<?> clazz) {
+    public static final boolean isFilter(
+            PropertyDescriptor prop, Class<?> clazz) {
 
         String fieldName = prop.getName();
 
