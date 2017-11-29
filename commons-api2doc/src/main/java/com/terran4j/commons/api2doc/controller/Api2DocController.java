@@ -1,14 +1,11 @@
 package com.terran4j.commons.api2doc.controller;
 
-import com.terran4j.commons.api2doc.domain.ApiDocObject;
-import com.terran4j.commons.api2doc.domain.ApiFolderObject;
-import com.terran4j.commons.api2doc.impl.*;
-import freemarker.template.Template;
+import com.terran4j.commons.api2doc.impl.DocMenuBuilder;
+import com.terran4j.commons.api2doc.impl.DocPageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/api2doc")
@@ -47,7 +44,7 @@ public class Api2DocController {
      */
     @RequestMapping(value = "/home.html", method = RequestMethod.GET)
     public String home(@RequestParam(value = "p", required = false) String p,
-                     Map<String, Object> model) throws Exception {
+                       Map<String, Object> model) throws Exception {
 
         String title = api2docTitle;
         if (StringUtils.isEmpty(title)) {
@@ -110,13 +107,10 @@ public class Api2DocController {
         writePage(html, response);
     }
 
-    /**
-     * http://localhost:8080/api2doc/overview.html
-     */
     @RequestMapping(value = "/api/{fid}/{id}.html", method = RequestMethod.GET)
-    public void apidoc(@PathVariable("fid") String folderId,
-                       @PathVariable("id") String id,
-                       HttpServletResponse response) throws Exception {
+    public void api2doc(@PathVariable("fid") String folderId,
+                        @PathVariable("id") String id,
+                        HttpServletResponse response) throws Exception {
         String html = docPageBuilder.doc2HtmlPage(folderId, id);
         writePage(html, response);
     }

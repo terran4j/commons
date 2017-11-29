@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.terran4j.commons.api2doc.impl.Api2DocUtils;
+import com.terran4j.commons.api2doc.impl.FlexibleString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.terran4j.commons.api2doc.annotations.ApiComment;
-import com.terran4j.commons.api2doc.domain.ApiResultObject;
 import com.terran4j.commons.api2doc.impl.ClasspathFreeMarker;
 
 import freemarker.template.Template;
@@ -78,7 +79,7 @@ public class EnumCodeWriter {
 			}
 			ApiComment apiComment = field.getAnnotation(ApiComment.class);
 			if (apiComment != null && StringUtils.hasText(apiComment.value())) {
-				comment = ApiResultObject.getComment(apiComment);
+                comment = new FlexibleString(apiComment.value().trim()).javadoc(1);
 			}
 			enumInfo.setComment(comment);
 			

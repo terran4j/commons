@@ -1,14 +1,10 @@
 package com.terran4j.commons.api2doc.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.controller.ApiObjectComparator;
-import com.terran4j.commons.restpack.RestPackIgnore;
+import com.terran4j.commons.api2doc.impl.Api2DocUtils;
 import com.terran4j.commons.util.Classes;
-import com.terran4j.commons.util.Strings;
-import com.terran4j.commons.util.error.BusinessException;
-import com.terran4j.commons.util.error.ErrorCodes;
 import com.terran4j.commons.util.value.KeyedList;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -18,8 +14,6 @@ import org.springframework.util.StringUtils;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -122,7 +116,7 @@ public class ApiResultObject extends ApiObject {
             return null;
         }
 
-        StringBuffer sb = new StringBuffer("<br/>可选值为：");
+        StringBuffer sb = new StringBuffer("\n可选值为：");
         Class<Enum<?>> enumClass = (Class<Enum<?>>) clazz;
         Enum[] enums = enumClass.getEnumConstants();
         for (Enum e : enums) {
@@ -137,10 +131,10 @@ public class ApiResultObject extends ApiObject {
             ApiComment comment = field.getAnnotation(ApiComment.class);
             String value = "";
             if (comment != null && StringUtils.hasText(comment.value())) {
-                value = getComment(comment);
+                value = Api2DocUtils.getComment(comment);
             }
             if (sb.length() > 0) {
-                sb.append("<br/>");
+                sb.append("\n");
             }
             sb.append(name).append(": ").append(value).append("; ");
         }
@@ -201,7 +195,7 @@ public class ApiResultObject extends ApiObject {
         if (dataType.isArrayType()) {
 //            typeName = typeName + "[]";
 
-            elementType = getArrayElementClass(method);
+            elementType = Api2DocUtils.getArrayElementClass(method);
             if (elementType == null) {
                 log.warn("Can't find element class by method: {}", method);
                 return null;
@@ -262,7 +256,7 @@ public class ApiResultObject extends ApiObject {
 
         // 有子类型，补充子类型信息。
         for (PropertyDescriptor prop : props) {
-            if (isFilter(prop, elementType)) {
+            if (Api2DocUtils.isFilter(prop, elementType)) {
                 continue;
             }
 
@@ -306,7 +300,7 @@ public class ApiResultObject extends ApiObject {
 
                 String comment = "";
                 if (childApiComment != null && StringUtils.hasText(childApiComment.value())) {
-                    comment = getComment(childApiComment);
+                    comment = Api2DocUtils.getComment(childApiComment);
                 }
                 childPropResult.insertComment(comment);
 
@@ -324,7 +318,7 @@ public class ApiResultObject extends ApiObject {
                 Class<?> childSubType = null;
                 if (childPropDataType != null) {
                     if (childPropDataType.isArrayType()) {
-                        childSubType = getArrayElementClass(subMethod);
+                        childSubType = Api2DocUtils.getArrayElementClass(subMethod);
                     } else if (childPropDataType.isObjectType()) {
                         childSubType = subMethod.getReturnType();
                     }
@@ -341,36 +335,6 @@ public class ApiResultObject extends ApiObject {
         return result;
     }
 
-    public static final String getComment(ApiComment apiComment) {
-        String comment = apiComment.value();
-        if (StringUtils.isEmpty(comment)) {
-            return null;
-        }
-        return comment.replaceAll("\n", "<br/>");
-    }
-
-    public static final String getSample(ApiComment apiComment, Class<?> clazz) throws BusinessException {
-        String sample = apiComment.sample();
-        if (StringUtils.isEmpty(sample)) {
-            return null;
-        }
-        sample = sample.trim();
-
-        if (!(sample.startsWith("@") && sample.endsWith("@"))) {
-            return sample.replaceAll("\n", "<br/>");
-        }
-
-        String fileName = sample.substring(1, sample.length() - 1);
-        String json = Strings.getString(clazz, fileName);
-        if (StringUtils.isEmpty(json)) {
-            throw new BusinessException(ErrorCodes.CONFIG_ERROR)
-                    .put("package", clazz.getPackage().getName())
-                    .put("fileName", fileName)
-                    .setMessage("在包 ${package} 中找不到文件： ${fileName}");
-        }
-        return json;
-    }
-
     public static final String getGroupId(Class<?> clazz) {
         if (clazz == null) {
             throw new NullPointerException();
@@ -379,62 +343,5 @@ public class ApiResultObject extends ApiObject {
         return groupId;
     }
 
-
-    public static final boolean isFilter(
-            PropertyDescriptor prop, Class<?> clazz) {
-
-        String fieldName = prop.getName();
-
-        // class 只是 Java 对象自带的  Object.getClass() 方法，忽略掉。
-        if ("class".equals(fieldName)) {
-            return true;
-        }
-
-        // 忽略掉需要忽略的字段。
-        Field field = Classes.getField(fieldName, clazz);
-        if (field != null) {
-            if (field.getAnnotation(RestPackIgnore.class) != null) {
-                return true;
-            }
-            if (field.getAnnotation(JsonIgnore.class) != null) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static final Class<?> getArrayElementClass(Method method) {
-
-        Class<?> returnType = method.getReturnType();
-        if (returnType.isArray()) {
-            Class<?> elementClass = returnType.getComponentType();
-            return elementClass;
-        }
-
-        if (Classes.isInterface(returnType, Collection.class)) {
-            Type gType = method.getGenericReturnType();
-            Type elementType = getGenericType(gType);
-            if (elementType instanceof Class<?>) {
-                Class<?> elementClass = (Class<?>) elementType;
-                return elementClass;
-            }
-        }
-
-        return null;
-    }
-
-    public static final Type getGenericType(Type gType) {
-        // 如果gType是泛型类型对像。
-        if (gType instanceof ParameterizedType) {
-            ParameterizedType pType = (ParameterizedType) gType;
-            // 获得泛型类型的泛型参数
-            Type[] gArgs = pType.getActualTypeArguments();
-            return gArgs[gArgs.length - 1];
-        } else {
-            System.out.println("获取泛型信息失败");
-            return null;
-        }
-    }
 
 }

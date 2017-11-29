@@ -185,7 +185,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 		// API 组的注释。
 		ApiComment apiComment = clazz.getAnnotation(ApiComment.class);
 		if (apiComment != null) {
-			String commentText = ApiResultObject.getComment(apiComment);
+			String commentText = Api2DocUtils.getComment(apiComment);
 			folder.setComment(commentText);
 		}
 
@@ -258,11 +258,11 @@ public class Api2DocCollector implements BeanPostProcessor {
 
 		ApiComment apiComment = method.getAnnotation(ApiComment.class);
 		if (apiComment != null && StringUtils.hasText(apiComment.value())) {
-			doc.setComment(ApiResultObject.getComment(apiComment));
+			doc.setComment(Api2DocUtils.getComment(apiComment));
 		}
 		if (apiComment != null && StringUtils.hasText(apiComment.sample())) {
 			Class<?> clazz = method.getDeclaringClass();
-			String sample = ApiResultObject.getSample(apiComment, clazz);
+			String sample = Api2DocUtils.getSample(apiComment, clazz);
 			if (StringUtils.hasText(sample)) {
 				doc.setSample(sample);
 			}
@@ -384,7 +384,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 
 		ApiComment apiComment = param.getAnnotation(ApiComment.class);
 		if (apiComment != null && StringUtils.hasText(apiComment.value())) {
-			String commentText = ApiResultObject.getComment(apiComment);
+			String commentText = Api2DocUtils.getComment(apiComment);
 			apiParamObject.setComment(commentText);
 		}
 		if (apiComment != null && StringUtils.hasText(apiComment.sample())) {

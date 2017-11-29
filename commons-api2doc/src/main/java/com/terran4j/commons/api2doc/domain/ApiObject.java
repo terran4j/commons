@@ -1,6 +1,7 @@
 package com.terran4j.commons.api2doc.domain;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
+import com.terran4j.commons.api2doc.impl.FlexibleString;
 import com.terran4j.commons.util.Strings;
 
 public class ApiObject {
@@ -9,9 +10,9 @@ public class ApiObject {
 
     private String name;
 
-    private String comment;
+    private final FlexibleString comment = new FlexibleString();
 
-    private String sample;
+    private final FlexibleString sample = new FlexibleString();
 
     private int order = Api2Doc.DEFAULT_ORDER;
 
@@ -31,14 +32,6 @@ public class ApiObject {
         this.name = name;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     public final int getOrder() {
         return order;
     }
@@ -48,22 +41,23 @@ public class ApiObject {
     }
 
     public void insertComment(String comment) {
-        if (comment == null) {
-            return;
-        }
-        if (this.comment == null) {
-            this.comment = comment;
-        } else {
-            this.comment = comment + "<br/>" + this.comment;
-        }
+        this.comment.insertLine(comment);
     }
 
-    public final String getSample() {
+    public FlexibleString getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment.setValue(comment);
+    }
+
+    public FlexibleString getSample() {
         return sample;
     }
 
-    public final void setSample(String sample) {
-        this.sample = sample;
+    public void setSample(String sample) {
+        this.sample.setValue(sample);
     }
 
     @Override

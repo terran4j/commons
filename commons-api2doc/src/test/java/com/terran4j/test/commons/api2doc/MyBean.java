@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.terran4j.commons.api2doc.annotations.ApiComment;
-import com.terran4j.demo.commons.api2doc.User;
+import com.terran4j.demo.commons.api2doc.DemoUser;
 
 public class MyBean {
 	
@@ -21,7 +21,7 @@ public class MyBean {
 	
 	private Date createTime;
 
-	private List<User> users = new ArrayList<>();
+	private List<DemoUser> users = new ArrayList<>();
 	
 	private MyBean[] children2 = new MyBean[0];
 	
@@ -59,11 +59,11 @@ public class MyBean {
 		this.createTime = createTime;
 	}
 
-	public List<User> getUsers() {
+	public List<DemoUser> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(List<DemoUser> users) {
 		this.users = users;
 	}
 

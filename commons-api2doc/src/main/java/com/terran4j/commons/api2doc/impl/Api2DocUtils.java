@@ -1,15 +1,25 @@
 package com.terran4j.commons.api2doc.impl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.domain.ApiDocObject;
 import com.terran4j.commons.api2doc.domain.ApiParamLocation;
 import com.terran4j.commons.api2doc.domain.ApiParamObject;
+import com.terran4j.commons.restpack.RestPackIgnore;
+import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.Encoding;
 import com.terran4j.commons.util.Strings;
+import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.value.ValueSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.beans.PropertyDescriptor;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -43,14 +53,14 @@ public class Api2DocUtils {
         if (params != null) {
             for (ApiParamObject param : params) {
                 if (param.getLocation() == ApiParamLocation.Path) {
-                    String value = param.getSample();
+                    String value = param.getSample().getValue();
                     if (StringUtils.isEmpty(value)) {
                         value = param.getDataType().getDefault();
                     }
                     pathParams.put(param.getId(), value);
                 }
                 if (param.getLocation() == ApiParamLocation.Param) {
-                    String value = param.getSample();
+                    String value = param.getSample().getValue();
                     if (StringUtils.isEmpty(value)) {
                         continue;
                     }
@@ -104,5 +114,92 @@ public class Api2DocUtils {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static final String getComment(ApiComment apiComment) {
+        String comment = apiComment.value();
+        if (StringUtils.isEmpty(comment)) {
+            return null;
+        }
+        return comment.trim();
+    }
+
+    public static final String getSample(ApiComment apiComment, Class<?> clazz) throws BusinessException {
+        String sample = apiComment.sample();
+        if (StringUtils.isEmpty(sample)) {
+            return null;
+        }
+        return sample.trim();
+
+//        if (!(sample.startsWith("@") && sample.endsWith("@"))) {
+//            return sample.replaceAll("\n", "<br/>");
+//        }
+//
+//        String fileName = sample.substring(1, sample.length() - 1);
+//        String json = Strings.getString(clazz, fileName);
+//        if (StringUtils.isEmpty(json)) {
+//            throw new BusinessException(ErrorCodes.CONFIG_ERROR)
+//                    .put("package", clazz.getPackage().getName())
+//                    .put("fileName", fileName)
+//                    .setMessage("在包 ${package} 中找不到文件： ${fileName}");
+//        }
+//        return json;
+    }
+
+    public static final Class<?> getArrayElementClass(Method method) {
+
+        Class<?> returnType = method.getReturnType();
+        if (returnType.isArray()) {
+            Class<?> elementClass = returnType.getComponentType();
+            return elementClass;
+        }
+
+        if (Classes.isInterface(returnType, Collection.class)) {
+            Type gType = method.getGenericReturnType();
+            Type elementType = getGenericType(gType);
+            if (elementType instanceof Class<?>) {
+                Class<?> elementClass = (Class<?>) elementType;
+                return elementClass;
+            }
+        }
+
+        return null;
+    }
+
+    public static final Type getGenericType(Type gType) {
+        // 如果gType是泛型类型对像。
+        if (gType instanceof ParameterizedType) {
+            ParameterizedType pType = (ParameterizedType) gType;
+            // 获得泛型类型的泛型参数
+            Type[] gArgs = pType.getActualTypeArguments();
+            return gArgs[gArgs.length - 1];
+        } else {
+            System.out.println("获取泛型信息失败");
+            return null;
+        }
+    }
+
+    public static final boolean isFilter(
+            PropertyDescriptor prop, Class<?> clazz) {
+
+        String fieldName = prop.getName();
+
+        // class 只是 Java 对象自带的  Object.getClass() 方法，忽略掉。
+        if ("class".equals(fieldName)) {
+            return true;
+        }
+
+        // 忽略掉需要忽略的字段。
+        Field field = Classes.getField(fieldName, clazz);
+        if (field != null) {
+            if (field.getAnnotation(RestPackIgnore.class) != null) {
+                return true;
+            }
+            if (field.getAnnotation(JsonIgnore.class) != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -32,7 +32,7 @@ public class ParseEnumTest {
 	@Test
 	public void testGetEnumComment() throws Throwable {
 		String comment = ApiResultObject.getEnumComment(MyState.class);
-		Assert.assertEquals("<br/>可选值为：<br/>open: 打开; <br/>close: 关闭; ", comment);
+		Assert.assertEquals("可选值为：\nopen: 打开; \nclose: 关闭;", comment.trim());
 	}
 	
 	@Test
@@ -44,7 +44,8 @@ public class ParseEnumTest {
 		KeyedList<String, ApiResultObject> list = new KeyedList<>();
 		ApiResultObject result = ApiResultObject.parseResultType(method, list);
 		Assert.assertNotNull(result);
-		Assert.assertEquals("<br/>可选值为：<br/>open: 打开; <br/>close: 关闭; ", result.getComment());
+		Assert.assertEquals("可选值为：\nopen: 打开; \nclose: 关闭;",
+				result.getComment().getValue().trim());
 	}
 
 }

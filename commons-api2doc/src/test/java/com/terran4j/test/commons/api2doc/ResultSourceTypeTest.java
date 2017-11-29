@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ReflectionUtils;
 
-import com.terran4j.demo.commons.api2doc.User;
+import com.terran4j.demo.commons.api2doc.DemoUser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ResultSourceTypeTest {
@@ -21,13 +21,13 @@ public class ResultSourceTypeTest {
 	
 	public class UserList {
 
-		private List<User> users = new ArrayList<>();
+		private List<DemoUser> users = new ArrayList<>();
 
-		public List<User> getUsers() {
+		public List<DemoUser> getUsers() {
 			return users;
 		}
 
-		public void setUsers(List<User> users) {
+		public void setUsers(List<DemoUser> users) {
 			this.users = users;
 		}
 		

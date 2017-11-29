@@ -32,7 +32,7 @@
 | 参数名 | 是否必须 | 类型   | 说明 | 示例值 |
 |:----  |-----  |-----   |-----    |-----   |
 <#list doc.params as param>
-| ${param.id} | ${param.requiredName} | ${param.typeName} | ${param.comment!} | ${param.sample!} |
+| ${param.id} | ${param.requiredName} | ${param.typeName} | ${param.comment.html()!} | ${param.sample.html()!} |
 </#list>
 </#if>
 
@@ -42,15 +42,6 @@
 </#if>
 
 <br/>
-
-<#if doc.sample??>
-**返回示例**
-
-```json
-${doc.sample}
-```
-
-</#if>
 
 <#if doc.results?? && (doc.results?size > 0) >
 
@@ -64,7 +55,7 @@ ${doc.sample}
 | 参数名 | 类型   | 说明 | 示例值 |
 |:---- |----- |-----  |----- |
 <#list result.children as item>
-| ${item.id} | <#if item.refGroupId??>[${item.typeName}](#${item.refGroupId})<#else>${item.typeName}</#if> | ${item.comment!} | ${item.sample!} |
+| ${item.id} | <#if item.refGroupId??>[${item.typeName}](#${item.refGroupId})<#else>${item.typeName}</#if> | ${item.comment.html()!} | ${item.sample.html()!} |
 </#list>
 
 </#list>
@@ -78,6 +69,6 @@ ${doc.sample}
 | 错误码    | 说明 |
 |:----    |-----   |
 <#list doc.errors as error>
-| ${error.id} | ${error.comment!} |
+| ${error.id} | ${error.comment.html()!} |
 </#list>
 </#if>

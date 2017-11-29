@@ -11,7 +11,7 @@ import ${import};
 
 /**
 <#if comment??>
- * ${comment}<br/>
+ * ${comment!}
 </#if>
  * 
 <#if config.declaredComment??>
@@ -27,7 +27,7 @@ public interface ${class} {
 </#if>
 <#if method.params??>
 <#list method.params as param>
-     * @param ${param.id} ${param.comment} 
+     * @param ${param.id} ${param.comment!}
 </#list>
 </#if>
 <#if method.returnClass ??>

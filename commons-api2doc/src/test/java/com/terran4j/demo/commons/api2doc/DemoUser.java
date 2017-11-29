@@ -6,7 +6,7 @@ import com.terran4j.commons.restpack.RestPackIgnore;
 
 import java.util.Date;
 
-public class User {
+public class DemoUser {
 
     @ApiComment(value = "账号id", sample = "123")
     private Long id;
@@ -26,6 +26,18 @@ public class User {
 
     @ApiComment(value = "创建时间\n也是注册时间。")
     private Date createTime;
+
+    @ApiComment(value = "头衔\n包括公司职位、学术职称、社会身份等",
+            sample = "XXX公司创始人兼CEO\nYYY公司投资人\nZZZ大学客座教授")
+    private String titles;
+
+    public String getTitles() {
+        return titles;
+    }
+
+    public void setTitles(String titles) {
+        this.titles = titles;
+    }
 
     /**
      * 获取创建时间

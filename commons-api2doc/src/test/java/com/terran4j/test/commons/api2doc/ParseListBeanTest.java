@@ -98,7 +98,7 @@ public class ParseListBeanTest {
 		Assert.assertTrue(resultTop.getChildren().size() == 1);
 		ApiResultObject users = resultTop.getChildren().get(0);
 		Assert.assertEquals("users", users.getId());
-		Assert.assertEquals("There are many users!", users.getComment());
+		Assert.assertEquals("There are many users!", users.getComment().getValue());
 
 		ApiResultObject resultUser = list.get(1);
 		log.info("resultUser: {}", resultUser);
@@ -106,7 +106,7 @@ public class ParseListBeanTest {
 		Assert.assertTrue(resultUser.getChildren().size() == 2);
 		ApiResultObject userId = resultUser.getChildren().get(0);
 		Assert.assertEquals("id", userId.getId());
-		Assert.assertEquals("账号id", userId.getComment());
+		Assert.assertEquals("账号id", userId.getComment().getValue());
 	}
 
 }

@@ -4,6 +4,7 @@ import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.domain.ApiDataType;
 import com.terran4j.commons.api2doc.domain.ApiResultObject;
+import com.terran4j.commons.api2doc.impl.Api2DocUtils;
 import com.terran4j.commons.restpack.RestPackIgnore;
 import com.terran4j.commons.util.value.KeyedList;
 import org.junit.Assert;
@@ -179,17 +180,17 @@ public class ApiResultObjectTest {
         log.info("testGetArrayElementClass");
         Method method = ReflectionUtils.findMethod(getClass(), "getList");
         Assert.assertNotNull(method);
-        Class<?> clazz = ApiResultObject.getArrayElementClass(method);
+        Class<?> clazz = Api2DocUtils.getArrayElementClass(method);
         Assert.assertEquals(String.class, clazz);
 
         method = ReflectionUtils.findMethod(getClass(), "getSet");
         Assert.assertNotNull(method);
-        clazz = ApiResultObject.getArrayElementClass(method);
+        clazz = Api2DocUtils.getArrayElementClass(method);
         Assert.assertEquals(String.class, clazz);
 
         method = ReflectionUtils.findMethod(getClass(), "getArray");
         Assert.assertNotNull(method);
-        clazz = ApiResultObject.getArrayElementClass(method);
+        clazz = Api2DocUtils.getArrayElementClass(method);
         Assert.assertEquals(String.class, clazz);
     }
 

@@ -8,13 +8,13 @@ import com.terran4j.commons.api2doc.annotations.ApiComment;
 public class UserPage {
 
 	@ApiComment("There are many users!")
-	private List<User> users = new ArrayList<>();
+	private List<DemoUser> users = new ArrayList<>();
 
-	public List<User> getUsers() {
+	public List<DemoUser> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(List<DemoUser> users) {
 		this.users = users;
 	}
 	

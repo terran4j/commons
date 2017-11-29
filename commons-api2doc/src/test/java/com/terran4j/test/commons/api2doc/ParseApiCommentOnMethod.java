@@ -60,13 +60,13 @@ public class ParseApiCommentOnMethod {
 
 		ApiResultObject userId = user.getChildren().get(0);
 		Assert.assertEquals("id", userId.getId());
-		Assert.assertEquals("账号id", userId.getComment());
-		Assert.assertEquals("123", userId.getSample());
+		Assert.assertEquals("账号id", userId.getComment().getValue());
+		Assert.assertEquals("123", userId.getSample().getValue());
 
 		ApiResultObject userName = user.getChildren().get(1);
 		Assert.assertEquals("username", userName.getId());
-		Assert.assertEquals("账号用户名", userName.getComment());
-		Assert.assertEquals("terran4j", userName.getSample());
+		Assert.assertEquals("账号用户名", userName.getComment().getValue());
+		Assert.assertEquals("terran4j", userName.getSample().getValue());
 	}
 
 }

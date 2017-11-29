@@ -2,7 +2,6 @@ package com.terran4j.commons.api2doc.impl;
 
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.domain.ApiDataType;
-import com.terran4j.commons.api2doc.domain.ApiResultObject;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.Enums;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -170,7 +169,7 @@ public class Api2DocObjectFactory {
         if (fieldProp == null) {
             throw new RuntimeException("field[" + name + "] NOT found in class: " + clazz);
         }
-        if (ApiResultObject.isFilter(fieldProp, clazz)) {
+        if (Api2DocUtils.isFilter(fieldProp, clazz)) {
             return;
         }
 
@@ -281,7 +280,7 @@ public class Api2DocObjectFactory {
 
         if (Classes.isInterface(returnType, Collection.class)) {
             Type type = field.getGenericType();
-            Type elementType = ApiResultObject.getGenericType(type);
+            Type elementType = Api2DocUtils.getGenericType(type);
             if (elementType instanceof Class<?>) {
                 Class<?> elementClass = (Class<?>) elementType;
                 return elementClass;

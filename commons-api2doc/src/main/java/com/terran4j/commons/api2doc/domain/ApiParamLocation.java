@@ -123,7 +123,7 @@ public enum ApiParamLocation {
 		if (currentLocation != null) {
 			apiParamObject.setLocation(currentLocation);
 			
-			String sample = apiParamObject.getSample();
+			String sample = apiParamObject.getSample().getValue();
 			if (ValueConstants.DEFAULT_NONE.equals(sample)) {
 				apiParamObject.setSample("");
 			}
