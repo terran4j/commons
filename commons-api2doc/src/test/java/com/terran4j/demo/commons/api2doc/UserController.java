@@ -1,6 +1,5 @@
 package com.terran4j.demo.commons.api2doc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.terran4j.commons.api2doc.Api2DocMocker;
@@ -43,7 +42,7 @@ public class UserController {
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST)
     public DemoUser insert(
             @PathVariable("id") Long id,
-            @ApiComment(see = DemoUser.class)
+            @ApiComment(seeClass = DemoUser.class)
             @RequestParam("name") String name) {
         return Api2DocMocker.mockObject(DemoUser.class);
     }

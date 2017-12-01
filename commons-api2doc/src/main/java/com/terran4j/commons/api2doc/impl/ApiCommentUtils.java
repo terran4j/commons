@@ -3,7 +3,6 @@ package com.terran4j.commons.api2doc.impl;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.domain.ApiObject;
 import com.terran4j.commons.util.Classes;
-import com.terran4j.commons.util.error.BusinessException;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -21,7 +20,7 @@ public class ApiCommentUtils {
         }
     }
 
-    public static final String getComment(ApiComment apiComment, String name) {
+    public static final String getComment(ApiComment apiComment, String defaultName) {
         if (apiComment == null) {
             return null;
         }
@@ -31,17 +30,7 @@ public class ApiCommentUtils {
             return comment.trim();
         }
 
-        Class<?> seeClass = apiComment.see();
-        if (seeClass == null || seeClass == Object.class || StringUtils.isEmpty(name)) {
-            return null;
-        }
-
-        Field field = Classes.getField(name, seeClass);
-        if (field == null) {
-            return null;
-        }
-
-        ApiComment seeComment = field.getAnnotation(ApiComment.class);
+        ApiComment seeComment = getSeeApiComment(apiComment, defaultName);
         if (seeComment == null) {
             return null;
         }
@@ -54,7 +43,7 @@ public class ApiCommentUtils {
         return null;
     }
 
-    public static final String getSample(ApiComment apiComment, String name) {
+    public static final String getSample(ApiComment apiComment, String defaultName) {
         if (apiComment == null) {
             return null;
         }
@@ -64,17 +53,7 @@ public class ApiCommentUtils {
             return sample.trim();
         }
 
-        Class<?> seeClass = apiComment.see();
-        if (seeClass == null || seeClass == Object.class || StringUtils.isEmpty(name)) {
-            return null;
-        }
-
-        Field field = Classes.getField(name, seeClass);
-        if (field == null) {
-            return null;
-        }
-
-        ApiComment seeComment = field.getAnnotation(ApiComment.class);
+        ApiComment seeComment = getSeeApiComment(apiComment, defaultName);
         if (seeComment == null) {
             return null;
         }
@@ -86,4 +65,28 @@ public class ApiCommentUtils {
 
         return null;
     }
+
+    private static ApiComment getSeeApiComment(ApiComment apiComment, String defaultName) {
+        Class<?> seeClass = apiComment.seeClass();
+        if (seeClass == null || seeClass == Object.class) {
+            return null;
+        }
+
+        String name = apiComment.seeField();
+        if (StringUtils.isEmpty(name)) {
+            name = defaultName;
+        }
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+
+        Field field = Classes.getField(name, seeClass);
+        if (field == null) {
+            return null;
+        }
+
+        ApiComment seeComment = field.getAnnotation(ApiComment.class);
+        return seeComment;
+    }
+
 }

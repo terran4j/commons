@@ -51,11 +51,11 @@ public class ApiCommentUtilsTest {
     @RequestMapping(value = "/api/v1/demo")
     public static class MyController {
 
-        @RequestMapping(value = "/user/{id}")
+        @RequestMapping(value = "/user/{userId}")
         public void updateUser(
-                @ApiComment(see = MyObject.class)
-                @PathVariable("id") Long userId,
-                @ApiComment(see = MyObject.class)
+                @ApiComment(seeClass = MyObject.class, seeField = "id")
+                @PathVariable("userId") Long userId,
+                @ApiComment(seeClass = MyObject.class)
                 @RequestParam("name") Integer userName) {
         }
     }
@@ -72,14 +72,29 @@ public class ApiCommentUtilsTest {
         Assert.assertEquals("terran4j", params.get(1).getSample().toString());
     }
 
+    public class AnotherObject {
+
+        @ApiComment(seeClass = MyObject.class)
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
     @Test
     public void testGetComment() throws Exception {
-        Field field = Classes.getField("id", MyObject.class);
+        String fieldName = "name";
+        Field field = Classes.getField(fieldName, AnotherObject.class);
         ApiComment apiComment = field.getAnnotation(ApiComment.class);
-        String comment = ApiCommentUtils.getComment(apiComment, "id");
-        Assert.assertEquals("用户id", comment);
-        String sample = ApiCommentUtils.getSample(apiComment, "id");
-        Assert.assertEquals("123", sample);
+        String comment = ApiCommentUtils.getComment(apiComment, fieldName);
+        Assert.assertEquals("用户名", comment);
+        String sample = ApiCommentUtils.getSample(apiComment, fieldName);
+        Assert.assertEquals("terran4j", sample);
     }
 
 }

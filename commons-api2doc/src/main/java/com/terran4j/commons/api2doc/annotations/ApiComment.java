@@ -20,6 +20,8 @@ public @interface ApiComment {
 
 	String sample() default "";
 
-	Class<?> see() default Object.class;
+	Class<?> seeClass() default Object.class;
+
+	String seeField() default "";
 
 }
