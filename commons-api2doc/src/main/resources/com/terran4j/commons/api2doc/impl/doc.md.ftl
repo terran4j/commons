@@ -1,6 +1,6 @@
 
 
-<#if doc.comment??>
+<#if doc.comment?? && doc.comment!="">
 **API简介** 
 - ${doc.comment}
 </#if>
@@ -36,7 +36,7 @@
 </#list>
 </#if>
 
-<#if docURL ??>
+<#if docURL??>
 **URL示例**
  - [${docURL}](${docURL})
 </#if>

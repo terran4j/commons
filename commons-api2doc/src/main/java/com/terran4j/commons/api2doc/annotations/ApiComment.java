@@ -16,8 +16,10 @@ import java.lang.annotation.Target;
 })
 public @interface ApiComment {
 
-	String value();
+	String value() default "";
 
 	String sample() default "";
+
+	Class<?> see() default Object.class;
 
 }

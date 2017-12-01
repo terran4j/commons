@@ -1,6 +1,5 @@
 package com.terran4j.demo.commons.api2doc;
 
-import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.restpack.RestPackIgnore;
 
@@ -8,11 +7,11 @@ import java.util.Date;
 
 public class DemoUser {
 
-    @ApiComment(value = "账号id", sample = "123")
+    @ApiComment(value = "用户id", sample = "123")
     private Long id;
 
-    @ApiComment(value = "账号用户名", sample = "terran4j")
-    private String username;
+    @ApiComment(value = "用户名", sample = "terran4j")
+    private String name;
 
     @ApiComment(value = "账号密码", sample = "sdfi23skvs")
     private String password;
@@ -59,12 +58,12 @@ public class DemoUser {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {

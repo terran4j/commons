@@ -184,10 +184,11 @@ public class Api2DocCollector implements BeanPostProcessor {
 
 		// API 组的注释。
 		ApiComment apiComment = clazz.getAnnotation(ApiComment.class);
-		if (apiComment != null) {
-			String commentText = Api2DocUtils.getComment(apiComment);
-			folder.setComment(commentText);
-		}
+		folder.setComment(ApiCommentUtils.getComment(apiComment, null));
+//		if (apiComment != null) {
+//			String commentText = Api2DocUtils.getComment(apiComment);
+//			folder.setComment(commentText);
+//		}
 
 		// API 组的路径前缀。
 		String[] basePaths = getPath(classMapping);
@@ -257,16 +258,16 @@ public class Api2DocCollector implements BeanPostProcessor {
 		doc.setName(name);
 
 		ApiComment apiComment = method.getAnnotation(ApiComment.class);
-		if (apiComment != null && StringUtils.hasText(apiComment.value())) {
-			doc.setComment(Api2DocUtils.getComment(apiComment));
-		}
-		if (apiComment != null && StringUtils.hasText(apiComment.sample())) {
-			Class<?> clazz = method.getDeclaringClass();
-			String sample = Api2DocUtils.getSample(apiComment, clazz);
-			if (StringUtils.hasText(sample)) {
-				doc.setSample(sample);
-			}
-		}
+        doc.setComment(ApiCommentUtils.getComment(apiComment, name));
+		doc.setSample(ApiCommentUtils.getSample(apiComment, name));
+
+//		if (apiComment != null && StringUtils.hasText(apiComment.sample())) {
+//			Class<?> clazz = method.getDeclaringClass();
+//			String sample = Api2DocUtils.getSample(apiComment, clazz);
+//			if (StringUtils.hasText(sample)) {
+//				doc.setSample(sample);
+//			}
+//		}
 
 		String[] paths = getPath(mapping);
 		paths = combine(basePaths, paths);
@@ -383,15 +384,16 @@ public class Api2DocCollector implements BeanPostProcessor {
 		apiParamObject.setId(name);
 
 		ApiComment apiComment = param.getAnnotation(ApiComment.class);
-		if (apiComment != null && StringUtils.hasText(apiComment.value())) {
-			String commentText = Api2DocUtils.getComment(apiComment);
-			apiParamObject.setComment(commentText);
-		}
-		if (apiComment != null && StringUtils.hasText(apiComment.sample())) {
-			if (StringUtils.hasText(apiComment.sample())) {
-				apiParamObject.setSample(apiComment.sample());
-			}
-		}
+		ApiCommentUtils.setApiComment(apiComment, apiParamObject);
+//		if (apiComment != null && StringUtils.hasText(apiComment.value())) {
+//			String commentText = Api2DocUtils.getComment(apiComment);
+//			apiParamObject.setComment(commentText);
+//		}
+//		if (apiComment != null && StringUtils.hasText(apiComment.sample())) {
+//			if (StringUtils.hasText(apiComment.sample())) {
+//				apiParamObject.setSample(apiComment.sample());
+//			}
+//		}
 
 		Class<?> paramType = param.getType();
 		apiParamObject.setSourceType(paramType);

@@ -202,11 +202,9 @@ public class Api2DocObjectFactory {
 
         Object fieldValue = null;
         if (fieldDataType.isSimpleType()) {
-            String defaultValue = null;
+
             ApiComment apiComment = field.getAnnotation(ApiComment.class);
-            if (apiComment != null) {
-                defaultValue = apiComment.sample();
-            }
+            String defaultValue = ApiCommentUtils.getSample(apiComment, fieldName);
             fieldValue = createBean(fieldClass, defaultValue, classStack);
 
             Class<?> paramType = setMethod.getParameterTypes()[0];
@@ -217,7 +215,7 @@ public class Api2DocObjectFactory {
             int size = 1;
             ApiComment apiComment = field.getAnnotation(ApiComment.class);
             if (apiComment != null) {
-                String sizeText = apiComment.sample();
+                String sizeText = ApiCommentUtils.getSample(apiComment, field.getName());
                 if (StringUtils.hasText(sizeText)) {
                     try {
                         size = Integer.parseInt(sizeText);

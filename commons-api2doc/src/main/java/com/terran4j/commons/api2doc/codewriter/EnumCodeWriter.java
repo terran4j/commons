@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import com.terran4j.commons.api2doc.impl.Api2DocUtils;
+import com.terran4j.commons.api2doc.impl.ApiCommentUtils;
 import com.terran4j.commons.api2doc.impl.FlexibleString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,9 +79,13 @@ public class EnumCodeWriter {
 				continue;
 			}
 			ApiComment apiComment = field.getAnnotation(ApiComment.class);
-			if (apiComment != null && StringUtils.hasText(apiComment.value())) {
-                comment = new FlexibleString(apiComment.value().trim()).javadoc(1);
-			}
+			comment = ApiCommentUtils.getComment(apiComment, field.getName());
+			if (comment != null) {
+                comment = new FlexibleString(comment).javadoc(1);
+            }
+//			if (apiComment != null && StringUtils.hasText(apiComment.value())) {
+//                comment = new FlexibleString(apiComment.value().trim()).javadoc(1);
+//			}
 			enumInfo.setComment(comment);
 			
 			enumInfos.add(enumInfo);

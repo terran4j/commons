@@ -4,6 +4,7 @@ import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.controller.ApiObjectComparator;
 import com.terran4j.commons.api2doc.impl.Api2DocUtils;
+import com.terran4j.commons.api2doc.impl.ApiCommentUtils;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.value.KeyedList;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -129,10 +130,11 @@ public class ApiResultObject extends ApiObject {
                 continue;
             }
             ApiComment comment = field.getAnnotation(ApiComment.class);
-            String value = "";
-            if (comment != null && StringUtils.hasText(comment.value())) {
-                value = Api2DocUtils.getComment(comment);
+            String value = ApiCommentUtils.getComment(comment, field.getName());
+            if (value == null) {
+                value = "";
             }
+
             if (sb.length() > 0) {
                 sb.append("\n");
             }
@@ -289,24 +291,27 @@ public class ApiResultObject extends ApiObject {
 
                 Api2Doc childApi2Doc = null;
                 ApiComment childApiComment = null;
+                String childName = null;
                 Field field = Classes.getField(id, elementType);
                 if (field != null) {
                     childApiComment = field.getAnnotation(ApiComment.class);
                     childApi2Doc = field.getAnnotation(Api2Doc.class);
+                    childName = field.getName();
                 } else {
                     childApiComment = subMethod.getAnnotation(ApiComment.class);
                     childApi2Doc = subMethod.getAnnotation(Api2Doc.class);
+                    childName = subMethod.getName();
                 }
 
-                String comment = "";
-                if (childApiComment != null && StringUtils.hasText(childApiComment.value())) {
-                    comment = Api2DocUtils.getComment(childApiComment);
+                String comment = ApiCommentUtils.getComment(childApiComment, childName);
+                if (comment == null) {
+                    comment = "";
                 }
                 childPropResult.insertComment(comment);
 
-                String sample = "";
-                if (childApiComment != null && StringUtils.hasText(childApiComment.sample())) {
-                    sample = childApiComment.sample();
+                String sample = ApiCommentUtils.getSample(childApiComment, childName);
+                if (sample == null) {
+                    sample = "";
                 }
                 childPropResult.setSample(sample);
 

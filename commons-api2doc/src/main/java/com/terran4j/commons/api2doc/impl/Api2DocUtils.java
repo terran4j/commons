@@ -3,6 +3,7 @@ package com.terran4j.commons.api2doc.impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.domain.ApiDocObject;
+import com.terran4j.commons.api2doc.domain.ApiObject;
 import com.terran4j.commons.api2doc.domain.ApiParamLocation;
 import com.terran4j.commons.api2doc.domain.ApiParamObject;
 import com.terran4j.commons.restpack.RestPackIgnore;
@@ -108,43 +109,55 @@ public class Api2DocUtils {
         return docURL;
     }
 
-    private static String encode(String str) {
+    private static String encode(String text) {
         try {
-            return URLEncoder.encode(str, Encoding.UTF8.getName());
+            return URLEncoder.encode(text, Encoding.UTF8.getName());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static final String getComment(ApiComment apiComment) {
-        String comment = apiComment.value();
-        if (StringUtils.isEmpty(comment)) {
-            return null;
-        }
-        return comment.trim();
-    }
-
-    public static final String getSample(ApiComment apiComment, Class<?> clazz) throws BusinessException {
-        String sample = apiComment.sample();
-        if (StringUtils.isEmpty(sample)) {
-            return null;
-        }
-        return sample.trim();
-
-//        if (!(sample.startsWith("@") && sample.endsWith("@"))) {
-//            return sample.replaceAll("\n", "<br/>");
+//    public static final void setApiComment(ApiComment apiComment, ApiObject apiObject) {
+//        if (apiComment != null && StringUtils.hasText(apiComment.value())) {
+//            String commentText = getComment(apiComment);
+//            apiObject.setComment(commentText);
 //        }
+//        if (apiComment != null && StringUtils.hasText(apiComment.sample())) {
+//            if (StringUtils.hasText(apiComment.sample())) {
+//                apiObject.setSample(apiComment.sample());
+//            }
+//        }
+//    }
 //
-//        String fileName = sample.substring(1, sample.length() - 1);
-//        String json = Strings.getString(clazz, fileName);
-//        if (StringUtils.isEmpty(json)) {
-//            throw new BusinessException(ErrorCodes.CONFIG_ERROR)
-//                    .put("package", clazz.getPackage().getName())
-//                    .put("fileName", fileName)
-//                    .setMessage("在包 ${package} 中找不到文件： ${fileName}");
+//    public static final String getComment(ApiComment apiComment) {
+//        String comment = apiComment.value();
+//        if (StringUtils.isEmpty(comment)) {
+//            return null;
 //        }
-//        return json;
-    }
+//        return comment.trim();
+//    }
+//
+//    public static final String getSample(ApiComment apiComment, Class<?> clazz) throws BusinessException {
+//        String sample = apiComment.sample();
+//        if (StringUtils.isEmpty(sample)) {
+//            return null;
+//        }
+//        return sample.trim();
+//
+////        if (!(sample.startsWith("@") && sample.endsWith("@"))) {
+////            return sample.replaceAll("\n", "<br/>");
+////        }
+////
+////        String fileName = sample.substring(1, sample.length() - 1);
+////        String json = Strings.getString(clazz, fileName);
+////        if (StringUtils.isEmpty(json)) {
+////            throw new BusinessException(ErrorCodes.CONFIG_ERROR)
+////                    .put("package", clazz.getPackage().getName())
+////                    .put("fileName", fileName)
+////                    .setMessage("在包 ${package} 中找不到文件： ${fileName}");
+////        }
+////        return json;
+//    }
 
     public static final Class<?> getArrayElementClass(Method method) {
 

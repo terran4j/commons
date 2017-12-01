@@ -72,6 +72,9 @@ public class FlexibleString {
 
     @Override
     public String toString() {
-        return getValue();
+        if (value.length() == 0) {
+            return "";
+        }
+        return value.toString();
     }
 }

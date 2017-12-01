@@ -144,6 +144,9 @@ public class DocPageBuilder {
             model.put("folderClasses", folderClasses);
 
             String content = freeMarker.build(mdTemplate, model);
+            if (log.isInfoEnabled()) {
+                log.info("\n{}", content);
+            }
             return content;
         } catch (IOException | TemplateException e) {
             throw new RuntimeException(e);

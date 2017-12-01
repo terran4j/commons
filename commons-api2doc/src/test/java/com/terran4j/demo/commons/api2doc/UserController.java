@@ -43,7 +43,7 @@ public class UserController {
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST)
     public DemoUser insert(
             @PathVariable("id") Long id,
-            @ApiComment(value = "用户名\n将显示在界面上", sample = "张三")
+            @ApiComment(see = DemoUser.class)
             @RequestParam("name") String name) {
         return Api2DocMocker.mockObject(DemoUser.class);
     }

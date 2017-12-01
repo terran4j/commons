@@ -87,13 +87,12 @@ public class RestPackUtils {
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
             String fieldName = propertyDescriptor.getName();
 
-            // 必须满足 JavaBean 规范,要有 setter / getter 方法。
+            // 必须满足 JavaBean 规范,要有 setter / getter 方法，还要有字段定义。
             Method getMethod = propertyDescriptor.getReadMethod();
             Method setMethod = propertyDescriptor.getWriteMethod();
             if (getMethod == null || setMethod == null) {
                 continue;
             }
-
             Field field = null;
             try {
                 field = beanClass.getDeclaredField(fieldName);
@@ -101,9 +100,6 @@ public class RestPackUtils {
                 // ignore it.
             }
             if (field == null) {
-                if (log.isInfoEnabled()) {
-                    log.info("在类 {} 中找不到字段：{} ", beanClass.getName(), fieldName);
-                }
                 continue;
             }
 
