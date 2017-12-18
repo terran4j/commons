@@ -16,7 +16,7 @@ class WelcomeController {
         if (StringUtils.isEmpty(welcomePath)) {
             return null
         }
-        var path = welcomePath!!.trim()
+        var path = welcomePath.trim()
         if ("/" == path) {
             return null
         }

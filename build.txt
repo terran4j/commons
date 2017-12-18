@@ -8,4 +8,4 @@ mvn clean install deploy -f commons/commons-http-invoker
 mvn clean install deploy -f commons/commons-reflux
 mvn clean install deploy -f commons/commons-test
 mvn clean install deploy -f commons/commons-dsql
-
+mvn clean install deploy -f commons/commons-website
