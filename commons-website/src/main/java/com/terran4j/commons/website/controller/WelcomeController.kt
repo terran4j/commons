@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 class WelcomeController {
 
-    @Value("\${server.website.welcome:}")
-    private val welcomePath: String = ""
+    @Value("\${server.website.welcome:index.html}")
+    private val welcomePath: String = "index.html"
 
     @RequestMapping("/")
     fun index(): String? {
