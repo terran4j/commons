@@ -1,7 +1,6 @@
 package com.terran4j.commons.website.config
 
 import com.terran4j.commons.website.controller.WelcomeController
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
@@ -10,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 open class WebsiteConfiguration : WebMvcConfigurerAdapter() {
 
-    @ConditionalOnProperty(name = ["server.website.welcome"])
     @Bean
     open fun welcomeController(): WelcomeController {
         return WelcomeController()

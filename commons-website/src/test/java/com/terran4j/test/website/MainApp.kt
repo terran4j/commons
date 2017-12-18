@@ -4,7 +4,6 @@ import com.terran4j.commons.website.config.WebsiteConfiguration
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Import
-import org.springframework.context.annotation.PropertySource
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
@@ -13,9 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody
 open class HelloController {
 
     /**
-     * http://localhost:8080/demo/hello.do
+     * http://localhost:8080
      */
-    @RequestMapping("/demo/hello.do")
+    @RequestMapping("/index.html")
     @ResponseBody
     fun hello(): String {
         return "hello, world"
@@ -24,7 +23,6 @@ open class HelloController {
 }
 
 @Import(WebsiteConfiguration::class)
-@PropertySource(value = ["classpath:demo-service-logs.properties"])
 @SpringBootApplication
 open class MainApp {
 }
