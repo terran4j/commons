@@ -1,5 +1,7 @@
 package com.terran4j.common.util;
 
+import java.util.Random;
+
 /**
  * Hello world!
  *

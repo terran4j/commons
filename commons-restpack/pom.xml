@@ -22,6 +22,10 @@
             <groupId>com.github.terran4j</groupId>
             <artifactId>terran4j-commons-util</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.terran4j</groupId>
+            <artifactId>terran4j-commons-website</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.aspectj</groupId>

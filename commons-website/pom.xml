@@ -3,48 +3,28 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>terran4j-commons-api2page</artifactId>
-    <packaging>jar</packaging>
-    <name>terran4j-commons-api2page</name>
-    <url>https://github.com/terran4j/commons</url>
-
     <parent>
         <artifactId>terran4j-commons-parent</artifactId>
         <groupId>com.github.terran4j</groupId>
         <version>Virgo.0.0-SNAPSHOT</version>
         <relativePath>../commons-parent/pom.xml</relativePath>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>terran4j-commons-website</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <!-- 模板引擎 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
-
-        <!-- terran4j 工具类库。 -->
-        <dependency>
-            <groupId>com.github.terran4j</groupId>
-            <artifactId>terran4j-commons-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.terran4j</groupId>
-            <artifactId>terran4j-commons-restpack</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.terran4j</groupId>
-            <artifactId>terran4j-commons-api2doc</artifactId>
-        </dependency>
-
-        <!-- aspectj -->
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-        </dependency>
     </dependencies>
-
+    
     <build>
         <resources>
             <resource>

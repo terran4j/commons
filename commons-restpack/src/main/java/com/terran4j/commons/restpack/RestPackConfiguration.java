@@ -30,10 +30,6 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(RestPackConfiguration.class);
 
-    private static final String PATH_PATERRN = "/**";
-
-    private static final String PATH_LOCATION = "classpath:/static/";
-
     private static ObjectMapper objectMapper = null;
 
     public static final ObjectMapper getObjectMapper() {
@@ -121,13 +117,4 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
         converters.add(0, restPackConverter);
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        /**
-         * 一旦启用了 @EnableWebMvc，则 Spring Boot 中内置的 MVC 规则就不好使了。
-         * 因此这里手工添加静态资源映射关系。
-         **/
-        registry.addResourceHandler(PATH_PATERRN).addResourceLocations(PATH_LOCATION);
-        super.addResourceHandlers(registry);
-    }
 }

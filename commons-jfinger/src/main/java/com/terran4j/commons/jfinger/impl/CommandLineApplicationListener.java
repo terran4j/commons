@@ -42,8 +42,6 @@ public class CommandLineApplicationListener implements ApplicationListener<Conte
 	private CommandLineService service = null;
 	
 	private Thread thread = null;
-	
-	
 
 	public CommandLineApplicationListener() {
 		super();
