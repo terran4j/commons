@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class DemoUserController {
 
     // 列表页面。
-    @PageList(value = "/abc/scholl/user.html", title = "用户列表", tableButtons = {
+    @PageList(value = "/abc/users/list.html", title = "用户列表", tableButtons = {
             @Button(name = "创建", invoke = "preAddUser")
     }, rowButtons = {
             @Button(name = "编辑", invoke = "preEditUser"),

@@ -5,17 +5,16 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>terran4j-commons-dsql</artifactId>
-    <packaging>jar</packaging>
-    <name>terran4j-commons-dsql</name>
-    <url>https://github.com/terran4j/commons</url>
-
     <parent>
         <groupId>com.github.terran4j</groupId>
         <artifactId>terran4j-commons-parent</artifactId>
         <version>Virgo.0.0-SNAPSHOT</version>
-        <relativePath>../commons-parent/pom.xml</relativePath>
     </parent>
+
+    <artifactId>terran4j-commons-dsql</artifactId>
+    <packaging>jar</packaging>
+    <name>terran4j-commons-dsql</name>
+    <url>https://github.com/terran4j/commons</url>
 
     <dependencies>
         <!-- 引入JPA -->
