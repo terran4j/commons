@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.github.terran4j</groupId>
         <artifactId>terran4j-commons-parent</artifactId>
-        <version>Virgo.0.0-SNAPSHOT</version>
+        <version>Virgo.0.1</version>
     </parent>
 
     <artifactId>terran4j-commons-api2page</artifactId>

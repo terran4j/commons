@@ -17,7 +17,7 @@ public class Enums {
         Object enumArray = null;
         try {
             Method method = enumType.getMethod("values");
-            enumArray = method.invoke(null,null);
+            enumArray = method.invoke(null,new Object[0]);
             if (enumArray == null || !enumArray.getClass().isArray()) {
                 return null;
             }

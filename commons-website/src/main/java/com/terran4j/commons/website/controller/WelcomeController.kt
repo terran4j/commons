@@ -5,12 +5,19 @@ import org.springframework.stereotype.Controller
 import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.RequestMapping
 
+/**
+ *  欢迎页
+ * @author terran4j
+ */
 @Controller
-class WelcomeController {
+open class WelcomeController {
 
     @Value("\${server.website.welcome:index.html}")
     private val welcomePath: String = "index.html"
 
+    /**
+     * 欢迎页
+     */
     @RequestMapping("/")
     fun index(): String? {
         if (StringUtils.isEmpty(welcomePath)) {

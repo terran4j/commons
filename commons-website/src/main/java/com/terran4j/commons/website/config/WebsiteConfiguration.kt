@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
+/**
+ * website 模块的配置类。
+ * @author terran4j
+ */
 @Configuration
 open class WebsiteConfiguration : WebMvcConfigurerAdapter() {
 
@@ -25,9 +29,9 @@ open class WebsiteConfiguration : WebMvcConfigurerAdapter() {
 
     companion object {
 
-        private val PATH_PATTERN = "/**"
+        private const val PATH_PATTERN = "/**"
 
-        private val PATH_LOCATION = "classpath:/static/"
+        private const val PATH_LOCATION = "classpath:/static/"
     }
 
 }
