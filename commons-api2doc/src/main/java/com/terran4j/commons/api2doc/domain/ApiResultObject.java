@@ -15,7 +15,10 @@ import org.springframework.util.StringUtils;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 记录所有的结果字段，它是一个复合型
@@ -181,13 +184,7 @@ public class ApiResultObject extends ApiObject {
 
         // 基本类型，直接处理。
         if (dataType.isSimpleType()) {
-            ApiResultObject result = new ApiResultObject();
-            result.setSourceType(clazz);
-            result.setDataType(dataType);
-            result.setTypeName(typeName);
-            result.insertComment(getEnumComment(clazz));
-            result.setId("");
-            return result;
+            return createSimple(clazz, clazz, dataType, typeName);
         }
 
         // 子类型。
@@ -195,8 +192,6 @@ public class ApiResultObject extends ApiObject {
 
         // 数组类型，找到它的元素的具体类型，然后处理具体类型。
         if (dataType.isArrayType()) {
-//            typeName = typeName + "[]";
-
             elementType = Api2DocUtils.getArrayElementClass(method);
             if (elementType == null) {
                 log.warn("Can't find element class by method: {}", method);
@@ -208,13 +203,8 @@ public class ApiResultObject extends ApiObject {
 
             // 数组类型，但元素是基本类型的，也直接处理。
             if (elementDataType != null && elementDataType.isSimpleType()) {
-                ApiResultObject result = new ApiResultObject();
-                result.setSourceType(elementType);
-                result.setDataType(elementDataType);
-                result.setTypeName(typeName);
-                result.insertComment(getEnumComment(clazz));
-                result.setId("");
-                return result;
+                return createSimple(elementType, clazz,
+                        elementDataType, typeName);
             }
         }
 
@@ -266,7 +256,7 @@ public class ApiResultObject extends ApiObject {
             Method subMethod = prop.getReadMethod();
 
             // 处理子类型。
-            ApiResultObject childPropResult = null;
+            ApiResultObject childPropResult;
             try {
                 childPropResult = parseResultType(subMethod, totalResults);
             } catch (Exception e) {
@@ -289,9 +279,9 @@ public class ApiResultObject extends ApiObject {
                 ApiDataType childPropDataType = ApiDataType.toDataType(childPropClass);
                 childPropResult.setDataType(childPropDataType);
 
-                Api2Doc childApi2Doc = null;
-                ApiComment childApiComment = null;
-                String childName = null;
+                Api2Doc childApi2Doc;
+                ApiComment childApiComment;
+                String childName;
                 Field field = Classes.getField(id, elementType);
                 if (field != null) {
                     childApiComment = field.getAnnotation(ApiComment.class);
@@ -346,6 +336,18 @@ public class ApiResultObject extends ApiObject {
         }
         String groupId = ApiDocUtils.getId(clazz);
         return groupId;
+    }
+
+    private static ApiResultObject createSimple(
+            Class<?> sourceType, Class<?> clazz,
+            ApiDataType dataType, String typeName) {
+        ApiResultObject result = new ApiResultObject();
+        result.setSourceType(sourceType);
+        result.setDataType(dataType);
+        result.setTypeName(typeName);
+        result.insertComment(getEnumComment(clazz));
+        result.setId("");
+        return result;
     }
 
 

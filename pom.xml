@@ -5,7 +5,7 @@
 
     <groupId>com.github.terran4j</groupId>
     <artifactId>terran4j-commons-parent</artifactId>
-    <version>Virgo.0.1</version>
+    <version>Virgo.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>terran4j-commons-parent</name>
     <url>https://github.com/terran4j/commons</url>
@@ -22,13 +22,13 @@
         <module>commons-restpack</module>
         <module>commons-api2doc</module>
         <module>commons-hedis</module>
-        <!--
+
         <module>commons-jfinger</module>
         <module>commons-http-invoker</module>
          <module>commons-test</module>
         <module>commons-dsql</module>
         <module>commons-reflux</module>
-        -->
+        <!-- -->
     </modules>
 
     <properties>
@@ -37,7 +37,7 @@
         <java.version>1.8</java.version>
         <jackson.version>2.8.8</jackson.version>
         <shiro.version>1.2.3</shiro.version>
-        <terran4j.commons.version>Virgo.0.1</terran4j.commons.version>
+        <terran4j.commons.version>Virgo.0.2-SNAPSHOT</terran4j.commons.version>
         <kotlin.version>1.2.20</kotlin.version>
     </properties>
 
@@ -374,12 +374,6 @@
             <name>terran4j-snapshots</name>
             <url>${terran4j.snapshots.url}</url>
         </snapshotRepository>
-        <!--
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        -->
 
         <!-- 正式版本，部署到中央仓库 -->
         <repository>
@@ -448,6 +442,7 @@
                 构建 snapshot 版本时不要用这些插件；
                 需要发布 release 版时再用。
             -->
+            <!--
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -486,6 +481,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
         </plugins>
     </build>
 

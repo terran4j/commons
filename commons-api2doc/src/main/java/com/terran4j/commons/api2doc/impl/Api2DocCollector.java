@@ -116,7 +116,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 			return null;
 		}
 		
-		List<Method> api2DocMethos = new ArrayList<>();
+		List<Method> ali2DocMethods = new ArrayList<>();
 		for (Method method : methods) {
 			Api2Doc api2Doc = method.getAnnotation(Api2Doc.class);
 			if (classApi2Doc == null && api2Doc == null) {
@@ -127,9 +127,9 @@ public class Api2DocCollector implements BeanPostProcessor {
 				// 本方法的文档被忽略。
 				continue;
 			}
-			api2DocMethos.add(method);
+			ali2DocMethods.add(method);
 		}
-		if (classApi2Doc == null && api2DocMethos.size() == 0) {
+		if (classApi2Doc == null && ali2DocMethods.size() == 0) {
 			// 整个类中的方法，都忽略从 API 生成文档，不用收集。
 			if (log.isInfoEnabled()) {
 				log.info("all method were ignored, no need to get, beanName = {}", beanName);
@@ -195,7 +195,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 
 		// 根据方法生成 API 文档。
 		List<ApiDocObject> docs = new ArrayList<>();
-		for (Method method : api2DocMethos) {
+		for (Method method : ali2DocMethods) {
 			ApiDocObject doc = getApiDoc(method, basePaths, beanName, classApi2Doc);
 			if (doc == null) {
 				continue;
@@ -462,15 +462,17 @@ public class Api2DocCollector implements BeanPostProcessor {
 
 	private String[] getPath(RequestMapping mapping) {
 		Set<String> allPaths = new HashSet<>();
-		
-		String[] paths = mapping.path();
-		if (paths != null && paths.length > 0) {
-			allPaths.addAll(Arrays.asList(paths));
-		}
 
-		paths = mapping.value();
-		if (paths != null && paths.length > 0) {
-			allPaths.addAll(Arrays.asList(paths));
+		if (mapping != null) {
+			String[] paths = mapping.path();
+			if (paths != null && paths.length > 0) {
+				allPaths.addAll(Arrays.asList(paths));
+			}
+
+			paths = mapping.value();
+			if (paths != null && paths.length > 0) {
+				allPaths.addAll(Arrays.asList(paths));
+			}
 		}
 		
 		return allPaths.toArray(new String[allPaths.size()]);
