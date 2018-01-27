@@ -33,11 +33,11 @@ import java.util.UUID;
 @Component
 public class RestPackAspect {
 
-    private static final Logger log = LoggerFactory.getLogger(RestPackAspect.class);
-
     private static final ThreadLocal<String> bufferRequestId = new ThreadLocal<>();
 
     private static final ThreadLocal<Long> bufferBeginTime = new ThreadLocal<>();
+
+    private static final ThreadLocal<Logger> bufferLog = new ThreadLocal<>();
 
     public static final boolean isRestPack() {
         return bufferRequestId.get() != null;
@@ -49,6 +49,10 @@ public class RestPackAspect {
 
     public static final Long getBeginTime() {
         return bufferBeginTime.get();
+    }
+
+    public static final Logger getLog() {
+        return bufferLog.get();
     }
 
     public RestPackAspect() {
@@ -82,7 +86,25 @@ public class RestPackAspect {
         String requestPath = request.getRequestURI();
         MDC.put("requestId", requestId);
         MDC.put("requestPath", requestPath);
-        if (log.isInfoEnabled()) {
+
+        // 写入 ThreadLocal 数据之前，先清除以前的历史数据（如果有的话）。
+        clearThreadLocal();
+
+        // 只有类上或父类上有 @HttpResultPackController 注解的，才需要打包返回结果。
+        Object target = point.getTarget();
+        Class<?> clazz = Classes.getTargetClass(target);
+        RestPackController pack = clazz.getAnnotation(RestPackController.class);
+        if (pack != null) {
+            long beginTime = System.currentTimeMillis();
+            bufferBeginTime.set(beginTime);
+            bufferRequestId.set(requestId);
+
+            Logger log = LoggerFactory.getLogger(clazz);
+            bufferLog.set(log);
+        }
+
+        Logger log = bufferLog.get();
+        if (log != null && log.isInfoEnabled()) {
             Map<String, Object> params = new HashMap<>();
             Enumeration<String> it = request.getParameterNames();
             while (it.hasMoreElements()) {
@@ -96,32 +118,21 @@ public class RestPackAspect {
                     params.put(key, values);
                 }
             }
-            log.info("request '{}' begin, params:\n{}", requestPath, Strings.toString(params));
-        }
-
-        // 写入 ThreadLocal 数据之前，先清除以前的历史数据（如果有的话）。
-        clearThreadLocal();
-
-        // 只有类上或父类上有 @HttpResultPackController 注解的，才需要打包返回结果。
-        Object target = point.getTarget();
-        Class<?> clazz = Classes.getTargetClass(target);
-        RestPackController pack = clazz.getAnnotation(RestPackController.class);
-        if (pack != null) {
-            long beginTime = System.currentTimeMillis();
-            bufferBeginTime.set(beginTime);
-            bufferRequestId.set(requestId);
+            log.info("request '{}' begin, params:\n{}",
+                    requestPath, Strings.toString(params));
         }
     }
 
     /**
      * 记录异常对象，以便于后续处理转化成<code>HttpResult</code>对象。
-     *
      * @param e 异常对象
      */
     @AfterThrowing(pointcut = "httpResultPackAspect()", throwing = "e")
     public void handleThrowing(Exception e) {
-        if (log.isInfoEnabled()) {
-            log.info("handle throwed exception[{}]: {}", e.getClass().getName(), e.getMessage());
+        Logger log = bufferLog.get();
+        if (log != null && log.isInfoEnabled()) {
+            log.info("handle throw exception[{}]: {}",
+                    e.getClass().getName(), e.getMessage());
         }
         ExceptionHolder.set(e);
     }
@@ -134,5 +145,6 @@ public class RestPackAspect {
         bufferRequestId.remove();
         bufferBeginTime.remove();
         ExceptionHolder.remove();
+        bufferLog.remove();
     }
 }

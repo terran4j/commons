@@ -27,7 +27,7 @@ import com.terran4j.commons.util.error.CommonErrorCode;
 @ControllerAdvice
 public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 
-	private static final Logger log = LoggerFactory.getLogger(RestPackAdvice.class);
+//	private static final Logger log = LoggerFactory.getLogger(RestPackAdvice.class);
 
 	@Override
 	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -58,12 +58,14 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 			}
 		}
 		setHttpResult(result);
+
+		Logger log = RestPackAspect.getLog();
+		if (log != null && log.isInfoEnabled()) {
+			log.info("request '{}' end, response:\n{}", MDC.get("requestPath"), result);
+		}
 		
 		RestPackAspect.clearThreadLocal();
 
-		if (log.isInfoEnabled()) {
-			log.info("request '{}' end, response:\n{}", MDC.get("requestPath"), result);
-		}
 		return result;
 	}
 	
@@ -90,16 +92,24 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 			MissingServletRequestParameterException me = (MissingServletRequestParameterException) e;
 			String paramKey = me.getParameterName();
 			String paramType = me.getParameterType();
-			if (log.isInfoEnabled()) {
+
+            Logger log = RestPackAspect.getLog();
+            if (log != null && log.isInfoEnabled()) {
 				log.info("miss param, key = {}, type = {}", paramKey, paramType);
 			}
-			return new BusinessException(ErrorCodes.NULL_PARAM).put("key", paramKey);
+
+			return new BusinessException(ErrorCodes.NULL_PARAM)
+                    .put("key", paramKey);
 		}
 
 		// Error 没有办法拦截，这里只能日志记录异常信息。
 		if (e instanceof Error) {
 			e.printStackTrace();
-			log.error(e.getMessage(), e);
+
+            Logger log = RestPackAspect.getLog();
+            if (log != null) {
+                log.error(e.getMessage(), e);
+            }
 		}
 
 		return new BusinessException(CommonErrorCode.UNKNOWN_ERROR, e);
