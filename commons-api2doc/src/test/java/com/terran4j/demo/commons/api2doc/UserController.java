@@ -13,6 +13,7 @@ import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 
 @Api2Doc(id = "users", name = "用户相关接口", order = 0)
+@ApiComment(seeClass = DemoUser.class)
 @RestController
 @RequestMapping(value = "/api2doc/demo")
 public class UserController {
@@ -42,7 +43,6 @@ public class UserController {
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST)
     public DemoUser insert(
             @PathVariable("id") Long id,
-            @ApiComment(seeClass = DemoUser.class)
             @RequestParam("name") String name) {
         return Api2DocMocker.mockObject(DemoUser.class);
     }
