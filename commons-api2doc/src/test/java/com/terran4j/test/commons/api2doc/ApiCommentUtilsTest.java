@@ -91,9 +91,11 @@ public class ApiCommentUtilsTest {
         String fieldName = "name";
         Field field = Classes.getField(fieldName, AnotherObject.class);
         ApiComment apiComment = field.getAnnotation(ApiComment.class);
-        String comment = ApiCommentUtils.getComment(apiComment, fieldName);
+        String comment = ApiCommentUtils.getComment(
+                apiComment, null, fieldName);
         Assert.assertEquals("用户名", comment);
-        String sample = ApiCommentUtils.getSample(apiComment, fieldName);
+        String sample = ApiCommentUtils.getSample(
+                apiComment, null, fieldName);
         Assert.assertEquals("terran4j", sample);
     }
 

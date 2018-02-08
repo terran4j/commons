@@ -79,7 +79,8 @@ public class EnumCodeWriter {
 				continue;
 			}
 			ApiComment apiComment = field.getAnnotation(ApiComment.class);
-			comment = ApiCommentUtils.getComment(apiComment, field.getName());
+			comment = ApiCommentUtils.getComment(
+					apiComment, null, field.getName());
 			if (comment != null) {
                 comment = new FlexibleString(comment).javadoc(1);
             }

@@ -133,7 +133,8 @@ public class ApiResultObject extends ApiObject {
                 continue;
             }
             ApiComment comment = field.getAnnotation(ApiComment.class);
-            String value = ApiCommentUtils.getComment(comment, field.getName());
+            String value = ApiCommentUtils.getComment(
+                    comment, null, field.getName());
             if (value == null) {
                 value = "";
             }
@@ -293,13 +294,20 @@ public class ApiResultObject extends ApiObject {
                     childName = subMethod.getName();
                 }
 
-                String comment = ApiCommentUtils.getComment(childApiComment, childName);
+                ApiComment elementApiComment = elementType
+                        .getAnnotation(ApiComment.class);
+                Class<?> defaultSeeClass = ApiCommentUtils
+                        .getDefaultSeeClass(elementApiComment, null);
+
+                String comment = ApiCommentUtils.getComment(
+                        childApiComment, defaultSeeClass, childName);
                 if (comment == null) {
                     comment = "";
                 }
                 childPropResult.insertComment(comment);
 
-                String sample = ApiCommentUtils.getSample(childApiComment, childName);
+                String sample = ApiCommentUtils.getSample(
+                        childApiComment, defaultSeeClass, childName);
                 if (sample == null) {
                     sample = "";
                 }

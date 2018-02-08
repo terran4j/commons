@@ -154,7 +154,7 @@ public class Api2DocObjectFactory {
     }
 
     private static void fillField(String name, Object bean, Stack<Class<?>> classStack) {
-        Class<?> clazz = bean.getClass();
+        Class<?> clazz = Classes.getTargetClass(bean);
 
         PropertyDescriptor fieldProp = null;
         try {
@@ -172,6 +172,10 @@ public class Api2DocObjectFactory {
         if (Api2DocUtils.isFilter(fieldProp, clazz)) {
             return;
         }
+
+        ApiComment classApiComment = clazz.getAnnotation(ApiComment.class);
+        Class<?> defaultSeeClass = ApiCommentUtils.getDefaultSeeClass(
+                classApiComment, null);
 
         String fieldName = fieldProp.getName();
 
@@ -204,7 +208,8 @@ public class Api2DocObjectFactory {
         if (fieldDataType.isSimpleType()) {
 
             ApiComment apiComment = field.getAnnotation(ApiComment.class);
-            String defaultValue = ApiCommentUtils.getSample(apiComment, fieldName);
+            String defaultValue = ApiCommentUtils.getSample(
+                    apiComment, defaultSeeClass, fieldName);
             fieldValue = createBean(fieldClass, defaultValue, classStack);
 
             Class<?> paramType = setMethod.getParameterTypes()[0];
@@ -215,12 +220,14 @@ public class Api2DocObjectFactory {
             int size = 1;
             ApiComment apiComment = field.getAnnotation(ApiComment.class);
             if (apiComment != null) {
-                String sizeText = ApiCommentUtils.getSample(apiComment, field.getName());
+                String sizeText = ApiCommentUtils.getSample(
+                        apiComment, defaultSeeClass, field.getName());
                 if (StringUtils.hasText(sizeText)) {
                     try {
                         size = Integer.parseInt(sizeText);
                     } catch (Exception e) {
-                        log.warn("List 或 Array 类型的字段上，@ApiComment 注解的 sample 属性应该是数字" +
+                        log.warn("List 或 Array 类型的字段上，" +
+                                "@ApiComment 注解的 sample 属性应该是数字" +
                                 "（代表它在 mock 时元素的个数）, sample = {}", sizeText);
                     }
                 }

@@ -9,33 +9,50 @@ import java.lang.reflect.Field;
 
 public class ApiCommentUtils {
 
-    public static final void setApiComment(ApiComment apiComment, ApiObject apiObject) {
-        String comment = getComment(apiComment, apiObject.getId());
+
+    public static Class<?> getDefaultSeeClass(ApiComment apiComment,
+                                              Class<?> previousSeeClass) {
+        if (apiComment == null) {
+            return previousSeeClass;
+        }
+
+        Class<?> defaultSeeClass = apiComment.seeClass();
+        if (defaultSeeClass == Object.class) {
+            return previousSeeClass;
+        }
+
+        return defaultSeeClass;
+    }
+
+    public static final void setApiComment(ApiComment apiComment,
+                                           Class<?> defaultSeeClass, ApiObject apiObject) {
+        String comment = getComment(apiComment, defaultSeeClass, apiObject.getId());
         if (comment != null) {
             apiObject.setComment(comment);
         }
-        String sample = getSample(apiComment, apiObject.getId());
+        String sample = getSample(apiComment, defaultSeeClass, apiObject.getId());
         if (sample != null) {
             apiObject.setSample(sample);
         }
     }
 
-    public static final String getComment(ApiComment apiComment, String defaultName) {
-        if (apiComment == null) {
-            return null;
+    public static final String getComment(ApiComment apiComment,
+                                          Class<?> defaultSeeClass, String defaultName) {
+
+        if (apiComment != null) {
+            String comment = apiComment.value();
+            if (StringUtils.hasText(comment)) {
+                return comment.trim();
+            }
         }
 
-        String comment = apiComment.value();
-        if (StringUtils.hasText(comment)) {
-            return comment.trim();
-        }
-
-        ApiComment seeComment = getSeeApiComment(apiComment, defaultName);
+        ApiComment seeComment = getSeeApiComment(
+                apiComment, defaultSeeClass, defaultName);
         if (seeComment == null) {
             return null;
         }
 
-        comment = seeComment.value();
+        String comment = seeComment.value();
         if (StringUtils.hasText(comment)) {
             return comment.trim();
         }
@@ -43,22 +60,22 @@ public class ApiCommentUtils {
         return null;
     }
 
-    public static final String getSample(ApiComment apiComment, String defaultName) {
-        if (apiComment == null) {
-            return null;
+    public static final String getSample(ApiComment apiComment,
+                                         Class<?> defaultSeeClass, String defaultName) {
+        if (apiComment != null) {
+            String sample = apiComment.sample();
+            if (StringUtils.hasText(sample)) {
+                return sample.trim();
+            }
         }
 
-        String sample = apiComment.sample();
-        if (StringUtils.hasText(sample)) {
-            return sample.trim();
-        }
-
-        ApiComment seeComment = getSeeApiComment(apiComment, defaultName);
+        ApiComment seeComment = getSeeApiComment(
+                apiComment, defaultSeeClass, defaultName);
         if (seeComment == null) {
             return null;
         }
 
-        sample = seeComment.sample();
+        String sample = seeComment.sample();
         if (StringUtils.hasText(sample)) {
             return sample.trim();
         }
@@ -66,13 +83,24 @@ public class ApiCommentUtils {
         return null;
     }
 
-    private static ApiComment getSeeApiComment(ApiComment apiComment, String defaultName) {
-        Class<?> seeClass = apiComment.seeClass();
+    private static ApiComment getSeeApiComment(
+            ApiComment apiComment, Class<?> defaultSeeClass, String defaultName) {
+
+        Class<?> seeClass = null;
+        if (apiComment != null ) {
+            seeClass = apiComment.seeClass();
+        }
+        if (seeClass == null || seeClass == Object.class) {
+            seeClass = defaultSeeClass;
+        }
         if (seeClass == null || seeClass == Object.class) {
             return null;
         }
 
-        String name = apiComment.seeField();
+        String name = null;
+        if (apiComment != null) {
+            name = apiComment.seeField();
+        }
         if (StringUtils.isEmpty(name)) {
             name = defaultName;
         }
