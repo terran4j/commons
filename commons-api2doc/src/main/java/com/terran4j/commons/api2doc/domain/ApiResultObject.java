@@ -333,7 +333,7 @@ public class ApiResultObject extends ApiObject {
             }
         }
 
-        Collections.sort(result.getChildren(), new ApiObjectComparator());
+        Collections.sort(result.getChildren());
 
         return result;
     }

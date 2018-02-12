@@ -3,8 +3,9 @@ package com.terran4j.commons.api2doc.domain;
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.impl.FlexibleString;
 import com.terran4j.commons.util.Strings;
+import org.jetbrains.annotations.NotNull;
 
-public class ApiObject {
+public class ApiObject implements Comparable<ApiObject>{
 
     private String id;
 
@@ -65,4 +66,20 @@ public class ApiObject {
         return Strings.toString(this);
     }
 
+    @Override
+    public int compareTo(@NotNull ApiObject o) {
+        ApiObject o1 = this;
+        ApiObject o2 = o;
+
+        // 优先按用户指定排序。
+        if (o1.getOrder() < o2.getOrder()) {
+            return -1;
+        }
+        if (o1.getOrder() > o2.getOrder()) {
+            return 1;
+        }
+
+        // 其次按 id 字符串排序。
+        return o1.getId().compareTo(o2.getId());
+    }
 }

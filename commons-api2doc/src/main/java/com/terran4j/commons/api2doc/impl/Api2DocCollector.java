@@ -9,12 +9,14 @@ import com.terran4j.commons.api2doc.domain.*;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.value.KeyedList;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -22,7 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
@@ -34,6 +39,9 @@ import java.util.*;
 public class Api2DocCollector implements BeanPostProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(Api2DocCollector.class);
+
+    private LocalVariableTableParameterNameDiscoverer parameterNameDiscoverer
+            = new LocalVariableTableParameterNameDiscoverer();
 
     @Autowired
     private Api2DocService apiDocService;
@@ -211,7 +219,7 @@ public class Api2DocCollector implements BeanPostProcessor {
                 log.info("add doc: {}/{}", folder.getId(), docId);
             }
         }
-        Collections.sort(docs, new ApiObjectComparator());
+        Collections.sort(docs);
         folder.addDocs(docs);
 
         return folder;
@@ -271,22 +279,10 @@ public class Api2DocCollector implements BeanPostProcessor {
         doc.setMethods(mapping.method());
 
         // 收集参数信息。
-        Parameter[] params = method.getParameters();
-        if (params != null && params.length > 0) {
-            for (Parameter param : params) {
-                ApiParamObject apiParamObject = getParam(param, defaultSeeClass);
-                if (apiParamObject == null) {
-                    continue;
-                }
-
-                String paramId = apiParamObject.getId();
-                ApiParamObject existParam = doc.getParam(paramId);
-                if (existParam != null) {
-                    String msg = "参数id值重复： " + paramId + "，所在方法： " + method;
-                    throw new BeanDefinitionStoreException(msg);
-                }
-
-                doc.addParam(apiParamObject);
+        List<ApiParamObject> apiParams = toApiParams(method, defaultSeeClass);
+        if (apiParams != null && apiParams.size() > 0) {
+            for (ApiParamObject apiParam : apiParams) {
+                doc.addParam(apiParam);
             }
         }
 
@@ -339,6 +335,104 @@ public class Api2DocCollector implements BeanPostProcessor {
         return doc;
     }
 
+    public List<ApiParamObject> toApiParams(Method method, Class<?> defaultSeeClass) {
+        List<ApiParamObject> result = new ArrayList<>();
+        Set<String> paramIds = new HashSet<>();
+
+        Parameter[] params = method.getParameters();
+        if (params != null && params.length > 0) {
+            String[] paramNames = parameterNameDiscoverer.getParameterNames(method);
+            for (int i = 0; i < params.length; i++) {
+                Parameter param = params[i];
+
+                Class<?> paramClass = param.getType();
+                ApiComment paramClassComment = paramClass.getAnnotation(ApiComment.class);
+                if (paramClassComment != null) {
+                    // 从参数的类的属性中获取注释信息。
+                    List<ApiParamObject> paramsFromClass = toApiParams(
+                            paramClass, defaultSeeClass);
+                    for (ApiParamObject paramFromClass : paramsFromClass) {
+                        if (paramIds.contains(paramFromClass.getId())) {
+                            continue;
+                        }
+                        paramIds.add(paramFromClass.getId());
+                        result.add(paramFromClass);
+                    }
+                } else {
+                    // 从参数本身中获取注释信息。
+                    String paramName = null;
+                    if (paramNames != null) {
+                        paramName = paramNames[i];
+                    } else {
+                        paramName = param.getName();
+                    }
+
+                    ApiParamObject apiParamObject = toApiParam(param,
+                            paramName, param.getType(), defaultSeeClass);
+                    if (apiParamObject == null) {
+                        continue;
+                    }
+
+                    String paramId = apiParamObject.getId();
+                    if (paramIds.contains(paramId)) {
+                        String msg = "参数id值重复： " + paramId + "，所在方法： " + method;
+                        throw new BeanDefinitionStoreException(msg);
+                    }
+
+                    paramIds.add(paramId);
+                    result.add(apiParamObject);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 从类的属性中获取注释信息。
+     * @param beanClass
+     * @param defaultSeeClass
+     * @return
+     */
+    public List<ApiParamObject> toApiParams(Class<?> beanClass, Class<?> defaultSeeClass) {
+        List<ApiParamObject> result = new ArrayList<>();
+
+        PropertyDescriptor[] props = PropertyUtils.getPropertyDescriptors(beanClass);
+        if (props == null || props.length == 0) {
+            return result;
+        }
+
+        for (PropertyDescriptor prop : props) {
+            if (Api2DocUtils.isFilter(prop, beanClass)) {
+                continue;
+            }
+
+            String fieldName = prop.getName();
+
+            Method readMethod = prop.getReadMethod();
+            if (readMethod == null) {
+                continue;
+            }
+            Class<?> fieldType = readMethod.getReturnType();
+
+            Field field = Classes.getField(fieldName, beanClass);
+            if (field == null) {
+                continue;
+            }
+
+            ApiParamObject param = toApiParam(field, fieldName, fieldType,
+                    defaultSeeClass);
+            if (param == null) {
+                continue;
+            }
+
+            result.add(param);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
     ApiErrorObject getError(ApiError errorCode) {
         if (errorCode == null) {
             return null;
@@ -362,30 +456,30 @@ public class Api2DocCollector implements BeanPostProcessor {
         return error;
     }
 
-    ApiParamObject getParam(Parameter param, Class<?> defaultSeeClass) {
+    ApiParamObject toApiParam(AnnotatedElement element, String elementName,
+                              Class<?> elementType, Class<?> defaultSeeClass) {
         ApiParamObject apiParamObject = new ApiParamObject();
 
-        ApiParamLocation.collects(apiParamObject, param);
+        ApiParamLocation.collects(apiParamObject, element);
 
         String id = apiParamObject.getId();
         checkId(id);
 
         String name = apiParamObject.getName();
         if (StringUtils.isEmpty(name)) {
-            name = param.getName();
+            name = elementName;
         }
         apiParamObject.setName(name);
 
         apiParamObject.setId(name);
 
-        ApiComment apiComment = param.getAnnotation(ApiComment.class);
+        ApiComment apiComment = element.getAnnotation(ApiComment.class);
         ApiCommentUtils.setApiComment(
                 apiComment, defaultSeeClass, apiParamObject);
 
-        Class<?> paramType = param.getType();
-        apiParamObject.setSourceType(paramType);
+        apiParamObject.setSourceType(elementType);
 
-        ApiDataType dataType = convertType(paramType);
+        ApiDataType dataType = convertType(elementType);
         apiParamObject.setDataType(dataType);
 
         return apiParamObject;

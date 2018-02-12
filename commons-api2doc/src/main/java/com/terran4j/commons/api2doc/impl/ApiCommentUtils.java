@@ -39,6 +39,11 @@ public class ApiCommentUtils {
         }
     }
 
+//    public static final ApiComment getComment(Field field, Class<?> defaultSeeClass) {
+//        ApiComment apiComment = field.getAnnotation(ApiComment.class);
+//        if (apiComment !)
+//    }
+
     public static final String getComment(ApiComment apiComment,
                                           Class<?> defaultSeeClass, String defaultName) {
 
