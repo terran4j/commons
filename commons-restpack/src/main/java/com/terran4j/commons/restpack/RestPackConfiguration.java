@@ -9,13 +9,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.ConversionServiceFactoryBean;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -24,7 +21,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * RestPack Spring配置。
@@ -99,7 +98,7 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
     /**
      * 注册一个自动将请求参数转为 Date 类型的转化器。
      */
-    @PostConstruct
+//    @PostConstruct // TODO： 目前这个会影响其它功能的，暂不启用。
     public void addConversionConfig() {
         RequestMappingHandlerAdapter handlerAdapter = applicationContext
                 .getBean(RequestMappingHandlerAdapter.class);
@@ -120,7 +119,7 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
         }
 
         GenericConversionService genericConversionService =
-                (GenericConversionService)initializer.getConversionService();
+                (GenericConversionService) initializer.getConversionService();
         if (genericConversionService == null) {
             if (log.isInfoEnabled()) {
                 log.info("genericConversionService is null.");
@@ -128,7 +127,8 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
             return;
         }
 
-        genericConversionService.addConverter(new DateConverter());
+        genericConversionService.addConverter(String.class, Date.class,
+                new DateConverter());
     }
 
     @Bean
