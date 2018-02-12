@@ -8,16 +8,23 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ConversionServiceFactoryBean;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 /**
  * RestPack Spring配置。
@@ -85,6 +92,45 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
         return objectMapper;
     }
 
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    /**
+     * 注册一个自动将请求参数转为 Date 类型的转化器。
+     */
+    @PostConstruct
+    public void addConversionConfig() {
+        RequestMappingHandlerAdapter handlerAdapter = applicationContext
+                .getBean(RequestMappingHandlerAdapter.class);
+        if (handlerAdapter == null) {
+            if (log.isInfoEnabled()) {
+                log.info("handlerAdapter is null.");
+            }
+            return;
+        }
+
+        ConfigurableWebBindingInitializer initializer = (ConfigurableWebBindingInitializer)
+                handlerAdapter.getWebBindingInitializer();
+        if (initializer == null) {
+            if (log.isInfoEnabled()) {
+                log.info("initializer is null.");
+            }
+            return;
+        }
+
+        GenericConversionService genericConversionService =
+                (GenericConversionService)initializer.getConversionService();
+        if (genericConversionService == null) {
+            if (log.isInfoEnabled()) {
+                log.info("genericConversionService is null.");
+            }
+            return;
+        }
+
+        genericConversionService.addConverter(new DateConverter());
+    }
+
     @Bean
     public HttpErrorHandler httpErrorHandler() {
         return new HttpErrorHandler();
@@ -113,7 +159,8 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
         converters.removeAll(removedConverters);
 
         // 添加 RestPackMessageConverter 转换器，并放在最高优先级。
-        HttpMessageConverter<?> restPackConverter = new RestPackMessageConverter(getObjectMapper());
+        HttpMessageConverter<?> restPackConverter =
+                new RestPackMessageConverter(getObjectMapper());
         converters.add(0, restPackConverter);
     }
 

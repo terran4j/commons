@@ -2,7 +2,6 @@ package com.terran4j.commons.api2doc.domain;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
-import com.terran4j.commons.api2doc.controller.ApiObjectComparator;
 import com.terran4j.commons.api2doc.impl.Api2DocUtils;
 import com.terran4j.commons.api2doc.impl.ApiCommentUtils;
 import com.terran4j.commons.util.Classes;

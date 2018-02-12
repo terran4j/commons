@@ -4,7 +4,6 @@ import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.annotations.ApiError;
 import com.terran4j.commons.api2doc.annotations.ApiErrors;
-import com.terran4j.commons.api2doc.controller.ApiObjectComparator;
 import com.terran4j.commons.api2doc.domain.*;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.error.BusinessException;

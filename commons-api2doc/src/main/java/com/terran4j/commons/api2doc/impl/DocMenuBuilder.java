@@ -1,6 +1,5 @@
 package com.terran4j.commons.api2doc.impl;
 
-import com.terran4j.commons.api2doc.controller.MenuComparator;
 import com.terran4j.commons.api2doc.controller.MenuData;
 import com.terran4j.commons.api2doc.domain.ApiDocObject;
 import com.terran4j.commons.api2doc.domain.ApiFolderObject;
@@ -32,7 +31,7 @@ public class DocMenuBuilder {
             menuGroups.add(menuGroup);
         }
 
-        Collections.sort(menuGroups, new MenuComparator());
+        Collections.sort(menuGroups);
 
         return menuGroups;
     }
@@ -66,7 +65,7 @@ public class DocMenuBuilder {
             }
         }
 
-        Collections.sort(children, new MenuComparator());
+        Collections.sort(children);
         menuGroup.setChildren(children);
         return menuGroup;
     }

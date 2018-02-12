@@ -2,10 +2,11 @@ package com.terran4j.commons.api2doc.controller;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.util.Strings;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class MenuData {
+public class MenuData implements Comparable<MenuData>{
 
     private boolean folder;
 
@@ -81,4 +82,17 @@ public class MenuData {
         return Strings.toString(this);
     }
 
+    @Override
+    public int compareTo(@NotNull MenuData o) {
+        MenuData o1 = this;
+        MenuData o2 = o;
+
+        if (o1.getOrder() < o2.getOrder()) {
+            return -1;
+        }
+        if (o1.getOrder() > o2.getOrder()) {
+            return 1;
+        }
+        return 0;
+    }
 }

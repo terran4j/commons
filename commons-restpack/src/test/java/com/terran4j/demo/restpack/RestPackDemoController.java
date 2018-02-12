@@ -29,6 +29,12 @@ public class RestPackDemoController {
 	    log.info("echo, msg = {}", msg);
 		return msg;
 	}
+
+	@RequestMapping(value = "/date", method = RequestMethod.GET)
+	public Date toDate(Date time) throws BusinessException {
+		log.info("echo, time = {}", time);
+		return new Date(time.getTime() + 1000);
+	}
 	
 	/**
 	 * http://localhost:8080/demo/restpack/void?msg=abc
