@@ -16,7 +16,7 @@ public class DateTimes {
 	
 	public static final String FORMAT_yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
 	
-	public static final String FORMAT_CHAINESE = "yyyy年MM月dd日 HH时mm分ss秒";
+	public static final String FORMAT_CHINESE = "yyyy年MM月dd日 HH时mm分ss秒";
 	
 	public static Date toDateTime(String dateText, String format) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(format);
@@ -67,4 +67,37 @@ public class DateTimes {
 		cal.add(Calendar.MONTH, month);
 		return cal.getTime();
 	}
+
+	public static Date cutHour(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Date cutDay(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Date cutMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.MONTH, 0);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
 }
