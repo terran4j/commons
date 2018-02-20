@@ -8,14 +8,18 @@ import java.util.List;
 
 public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
 
-    @Query("addresses")
+    @Query("address-list")
     List<AddressDistance> getAll(AddressQuery params);
 
-    @Query("nearest-address")
+    @Query("address-count")
+    int count(@Param("lat") double lat, @Param("lon") double lon,
+              @Param("maxDistance") int maxDistance);
+
+    @Query("address-nearest")
     AddressDistance getNearest(
             @Param("lat") double lat, @Param("lon") double lon);
 
-    @Query("nearest-address-2")
+    @Query("address-nearest-2")
     AddressDistance getNearest2(double lat, double lon);
 
 }

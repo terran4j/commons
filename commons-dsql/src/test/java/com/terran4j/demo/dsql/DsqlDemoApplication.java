@@ -32,7 +32,7 @@ public class DsqlDemoApplication implements ApplicationRunner {
     private AddressDistanceDAO addressDistanceDAO;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments appArgs) throws Exception {
         // 清空表中的数据，以避免旧数据干扰运行。
         addressDAO.deleteAll();
 
@@ -52,20 +52,27 @@ public class DsqlDemoApplication implements ApplicationRunner {
         // 当前位置，作为查询的参数
         Address currentAddress = new Address("融泽嘉园一号院",
                 116.3086509705, 40.0668729389);
-        AddressQuery params = new AddressQuery(
+        AddressQuery args = new AddressQuery(
                 currentAddress.getLat(), currentAddress.getLon());
-        params.setName("%地铁%");
+        args.setName("%地铁%");
 
-        params.setNearFirst(true);
-        List<AddressDistance> result = addressDistanceDAO.getAll(params);
+        args.setNearFirst(true);
+        List<AddressDistance> result = addressDistanceDAO.getAll(args);
         if (log.isInfoEnabled()) {
-            log.info("\n由近及远查询所有，入参： {}, \n查询结果： {}", params, result);
+            log.info("\n由近及远查询所有，入参： {}, \n查询结果： {}", args, result);
         }
 
-        params.setNearFirst(false);
-        result = addressDistanceDAO.getAll(params);
+        args.setNearFirst(false);
+        result = addressDistanceDAO.getAll(args);
         if (log.isInfoEnabled()) {
-            log.info("\n由远及近查询所有，入参： {}, \n查询结果： {}", params, result);
+            log.info("\n由远及近查询所有，入参： {}, \n查询结果： {}", args, result);
+        }
+
+        int maxDistance = 5000;
+        long count = addressDistanceDAO.count(
+                currentAddress.getLat(), currentAddress.getLon(), maxDistance);
+        if (log.isInfoEnabled()) {
+            log.info("\n统计指定范围内的位置数量，count = {}", count);
         }
 
         AddressDistance addressDistance = addressDistanceDAO.getNearest(
