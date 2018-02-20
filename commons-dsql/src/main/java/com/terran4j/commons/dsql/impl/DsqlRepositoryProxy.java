@@ -126,7 +126,6 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
             if (args[0] != null) {
                 context.put("args", args[0]);
             }
-            return context;
         }
 
         for(int i = 0 ; i < params.length; i++) {

@@ -124,7 +124,7 @@ public class DsqlBuilder {
         try {
             String sql = build(template, model);
             if (log.isInfoEnabled()) {
-                log.info("\nSQL（渲染后）: \n{}\n参数: {}", sql.trim(), model);
+                log.info("\nSQL（模板解析后）: \n{}\n参数: {}", sql.trim(), model);
             }
             return sql;
         } catch (IOException | TemplateException e) {

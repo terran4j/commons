@@ -4,8 +4,10 @@ import com.terran4j.commons.util.Strings;
 
 public class AddressDistance {
 
+    // 位置记录
     private Address address;
 
+    // 此位置与入参所指定位置的距离，单位为米。
     private Long distance;
 
     public Address getAddress() {

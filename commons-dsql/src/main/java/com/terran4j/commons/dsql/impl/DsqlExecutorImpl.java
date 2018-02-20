@@ -93,7 +93,7 @@ public class DsqlExecutorImpl implements DsqlExecutor {
         info.setArgs(args);
         info.setSql(sql);
         if (log.isInfoEnabled()) {
-            log.info("\nSQL（最终）: \n{}\n参数: {}", sql.trim(), Strings.toString(args));
+            log.info("\nSQL（变量替换后）: \n{}\n参数: {}", sql.trim(), Strings.toString(args));
         }
         return info;
     }

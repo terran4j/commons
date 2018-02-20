@@ -1,7 +1,8 @@
-package com.terran4j.demo.dsql;
+package com.terran4j.demo.dsql.appdsql;
 
 import com.terran4j.commons.dsql.EnableDsqlRepositories;
 import com.terran4j.commons.test.DatabaseTestConfig;
+import com.terran4j.demo.dsql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,20 @@ public class DsqlDemoApplication implements ApplicationRunner {
         // 当前位置，作为查询的参数
         Address currentAddress = new Address("融泽嘉园一号院",
                 116.3086509705, 40.0668729389);
+
+        AddressDistance addressDistance = addressDistanceDAO.getNearest(
+                currentAddress.getLat(), currentAddress.getLon());
+        if (log.isInfoEnabled()) {
+            log.info("\n查询最近位置（指定参数名），最近位置： {}", addressDistance);
+        }
+
+        addressDistance = addressDistanceDAO.getNearest2(
+                currentAddress.getLat(), currentAddress.getLon());
+        if (log.isInfoEnabled()) {
+            log.info("\n查询最近位置（不指定参数名），当前位置：{},\n最近位置： {}",
+                    currentAddress, addressDistance);
+        }
+
         AddressQuery args = new AddressQuery(
                 currentAddress.getLat(), currentAddress.getLon());
         args.setName("%地铁%");
@@ -73,20 +88,6 @@ public class DsqlDemoApplication implements ApplicationRunner {
                 currentAddress.getLat(), currentAddress.getLon(), maxDistance);
         if (log.isInfoEnabled()) {
             log.info("\n统计指定范围内的位置数量，count = {}", count);
-        }
-
-        AddressDistance addressDistance = addressDistanceDAO.getNearest(
-                currentAddress.getLat(), currentAddress.getLon());
-        if (log.isInfoEnabled()) {
-            log.info("\n查询最近位置（指定参数名），当前位置：{},\n最近位置： {}",
-                    currentAddress, addressDistance);
-        }
-
-        addressDistance = addressDistanceDAO.getNearest2(
-                currentAddress.getLat(), currentAddress.getLon());
-        if (log.isInfoEnabled()) {
-            log.info("\n查询最近位置（不指定参数名），当前位置：{},\n最近位置： {}",
-                    currentAddress, addressDistance);
         }
     }
 
