@@ -33,7 +33,7 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
         // 设置生成类的父类类型
         enhancer.setSuperclass(clazz);
         // 动态生成字节码并返回代理对象
-        return (T)enhancer.create();
+        return (T) enhancer.create();
     }
 
     private Class<?> elementType;
@@ -52,10 +52,10 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
                     DsqlRepository.class);
         }
         Type type = types[0];
-        ParameterizedType parameterizedType = (ParameterizedType)type;
+        ParameterizedType parameterizedType = (ParameterizedType) type;
         Type genericType = parameterizedType.getActualTypeArguments()[0];
         if (genericType instanceof Class<?>) {
-            return (Class<?>)genericType;
+            return (Class<?>) genericType;
         } else {
             throw new RuntimeException(proxyInterface + "'s genericType is NOT a class: " +
                     genericType);
@@ -74,20 +74,28 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
         Map<String, Object> context = getContext(method, objects);
 
         Query queryAnnotation = method.getAnnotation(Query.class);
-        if (queryAnnotation == null) {
-            throw new IllegalStateException(method + " MUST has @Query annotation.");
+        if (queryAnnotation != null) {
+            String sqlName = queryAnnotation.value();
+            return doQuery(sqlName, context, method, executor);
         }
-        String sqlName = queryAnnotation.value();
+
+
+        throw new IllegalStateException(method + " MUST has @Query annotation.");
+    }
+
+    private Object doQuery(String sqlName, Map<String, Object> args,
+                           Method method, DsqlExecutor executor) throws BusinessException {
+        SqlInfo sqlInfo = SqlInfo.create(args, proxyInterface, sqlName);
 
         Class<?> returnType = method.getReturnType();
         if (returnType.equals(Integer.class) || returnType.equals(int.class)) {
-            return executor.query4Count(context, proxyInterface, sqlName);
+            return executor.query4Count(sqlInfo);
         }
         if (returnType.equals(Long.class) || returnType.equals(long.class)) {
-            return executor.query4Count(context, proxyInterface, sqlName);
+            return executor.query4Count(sqlInfo);
         }
         if (returnType.equals(elementType)) {
-            List<?> result = executor.query4List(context, elementType, proxyInterface, sqlName);
+            List<?> result = executor.query4List(sqlInfo, elementType);
             if (result == null || result.size() == 0) {
                 return null;
             }
@@ -100,7 +108,7 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
             return result.get(0);
         }
         if (List.class.equals(returnType)) {
-            List<?> result = executor.query4List(context, elementType, proxyInterface, sqlName);
+            List<?> result = executor.query4List(sqlInfo, elementType);
             return result;
         }
         throw new BusinessException(ErrorCodes.CONFIG_ERROR)
@@ -128,7 +136,7 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
             }
         }
 
-        for(int i = 0 ; i < params.length; i++) {
+        for (int i = 0; i < params.length; i++) {
             Parameter param = params[i];
             String key = param.getName();
 

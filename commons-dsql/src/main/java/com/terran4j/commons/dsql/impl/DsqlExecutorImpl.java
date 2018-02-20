@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class DsqlExecutorImpl implements DsqlExecutor {
 
-    private static final Logger log = LoggerFactory.getLogger(DsqlExecutorImpl.class);
-
     private JdbcTemplate jdbcTemplate;
 
     public DsqlExecutorImpl() {
@@ -48,21 +46,17 @@ public class DsqlExecutorImpl implements DsqlExecutor {
      * @return
      */
     @Override
-    public <T> List<T> query4List(Map<String, Object> query, final Class<T> elementType,
-                                  Class<?> basePackageClass, String sqlName)
+    public <T> List<T> query4List(SqlInfo sqlInfo, Class<T> elementType)
             throws BusinessException {
-        SqlInfo sqlInfo = getSqlInfo(query, basePackageClass, sqlName);
         RowMapper<T> rm = CompositeBeanRowMapper.newInstance(elementType);
         List<T> result = jdbcTemplate.query(sqlInfo.getSql(), sqlInfo.getArgs(), rm);
         return result;
     }
 
     @Override
-    public long query4Count(Map<String, Object> query, Class<?> basePackageClass, String sqlName)
-            throws BusinessException{
-        SqlInfo sqlInfo = getSqlInfo(query, basePackageClass, sqlName);
-        Long count = jdbcTemplate.queryForObject(sqlInfo.getSql(), sqlInfo.getArgs(),
-                Long.class);
+    public int query4Count(SqlInfo sqlInfo) throws BusinessException{
+        Integer count = jdbcTemplate.queryForObject(sqlInfo.getSql(), sqlInfo.getArgs(),
+                Integer.class);
         if (count == null) {
             throw new BusinessException(ErrorCodes.CONFIG_ERROR)
                     .put("sql", sqlInfo.getSql())
@@ -72,39 +66,10 @@ public class DsqlExecutorImpl implements DsqlExecutor {
         return count;
     }
 
-    private SqlInfo getSqlInfo(Map<String, Object> query, Class<?> basePackageClass, String sqlName) throws BusinessException {
-        Map<String, Object> context = buildContext(query);
-        DsqlBuilder dsqlBuilder = DsqlBuilder.getInstance();
-        String sql = dsqlBuilder.buildSQL(context, basePackageClass, sqlName);
-
-        List<String> keys = new ArrayList<>();
-        sql = dsqlBuilder.buildPreparedArgs(sql, keys);
-
-        Object[] args = new Object[keys.size()];
-        int i = 0;
-        for (String key : keys) {
-            String el = "#" + key;
-            Object value = Expressions.parse(el, context);
-            args[i] = value;
-            i++;
-        }
-
-        SqlInfo info = new SqlInfo();
-        info.setArgs(args);
-        info.setSql(sql);
-        if (log.isInfoEnabled()) {
-            log.info("\nSQL（变量替换后）: \n{}\n参数: {}", sql.trim(), Strings.toString(args));
-        }
-        return info;
+    @Override
+    public int update(SqlInfo sqlInfo) throws BusinessException {
+        return jdbcTemplate.update(sqlInfo.getSql(), sqlInfo.getArgs());
     }
 
-    public static final Map<String, Object> buildContext(Map<String, Object> query) {
-//        Map<String, Object> context = new HashMap<>();
-//        if (query != null) {
-//            context.put("query", query);
-//        }
-        // 暂时不需要做任何处理。
-        return query;
-    }
 
 }

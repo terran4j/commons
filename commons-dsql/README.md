@@ -582,11 +582,7 @@ FreeMarker 是 Web 开发中非常常用的模板引擎工具，
 public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
 
     @Query("address-nearest")
-    AddressDistance getNearest(
-            @Param("lat") double lat, @Param("lon") double lon);
-
-    @Query("address-nearest-2")
-    AddressDistance getNearest2(double lat, double lon);
+    AddressDistance getNearest(@Param("lat") double lat, @Param("lon") double lon);
 
     @Query("address-list")
     List<AddressDistance> getAll(AddressQuery params);
