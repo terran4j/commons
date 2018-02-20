@@ -333,7 +333,6 @@
                 <artifactId>aspectjrt</artifactId>
                 <version>1.5.4</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

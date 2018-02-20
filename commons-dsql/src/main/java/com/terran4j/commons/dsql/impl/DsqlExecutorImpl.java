@@ -2,8 +2,11 @@ package com.terran4j.commons.dsql.impl;
 
 import com.terran4j.commons.dsql.DsqlExecutor;
 import com.terran4j.commons.util.Expressions;
+import com.terran4j.commons.util.Strings;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.ErrorCodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -13,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DsqlExecutorImpl implements DsqlExecutor {
+
+    private static final Logger log = LoggerFactory.getLogger(DsqlExecutorImpl.class);
 
     private JdbcTemplate jdbcTemplate;
 
@@ -87,6 +92,9 @@ public class DsqlExecutorImpl implements DsqlExecutor {
         SqlInfo info = new SqlInfo();
         info.setArgs(args);
         info.setSql(sql);
+        if (log.isInfoEnabled()) {
+            log.info("\nSQL（最终）: \n{}\n参数: {}", sql.trim(), Strings.toString(args));
+        }
         return info;
     }
 

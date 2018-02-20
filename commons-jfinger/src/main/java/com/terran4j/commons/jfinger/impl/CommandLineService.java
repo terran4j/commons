@@ -188,7 +188,7 @@ public class CommandLineService {
 					String name = optionConfig.getName();
 					String value = ci.getOption(key);
 					if (value == null) {
-						throw new CommandException(CommandErrorCode.OPTION_KEY_EMPTY) // 
+						throw new CommandException(CommandErrorCode.OPTION_KEY_EMPTY.getName()) //
 								.put("group", groupName) // 
 								.put("commandName", commandName) // 
 								.put("optionKey", key) // 
@@ -364,10 +364,10 @@ public class CommandLineService {
 				if (errorPart.length() > 10) {
 					errorPart = errorPart.substring(0, 10);
 				}
-				throw new CommandException(CommandErrorCode.ARG_QUOTE_NOT_CLOSE) //
-						.put("startIndex", startIndex) //
-						.put("errorPart", errorPart) //
-						.put("command", command) //
+				throw new CommandException(CommandErrorCode.ARG_QUOTE_NOT_CLOSE.getName())
+						.put("startIndex", startIndex)
+						.put("errorPart", errorPart)
+						.put("command", command)
 						.setMessage("命令中第${startIndex}个字符\"号没有另一个\"作为结束符: ${errorPart}");
 			}
 

@@ -59,9 +59,9 @@ public class DsqlRepositoryConfigRegistrar implements ImportBeanDefinitionRegist
         }
     }
 
-    private final Set<Package> scanedPackages = new HashSet<>();
+    private final Set<Package> scannedPackages = new HashSet<>();
 
-    private final Set<Package> scanedClasses = new HashSet<>();
+    private final Set<Package> scannedClasses = new HashSet<>();
 
     private final BeanNameGenerator beanNameGenerator = new DefaultBeanNameGenerator();
 
@@ -105,7 +105,7 @@ public class DsqlRepositoryConfigRegistrar implements ImportBeanDefinitionRegist
 
         for (Class<?> basePackageClass : basePackageClasses) {
             Package currentPackage = basePackageClass.getPackage();
-            if (scanedPackages.contains(currentPackage)) {
+            if (scannedPackages.contains(currentPackage)) {
                 continue;
             }
             Set<Class<?>> daoClasses = scanClasses(basePackageClass);
@@ -113,7 +113,7 @@ public class DsqlRepositoryConfigRegistrar implements ImportBeanDefinitionRegist
                 continue;
             }
             for (Class<?> daoClass : daoClasses) {
-                if (scanedClasses.contains(daoClass)) {
+                if (scannedClasses.contains(daoClass)) {
                     continue;
                 }
                 registBean(registry, daoClass);
@@ -145,7 +145,7 @@ public class DsqlRepositoryConfigRegistrar implements ImportBeanDefinitionRegist
             }
         }
 
-        Object bean = DsqlRepositoryProxy.getProxyObject(beanClass);
+        Object bean = DsqlRepositoryProxy.createProxyObject(beanClass);
         registry.registerSingleton(beanName, bean);
         return true;
     }

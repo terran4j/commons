@@ -38,6 +38,7 @@
         <dependency>
             <groupId>com.github.terran4j</groupId>
             <artifactId>terran4j-commons-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

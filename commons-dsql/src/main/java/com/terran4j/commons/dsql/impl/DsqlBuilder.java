@@ -56,7 +56,8 @@ public class DsqlBuilder {
 	}
 
 	private String getPath(Class<?> clazz, String fileName) {
-		String path = clazz.getPackage().getName().replace('.', '/') + "/" + fileName;
+		String path = clazz.getPackage().getName().replace('.', '/')
+                + "/" + fileName;
 		return path;
 	}
 
@@ -97,7 +98,7 @@ public class DsqlBuilder {
     private final String build(Template template, Map<String, Object> model) //
 			throws IOException, TemplateException {
 		if (!templates.containsValue(template)) {
-			String msg = "Can't build from the tempate which NOT get by calling this method:\n"
+			String msg = "Can't build from the template which NOT get by calling this method:\n"
 					+ "ClasspathFreeMarker.getTemplate(Class<?> clazz, String fileName)";
 			throw new UnsupportedOperationException(msg);
 		}
@@ -123,14 +124,14 @@ public class DsqlBuilder {
         try {
             String sql = build(template, model);
             if (log.isInfoEnabled()) {
-                log.info("sql: {}\nmodel: {}", sql, model);
+                log.info("\nSQL（渲染后）: \n{}\n参数: {}", sql.trim(), model);
             }
             return sql;
         } catch (IOException | TemplateException e) {
             throw new BusinessException(ErrorCodes.CONFIG_ERROR)
                     .put("package", clazz.getPackage())
                     .put("fileName", fileName)
-                    .put("model", model)
+                    .put("params", model)
                     .setMessage("使用文件 ${fileName} 构建SQL出错：" + e.getMessage());
         }
     }

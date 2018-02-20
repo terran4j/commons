@@ -22,17 +22,17 @@ import static com.terran4j.commons.dsql.impl.DsqlRepositoryConfigRegistrar.getDs
 
 public class DsqlRepositoryProxy implements MethodInterceptor {
 
-    public static final <T> T getProxyObject(Class<T> clazz) {
-        //增强器，动态代码生成器
+    public static final <T> T createProxyObject(Class<T> clazz) {
+        // 增强器，动态代码生成器
         Enhancer enhancer = new Enhancer();
 
-        //回调方法
+        // 回调方法
         DsqlRepositoryProxy proxy = new DsqlRepositoryProxy(clazz);
         enhancer.setCallback(proxy);
 
-        //设置生成类的父类类型
+        // 设置生成类的父类类型
         enhancer.setSuperclass(clazz);
-        //动态生成字节码并返回代理对象
+        // 动态生成字节码并返回代理对象
         return (T)enhancer.create();
     }
 
@@ -73,15 +73,15 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
 
         Map<String, Object> context = getContext(method, objects);
 
-        Query queryAnno = method.getAnnotation(Query.class);
-        if (queryAnno == null) {
+        Query queryAnnotation = method.getAnnotation(Query.class);
+        if (queryAnnotation == null) {
             throw new IllegalStateException(method + " MUST has @Query annotation.");
         }
-        String sqlName = queryAnno.value();
+        String sqlName = queryAnnotation.value();
 
         Class<?> returnType = method.getReturnType();
         if (returnType.equals(Integer.class) || returnType.equals(int.class)) {
-            return (long)executor.query4Count(context, proxyInterface, sqlName);
+            return executor.query4Count(context, proxyInterface, sqlName);
         }
         if (returnType.equals(Long.class) || returnType.equals(long.class)) {
             return executor.query4Count(context, proxyInterface, sqlName);
@@ -106,7 +106,7 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
         throw new BusinessException(ErrorCodes.CONFIG_ERROR)
                 .put("method", method).put("returnType", returnType)
                 .put("elementType", elementType.getSimpleName())
-                .setMessage("Unknow returnType: ${returnType}, " +
+                .setMessage("Unknown returnType: ${returnType}, " +
                         "ONLY support the following Types:\n" +
                         "List<${elementType}>, ${elementType}, " +
                         "Long, long, Integer, int.");
@@ -124,21 +124,20 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
         // 只有一个参数，并且没有 @Param 注解时，用 query 作默认的 key.
         if (params.length == 1 && params[0].getAnnotation(Param.class) == null) {
             if (args[0] != null) {
-                context.put("query", args[0]);
+                context.put("args", args[0]);
             }
             return context;
         }
 
         for(int i = 0 ; i < params.length; i++) {
             Parameter param = params[i];
-            Param paramAnno = param.getAnnotation(Param.class);
-            if (paramAnno == null) {
-                throw new BusinessException(ErrorCodes.CONFIG_ERROR)
-                        .put("method", method).put("param", param)
-                        .setMessage("Method [${method}] has the param " +
-                                "without @Param Annotation: ${param}");
+            String key = param.getName();
+
+            Param paramAnnotation = param.getAnnotation(Param.class);
+            if (paramAnnotation != null) {
+                key = paramAnnotation.value();
             }
-            String key = paramAnno.value();
+
             Object value = args[i];
             if (value != null) {
                 context.put(key, value);
