@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class DsqlRepositoryTest extends BaseDsqlTest {
+public class DsqlQueryTest extends BaseDsqlTest {
 
-    private static final Logger log = LoggerFactory.getLogger(DsqlRepositoryTest.class);
+    private static final Logger log = LoggerFactory.getLogger(DsqlQueryTest.class);
 
     @Autowired
     private LocationDistanceDAO locationDistanceDAO;
@@ -74,4 +74,5 @@ public class DsqlRepositoryTest extends BaseDsqlTest {
         int size = distancedLocationDAO.count(query);
         Assert.assertEquals(1, size);
     }
+
 }

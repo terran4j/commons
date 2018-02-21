@@ -7,6 +7,7 @@ import com.terran4j.commons.dsql.impl.DsqlExecutorImpl;
 import com.terran4j.commons.test.*;
 import com.terran4j.test.dsql.dao.Location;
 import com.terran4j.test.dsql.dao.LocationDAO;
+import com.terran4j.test.dsql.dao1.LocationDsqlDAO;
 import com.terran4j.test.dsql.dao2.LocationDistanceDAO;
 import com.terran4j.test.dsql.dao3.DistancedLocationDAO;
 import org.junit.Before;
@@ -29,6 +30,7 @@ public abstract class BaseDsqlTest extends BaseSpringBootTest {
     @EntityScan(basePackageClasses = Location.class)
     @EnableJpaRepositories(basePackageClasses = LocationDAO.class)
     @EnableDsqlRepositories(basePackageClasses = {
+            LocationDsqlDAO.class,
             LocationDistanceDAO.class,
             DistancedLocationDAO.class,
     })

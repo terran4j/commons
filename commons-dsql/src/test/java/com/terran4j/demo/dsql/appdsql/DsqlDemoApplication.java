@@ -57,13 +57,13 @@ public class DsqlDemoApplication implements ApplicationRunner {
         AddressDistance addressDistance = addressDistanceDAO.getNearest(
                 currentAddress.getLat(), currentAddress.getLon());
         if (log.isInfoEnabled()) {
-            log.info("\n查询最近位置（指定参数名），最近位置： {}", addressDistance);
+            log.info("\n查询最近位置（指定参数名）： {}", addressDistance);
         }
 
         addressDistance = addressDistanceDAO.getNearest2(
                 currentAddress.getLat(), currentAddress.getLon());
         if (log.isInfoEnabled()) {
-            log.info("\n查询最近位置（不指定参数名），当前位置：{},\n最近位置： {}",
+            log.info("\n查询最近位置（不指定参数名）： {}",
                     currentAddress, addressDistance);
         }
 
@@ -88,6 +88,22 @@ public class DsqlDemoApplication implements ApplicationRunner {
                 currentAddress.getLat(), currentAddress.getLon(), maxDistance);
         if (log.isInfoEnabled()) {
             log.info("\n统计指定范围内的位置数量，count = {}", count);
+        }
+
+        addressDistanceDAO.updateNearest("新位置",
+                currentAddress.getLat(), currentAddress.getLon());
+        addressDistance = addressDistanceDAO.getNearest(
+                currentAddress.getLat(), currentAddress.getLon());
+        if (log.isInfoEnabled()) {
+            log.info("\n查询最近位置（修改后）： {}", addressDistance);
+        }
+
+        addressDistanceDAO.deleteNearest(
+                currentAddress.getLat(), currentAddress.getLon());
+        addressDistance = addressDistanceDAO.getNearest(
+                currentAddress.getLat(), currentAddress.getLon());
+        if (log.isInfoEnabled()) {
+            log.info("\n查询最近位置（删除后）： {}", addressDistance);
         }
     }
 
