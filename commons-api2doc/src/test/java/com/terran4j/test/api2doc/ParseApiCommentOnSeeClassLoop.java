@@ -1,4 +1,4 @@
-package com.terran4j.test.commons.api2doc;
+package com.terran4j.test.api2doc;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;

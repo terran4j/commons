@@ -1,4 +1,4 @@
-package com.terran4j.test.commons.api2doc;
+package com.terran4j.test.api2doc;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
@@ -72,7 +72,7 @@ public class Api2DocCollectorTest {
         // 按 order 及 方法中排序。
         Assert.assertEquals("delete", folder.getDocs().get(0).getId());
         Assert.assertEquals("getUser", folder.getDocs().get(1).getId());
-        Assert.assertEquals("getUserList", folder.getDocs().get(2).getId());
+        Assert.assertEquals("getUsers", folder.getDocs().get(2).getId());
         Assert.assertEquals("insert", folder.getDocs().get(3).getId());
     }
 

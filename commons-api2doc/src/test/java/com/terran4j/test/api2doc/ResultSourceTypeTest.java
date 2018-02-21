@@ -1,4 +1,4 @@
-package com.terran4j.test.commons.api2doc;
+package com.terran4j.test.api2doc;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ReflectionUtils;
 
-import com.terran4j.demo.commons.api2doc.DemoUser;
+import com.terran4j.demo.api2doc.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ResultSourceTypeTest {
@@ -21,13 +21,13 @@ public class ResultSourceTypeTest {
 	
 	public class UserList {
 
-		private List<DemoUser> users = new ArrayList<>();
+		private List<User> users = new ArrayList<>();
 
-		public List<DemoUser> getUsers() {
+		public List<User> getUsers() {
 			return users;
 		}
 
-		public void setUsers(List<DemoUser> users) {
+		public void setUsers(List<User> users) {
 			this.users = users;
 		}
 		
@@ -40,7 +40,7 @@ public class ResultSourceTypeTest {
 	@Test
 	public void testGetResultSourceType() throws Exception {
 		log.info("testGetResultSourceType");
-		Method method = ReflectionUtils.findMethod(getClass(), "getUserList");
+		Method method = ReflectionUtils.findMethod(getClass(), "getUsers");
 		Assert.assertNotNull(method);
 	}
 	

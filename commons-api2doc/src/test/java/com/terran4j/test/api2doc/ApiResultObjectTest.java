@@ -1,4 +1,4 @@
-package com.terran4j.test.commons.api2doc;
+package com.terran4j.test.api2doc;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
@@ -23,7 +23,7 @@ public class ApiResultObjectTest {
 
     private static final Logger log = LoggerFactory.getLogger(ApiResultObjectTest.class);
 
-    public enum UserState {
+    public enum UserType {
 
         @ApiComment("启用")
         open,
@@ -49,7 +49,7 @@ public class ApiResultObjectTest {
 
         @Api2Doc(order = 30)
         @ApiComment(value = "用户状态", sample = "open")
-        private UserState state;
+        private UserType state;
 
         @Api2Doc(order = 40)
         @ApiComment(value = "是否已删除", sample = "true")
@@ -80,11 +80,11 @@ public class ApiResultObjectTest {
             this.password = password;
         }
 
-        public UserState getState() {
+        public UserType getState() {
             return state;
         }
 
-        public void setState(UserState state) {
+        public void setState(UserType state) {
             this.state = state;
         }
 

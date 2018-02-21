@@ -1,4 +1,4 @@
-package com.terran4j.test.commons.api2doc;
+package com.terran4j.test.api2doc;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

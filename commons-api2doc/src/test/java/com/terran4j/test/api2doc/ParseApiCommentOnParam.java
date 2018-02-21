@@ -1,12 +1,10 @@
-package com.terran4j.test.commons.api2doc;
+package com.terran4j.test.api2doc;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.domain.ApiParamLocation;
 import com.terran4j.commons.api2doc.domain.ApiParamObject;
-import com.terran4j.commons.api2doc.domain.ApiResultObject;
 import com.terran4j.commons.api2doc.impl.Api2DocCollector;
-import com.terran4j.commons.util.value.KeyedList;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
