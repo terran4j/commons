@@ -60,7 +60,7 @@
 * data :  实际的业务数据，内容由每个 API 的业务逻辑决定。
 
 错误响应内容：
-```
+```json
 {
   "requestId" : "d7ab68ac513e4549896aa33f0cda3518",
   "serverTime" : 1502594589673,
@@ -68,9 +68,7 @@
   "resultCode" : "name.duplicate",
   "message" : "昵称重复： terran4j，请换个昵称！",
   "props" : {
-    "key1": "value1",
-    "key2": "value2",
-    ......
+    "name": "terran4j"
   }
 }
 ```
