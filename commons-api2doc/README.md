@@ -204,6 +204,9 @@ Api2Doc 专注于文档的自动化生成，让大家花最小的成本，完成
         </dependency>
 ```
 
-目前 terran4j-commons 的所有子项目都是按统一的版本号升级的，
-**最新稳定版请参考 [首页](https://github.com/terran4j/commons) 的版本说明**
+terran4j-commons-api2doc 的**最新稳定版，请参考 [这里](https://github.com/terran4j/commons/blob/master/version.md)**
 
+
+## 启用 Api2Doc
+
+我们需要在 

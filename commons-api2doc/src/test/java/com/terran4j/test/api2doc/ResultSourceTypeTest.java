@@ -33,7 +33,7 @@ public class ResultSourceTypeTest {
 		
 	}
 	
-	public UserList getUserList() {
+	public UserList getUsers() {
 		return new UserList();
 	}
 

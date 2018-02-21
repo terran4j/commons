@@ -44,7 +44,7 @@ public class Api2DocCollectorTest {
         }
 
         @RequestMapping(value = "/users", method = RequestMethod.GET)
-        public List<User> getUserList() {
+        public List<User> getUsers() {
             return null;
         }
 

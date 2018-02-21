@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api2Doc(id = "users", name = "用户接口", order = 0)
+@Api2Doc(id = "demo", name = "用户接口", order = 0)
 @ApiComment(seeClass = User.class)
 @RestController
-@RequestMapping(value = "/api2doc/demo")
+@RequestMapping(value = "/src/test/resources/demo")
 public class UserController {
 
     // http://localhost:8080/api2doc/demo/user/1
@@ -23,10 +23,7 @@ public class UserController {
         return Api2DocMocker.mockObject(User.class);
     }
 
-
-    /**
-     * http://localhost:8080/api2doc/demo/users
-     */
+    // http://localhost:8080/api2doc/demo/users
     @Api2Doc(order = 20)
     @ApiComment("查询所有用户，按注册时间进行排序。")
     @RequestMapping(name = "查询用户列表",
