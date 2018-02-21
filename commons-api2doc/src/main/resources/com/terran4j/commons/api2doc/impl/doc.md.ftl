@@ -1,5 +1,3 @@
-
-
 <#if doc.comment?? && doc.comment!="">
 **API简介** 
 - ${doc.comment}
@@ -7,14 +5,13 @@
 
 <br/>
 
-**客户端API类**
-- ${folderClasses}
+<#--**客户端API类**-->
+<#--- ${folderClasses}-->
 
+<#--**客户端API方法**-->
+<#--- ${doc.id}-->
 
-**客户端API方法**
-- ${doc.id}
-
-<br/>
+<#--<br/>-->
 
 **请求URI**
 <#list doc.paths as path>
@@ -45,7 +42,7 @@
 
 <#if doc.results?? && (doc.results?size > 0) >
 
-**返回值**
+**返回结果**
 - [${doc.returnTypeDesc}](#${doc.results[0].groupId}) （参见下面的类型说明）
 
 <#list doc.results as result>

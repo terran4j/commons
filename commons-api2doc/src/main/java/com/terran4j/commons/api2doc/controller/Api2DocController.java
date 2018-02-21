@@ -32,6 +32,9 @@ public class Api2DocController {
     @Value("${api2doc.icon:}")
     private String api2docIcon;
 
+    @Value("${api2doc.client.enable:false}")
+    private boolean api2docClientEnable = false;
+
     @Autowired
     private DocMenuBuilder docMenuBuilder;
 
@@ -66,7 +69,7 @@ public class Api2DocController {
         model.put("menus", menus);
 
         // 当前要显示的内容。
-        String docPath = null;
+        String docPath;
         if (StringUtils.hasText(p)) {
             int pos = p.indexOf("-");
             String fid = p.substring(0, pos);

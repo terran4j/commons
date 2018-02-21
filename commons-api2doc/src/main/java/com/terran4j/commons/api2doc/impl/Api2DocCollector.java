@@ -31,9 +31,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
-/**
- * @author jiangwei
- */
+
 @Service
 public class Api2DocCollector implements BeanPostProcessor {
 
