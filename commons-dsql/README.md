@@ -50,26 +50,58 @@ JPA 的优点是：
 而对于复杂 SQL 操作需求，还是使用类似于 MyBatis 一样，
 手工编写 SQL 并将结果自动映射到实体对象的方式比较好。
 
-因此，DSQL 项目便应运而生了，它对 JPA 进行了扩展，主要解决 JPA 不擅长编写复杂 SQL 的问题，
+因此，DSQL 项目便应运而生了，它对 JPA 进行了扩展，
+主要解决 JPA 不擅长编写复杂 SQL 的问题，
 让您的项目可以使用 JPA 和 MyBatis 两者的优点，可以说是鱼与熊掌兼得。
 
 
-## 引入 DSQL 依赖
+## DSQL 简介
 
-然后，您就可以在您的项目的 pom.xml 文件中，引用 dsql 的 jar 包了，如下所示：
-```
-		<dependency>
-			<groupId>terran4j</groupId>
-			<artifactId>terran4j-commons-dsql</artifactId>
-			<version>Virgo.0.1</version>
-		</dependency>
+DSQL 允许我们更简单的方法编写原生的、动态的SQL，
+下面我们用一段代码来展示一下。
+
+比如，用 DSQL 定义一个 DAO 方法：
+
+```java
+public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
+
+    @Query("address-list")
+    List<AddressDistance> getAll(AddressQuery args);
+}
 ```
 
-**目前 `terran4j-commons-sql` 的最新稳定版是 Virgo.0.1 ，后续有新的稳定版本会更新到本文档中。**
+与 JPA 一样，这个接口不需要实现类，@Query("address-list") 的意思是：
+在调用这个方法时，会使用名为 address-list.sql.ftl 文件中的 SQL  执行查询，
+查询结果自动映射到返回类型 List<AddressDistance>上。 
+
+文件 address-list.sql.ftl 写在这个接口类所在的 package 中，内容如：
+
+```ftl
+SELECT *, ROUND(6378.137 * 2 * ASIN(SQRT(
+    POW(SIN(( @{args.lat} * PI() / 180 - lat * PI() / 180) / 2),2)
+    + COS( @{args.lat} * PI() / 180) * COS(lat * PI() / 180)
+    * POW(SIN(( @{args.lon} * PI() / 180 - lon * PI() / 180) / 2), 2)
+)) * 1000) AS distance
+FROM demo_address
+where 1 = 1
+<#if args.name ??>
+    and name like @{args.name}
+</#if>
+ORDER BY distance <#if args.nearFirst>ASC<#else>DESC</#if>
+```
+
+本质上是一条 SQL 语句，但可以用 FreeMarker 的语法编写控制逻辑，
+还可以用 @{...} 来使用入参。
+除此之外，不需要额外编写 XML 指定映射关系，
+是不是比 JPA 及 MyBatis 都简单呢？
+
+DSQL 定位是作为 JPA 的一个补充，
+提供一种编写原生的、动态复杂 SQL 的方式，以提高开发效率和代码可维护性。
 
 
 ## 示例程序介绍
 
+下面我们就要正式学习 DSQL 了，
 本教程会用一个“地理位置查询”的示例程序来讲述 DSQL 的用法。
 
 “地理位置查询”的功能是这样的：
@@ -80,6 +112,27 @@ JPA 的优点是：
 
 这个示例程序的代码，已经放在 src/test/java 目录中 com.terran4j.demo.dsql 包里面，
 本地装好数据库的情况下，是可以运行的，大家在学习过程中可以参考。
+
+
+## 引入 DSQL 依赖
+
+首先，您就可以在您的项目的 pom.xml 文件中，引用 dsql 的 jar 包了，如下所示：
+
+```xml
+		<dependency>
+			<groupId>terran4j</groupId>
+			<artifactId>terran4j-commons-dsql</artifactId>
+			<version>Virgo.0.1</version>
+		</dependency>
+```
+
+**目前 `terran4j-commons-sql` 的最新稳定版是 Virgo.0.1 ，后续有新的稳定版本会更新到本文档中。**
+
+使用 gradle 就更简单了：
+```
+complie "terran4j:terran4j-commons-dsql:Virgo.0.1"
+```
+
 
  ## 定义实体类
  
@@ -122,41 +175,12 @@ public class Address {
 	@Column(length = 20, precision = 8)
 	private Double lat;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getLon() {
-        return lon;
-    }
-
-    public void setLon(Double lon) {
-        this.lon = lon;
-    }
-
-    public Double getLat() {
-        return lat;
-    }
-
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
+    // 省略 getter / setter  等方法
 }
 ```
 
 仍然是 JPA 的规范。
+
 
 ## 编写 JpaRepository
 
@@ -244,7 +268,7 @@ public class JpaDemoApplication implements ApplicationRunner {
 
 注意：这个类上有一行代码：`@Import(DatabaseTestConfig.class)`，
 DatabaseTestConfig 是 terran4j-commons-test 子项目提供的一个配置类，
-它主要是注入了一个默认的数据源配置，
+它的目标是在写测试代码时，注入了一个默认的数据源配置，
 其作用相当于在 application.properties 文件中自动加入如下配置项：
 
 ```
@@ -259,8 +283,8 @@ spring.jpa.jackson.serialization.indent_output = true
 
 这是一种约定优先的设计思想，如果你在本机开发时，本地数据库名为 test，
 用户名用 root，无密码（反正本地都是测试数据，无所谓安全性），
-也就是符合这些配置约定时，就可以直接引用并运行 main 函数了，
-否则还是老老实实的在 application 配置文件中定义吧。
+如果你的本地环境符合这些配置约定时，那示例代码下下来无须任何配置就可以运行，
+否则您还是老老实实的在 application 文件中定义配置吧。
 
 最后我们运行下 main 函数，发现数据写入数据库中了，
 所以说 JPA 入手容易，写写简单的 CURD 还是非常容易的。
@@ -268,11 +292,11 @@ spring.jpa.jackson.serialization.indent_output = true
  
 ## 编写 DsqlRepository 
 
-以上都还只是 JPA 的知识，从这里开始 DSQL 要闪亮登场了。
+以上都还只是 JPA 的知识，从本节开始 DSQL 要闪亮登场了。
 
-这一节，我们要实现一个查询需求：
+这一节，我们要实现一个查询功能：
 * 根据指定的位置，查询与其距离最近的一个位置。
-* 除了返回位置信息外，还要返回两个位置之间的距离，单位为米。
+* 除了返回最近位置数据外，还要返回两个位置之间的距离，单位为米。
 这个 SQL 就有点小复杂了，我们用 DSQL 来实现。
 
 与 JPA 类似， DSQL 的 Repository 也是需要继承一个接口，代码如下所示：
@@ -575,10 +599,10 @@ FreeMarker 是 Web 开发中非常常用的模板引擎工具，
 1. 指定的泛型类型的 List 类型， 这时 SQL 的查询结果可以有 0 到多条记录。
 2. 指定的泛型类型，这时 SQL 的查询结果必须是 0 到 1 条记录，多条时会报错。
 3. int 类型，这时 SQL 查询结果必须是一个数字，如： SELECT count(*) from ...  的形式。
-如下代码所示：
+
+如下代码展示了不同返回值的方法：
 
 ```java
-
 public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
 
     @Query("address-nearest")
@@ -590,8 +614,65 @@ public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
     @Query("address-count")
     int count(@Param("lat") double lat, @Param("lon") double lon,
               @Param("maxDistance") int maxDistance);
-
 }
 ```
+
+## 使用 @Modifying 进行增删改操作
+
+以上都是用 @Query 注解修饰查询方法，那如果我们要进行 insert / update / delete 
+操作时怎么办呢？
+
+答案就是用 @Modifying 来修饰方法，我们看下面的代码：
+
+```java
+public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
+    
+    @Modifying("address-update-nearest")
+    int updateNearest(@Param("name") String name,
+                      @Param("lat") double lat, @Param("lon") double lon);
+
+    @Modifying("address-delete-nearest")
+    int deleteNearest(@Param("lat") double lat, @Param("lon") double lon);
+}
+```
+
+与 updateNearest 相关的 address-update-nearest.sql.ftl 文件内容如下：
+
+```ftl
+UPDATE demo_address SET `name` = @{name}
+WHERE id IN (
+    SELECT t.id FROM (
+        SELECT *, ROUND(6378.137 * 2 * ASIN(SQRT(
+            POW(SIN(( @{lat} * PI() / 180 - lat * PI() / 180) / 2),2)
+            + COS( @{lat} * PI() / 180) * COS(lat * PI() / 180)
+            * POW(SIN(( @{lon} * PI() / 180 - lon * PI() / 180) / 2), 2)
+        )) * 1000) AS distance
+        FROM demo_address
+        ORDER BY distance ASC
+        LIMIT 0, 1
+    ) AS t
+)
+```
+
+与 deleteNearest 相关的 address-delete-nearest.sql.ftl 文件内容如下：
+
+```ftl
+DELETE from demo_address
+WHERE id IN (
+    SELECT t.id FROM (
+        SELECT *, ROUND(6378.137 * 2 * ASIN(SQRT(
+            POW(SIN(( @{lat} * PI() / 180 - lat * PI() / 180) / 2),2)
+            + COS( @{lat} * PI() / 180) * COS(lat * PI() / 180)
+            * POW(SIN(( @{lon} * PI() / 180 - lon * PI() / 180) / 2), 2)
+        )) * 1000) AS distance
+        FROM demo_address
+        ORDER BY distance ASC
+        LIMIT 0, 1
+    ) AS t
+)
+```
+
+代码语法都是一样的，就不多讲了。
+
 
 
