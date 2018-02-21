@@ -22,9 +22,8 @@
         <module>commons-restpack</module>
         <module>commons-api2doc</module>
         <module>commons-hedis</module>
-
         <module>commons-jfinger</module>
-        <module>commons-http-invoker</module>
+        <module>commons-hi</module>
          <module>commons-test</module>
         <module>commons-dsql</module>
         <module>commons-reflux</module>

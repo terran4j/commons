@@ -22,10 +22,6 @@
             <groupId>com.github.terran4j</groupId>
             <artifactId>terran4j-commons-util</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.github.terran4j</groupId>
-            <artifactId>terran4j-commons-http-invoker</artifactId>
-        </dependency>
 
         <!-- 引入数据库支持，用于初始化测试数据。 -->
         <dependency>
@@ -49,7 +45,6 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
