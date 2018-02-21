@@ -128,7 +128,7 @@ ORDER BY distance <#if args.nearFirst>ASC<#else>DESC</#if>
 		</dependency>
 ```
 
-**目前 `terran4j-commons-sql` 的最新稳定版是 Virgo.0.1 ，后续有新的稳定版本会更新到本文档中。**
+**目前 terran4j-commons 的最新稳定版是 Virgo.0.1 ，后续有新的稳定版本会更新到本文档中。**
 
 使用 gradle 就更简单了：
 ```
