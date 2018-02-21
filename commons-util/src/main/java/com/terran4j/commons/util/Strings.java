@@ -88,7 +88,7 @@ public class Strings {
 
     /**
      * 从classpath中读取文本资源文件。<br>
-     * 比如：包 com.terran4j.demo 下有一个类： Hello.java 和一个 hi.txt 文件：<br>
+     * 比如：包 com.terran4j.demo3 下有一个类： Hello.java 和一个 hi.txt 文件：<br>
      * 那 getString(Hello.class, "hi.txt") 方法可以获取 hi.txt 文件的内容。
      * 
      * @param clazz 与文本文件在相同包下的类。

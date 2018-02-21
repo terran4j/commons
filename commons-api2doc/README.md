@@ -2,13 +2,15 @@
 ## 目录
 
 * 项目背景
-* RestPack 简介
-* 引入 RestPack 依赖
-* 启用 RestPack
-* @RestPackController 注解
-* RestPack 异常处理
-* 日志输出
-* 资源分享与技术交流
+* Api2Doc 简介
+* 引入 Api2Doc 依赖
+* 启用 Api2Doc 服务
+* 给 Controller 类上添加文档注解
+* 给文档菜单项排序
+* 补充自定义文档
+* 定制欢迎页
+* 定制标题及图标
+* 关闭 Api2Doc 服务
 
 
 ## 项目背景
@@ -156,7 +158,6 @@ public class UserController2 {
 下面是 User 类的代码：
 
 ```java
-
 public class User {
 
     @ApiComment(value = "用户id", sample = "123")
@@ -207,6 +208,340 @@ Api2Doc 专注于文档的自动化生成，让大家花最小的成本，完成
 terran4j-commons-api2doc 的**最新稳定版，请参考 [这里](https://github.com/terran4j/commons/blob/master/version.md)**
 
 
-## 启用 Api2Doc
+## 启用 Api2Doc 服务
 
-我们需要在 
+本教程的示例代码在 src/test/java 目录的 com.terran4j.demo.api2doc 中，
+您也可以从 [这里](https://github.com/terran4j/commons/tree/master/commons-api2doc/src/test/java/com/terran4j/demo/api2doc) 获取到。
+
+首先，我们需要在 SpringBootApplication 类上面，
+添加 @EnableApi2Doc 注解以启用 Api2Doc 服务，
+如下代码所示：
+
+```java
+package com.terran4j.demo.api2doc;
+
+import com.terran4j.commons.api2doc.config.EnableApi2Doc;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+//  文档访问地址： http://localhost:8080/api2doc/home.html
+@EnableApi2Doc
+@SpringBootApplication
+public class Api2DocDemoApp {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Api2DocDemoApp.class, args);
+    }
+
+}
+``` 
+
+## 给 Controller 类上添加文档注解
+
+```java
+package com.terran4j.demo.api2doc;
+
+import com.terran4j.commons.api2doc.annotations.Api2Doc;
+import com.terran4j.commons.api2doc.annotations.ApiComment;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@Api2Doc(id = "demo1", name = "用户接口1")
+@ApiComment(seeClass = User.class)
+@RestController
+@RequestMapping(value = "/api2doc/demo1")
+public class UserController1 {
+
+    @ApiComment("添加一个新的用户。")
+    @RequestMapping(name = "新增用户",
+            value = "/user", method = RequestMethod.POST)
+    public User addUser(String group, String name,
+                        @ApiComment("用户类型") UserType type) {
+        return null; // TODO:  还未实现。
+    }
+}
+```
+
+其中返回类型 User 类的定义为：
+
+```java
+public class User {
+
+    @ApiComment(value = "用户id", sample = "123")
+    private Long id;
+
+    @ApiComment(value = "用户名", sample = "terran4j")
+    private String name;
+
+    @ApiComment(value = "账号密码", sample = "sdfi23skvs")
+    private String password;
+
+    @ApiComment(value = "用户所在的组", sample = "研发组")
+    private String group;
+
+    @ApiComment(value = "用户类型", sample = "admin")
+    private UserType type;
+
+    @ApiComment(value = "是否已删除", sample = "true")
+    @RestPackIgnore
+    private Boolean deleted;
+
+    @ApiComment(value = "创建时间\n也是注册时间。")
+    private Date createTime;
+
+    // 省略  getter / setter 方法。
+}
+```
+
+以及 type 属性的类型，也就是 UserType 类的定义为：
+
+```java
+package com.terran4j.demo.api2doc;
+
+import com.terran4j.commons.api2doc.annotations.ApiComment;
+
+public enum UserType {
+
+    @ApiComment("管理员")
+    admin,
+
+    @ApiComment("普通用户")
+    user
+}
+```
+
+Api2Doc 一共就两个注解：@Api2Doc 及 @ApiComment。
+
+@Api2Doc 用于对文档的生成进行控制。
+
+@Api2Doc 修饰在类上，表示这个类会参与到文档生成过程中，
+Api2Doc 服务会扫描 Spring 容器中所有的 Controller 类，
+只有类上有 @Api2Doc 的类，才会被生成文档，
+一个类对应于文档页面左侧的一级菜单项，@Api2Doc 的 name 属性则表示这个菜单项的名称。
+
+@Api2Doc 也可以修饰在方法，不过在方法上的  @Api2Doc 是可以省略，
+ Api2Doc 服务会扫描这个类的所有带有 @RequestMapping 的方法，
+ 每个这样的方法对应文档页面的左侧的二级菜单项，
+ 菜单项的名称取 @RequestMapping 的 name 属性，
+ 当然您仍然可以在方法上用  @Api2Doc 的 name 属性进行重定义。
+ 
+ @ApiComment 用于对 API 进行说明，它可以修饰在很多地方：
+ * 修饰在类上，表示对这组 API 接口进行说明；
+ * 修饰在方法上，表示对这个 API 接口进行说明；
+ * 修饰在参数上，表示对这个 API 接口的请求参数进行说明；
+ * 修饰在返回类型的属性上，表示对这个 API 接口的返回字段进行说明；
+ * 修饰在枚举项上，表示对枚举项进行说明；
+
+如果相同名称、相同意义的属性或参数字段，其说明已经在别的地方定义过了，
+可以用 @ApiComment 的 seeClass 属性表示采用指定类的同名字段上的说明信息，
+所以如这段代码：
+
+```java
+@Api2Doc(id = "demo1", name = "用户接口1")
+@ApiComment(seeClass = User.class)
+@RestController
+@RequestMapping(value = "/api2doc/demo1")
+public class UserController1 {
+
+    @ApiComment("添加一个新的用户。")
+    @RequestMapping(name = "新增用户",
+            value = "/user", method = RequestMethod.POST)
+    public User addUser(String group, String name, UserType type) {
+        return null; // TODO:  还未实现。
+    }
+}
+```
+
+虽然 group, name ,type 三个参数没有用 @ApiComment 进行说明，
+但由于这个类上有 @ApiComment(seeClass = User.class) ，
+因此只要 User 类中有 group, name ,type 字段并且有  @ApiComment 的说明就行了。
+
+
+最后我们运行 main 函数，访问 Api2Doc 的主页面：
+```
+http://localhost:8080/api2doc/home.html
+```
+
+文档页面如下：
+
+![api2doc-2.png](http://upload-images.jianshu.io/upload_images/4489584-7ebd93408d4ec409.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 给文档菜单项排序
+
+我们可以用 @Api2Doc 中的 order 属性给菜单项排序，
+order 的值越小，该菜单项就越排在前面，
+比如对于这段代码：
+
+```java
+package com.terran4j.demo.api2doc;
+
+import com.terran4j.commons.api2doc.annotations.Api2Doc;
+import com.terran4j.commons.api2doc.annotations.ApiComment;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@Api2Doc(id = "demo2", name = "用户接口2", order = 1)
+@ApiComment(seeClass = User.class)
+@RestController
+@RequestMapping(value = "/api2doc/demo2")
+public class UserController2 {
+
+    @Api2Doc(order = 10)
+    @ApiComment("添加一个新的用户。")
+    @RequestMapping(name = "新增用户",
+            value = "/user", method = RequestMethod.POST)
+    public User addUser(
+            @ApiComment("用户组名称") String group,
+            @ApiComment("用户名称") String name,
+            @ApiComment("用户类型") UserType type) {
+        return null; // TODO:  还未实现。
+    }
+
+    @Api2Doc(order = 20)
+    @ApiComment("根据用户id，查询此用户的信息")
+    @RequestMapping(name = "查询单个用户",
+            value = "/user/{id}", method = RequestMethod.GET)
+    public User getUser(@PathVariable("id") Long id) {
+        return null; // TODO:  还未实现。
+    }
+
+    @Api2Doc(order = 30)
+    @ApiComment("查询所有用户，按注册时间进行排序。")
+    @RequestMapping(name = "查询用户列表",
+            value = "/users", method = RequestMethod.GET)
+    public List<User> getUsers() {
+        return null; // TODO:  还未实现。
+    }
+
+    @Api2Doc(order = 40)
+    @ApiComment("根据指定的组名称，查询该组中的所有用户信息。")
+    @RequestMapping(name = "查询用户组",
+            value = "/group/{group}", method = RequestMethod.GET)
+    public UserGroup getGroup(@PathVariable("group") String group) {
+        return null; // TODO:  还未实现。
+    }
+}
+```
+
+显示的结果为：
+
+![api2doc-3.png](http://upload-images.jianshu.io/upload_images/4489584-0818fdef543c8c07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+在类上的 @Api2Doc 同样可以给一级菜单排序，规则是一样的，这里就不演示了。
+
+
+## 补充自定义文档
+
+有时候光有自动生成的 API 文档似乎还不太完美，或许我们想补充点别的什么东西，
+比如： 对项目的背景介绍、技术架构说明之类，那这个要怎么弄呢？
+
+Api2Doc 允许用 md 语法手工编写文档，并集成到自动生成的 API 文档之中，
+方法如下：
+
+首先，要在类上的 @Api2Doc 定义 id 属性，比如对下面这个类：
+
+```java
+package com.terran4j.demo.api2doc;
+
+import com.terran4j.commons.api2doc.annotations.Api2Doc;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Api2Doc(id = "demo3", name = "用户接口3")
+@RestController
+@RequestMapping(value = "/api2doc/demo3")
+public class UserController3 {
+
+    @Api2Doc(order = 10)
+    @RequestMapping(name = "接口1", value = "/m1")
+    public void m1() {
+    }
+
+    @Api2Doc(order = 20)
+    @RequestMapping(name = "接口2", value = "/m2")
+    public void m2() {
+    }
+}
+``` 
+
+@Api2Doc(id = "demo3", name = "用户接口3") 表示 id 为 demo3。
+
+然后，我们在 src/main/resources 中创建目录  api2doc/demo3，
+前面的 api2doc 是固定的，后面的 demo3 表示这个目录中的文档是添加到
+id 为 demo3 的一级文档菜单下。
+
+然后我们在 api2doc/demo3 目录中编写 md 格式的文档，如下图所示：
+
+![api2doc-4.png](http://upload-images.jianshu.io/upload_images/4489584-a76a84061f2771d3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+文件名的格式为 ${order}-${docName}.md，
+即 - 号前面的数字表示这个文档的排序，与 @Api2Doc 中的 order 属性是一样的，
+而 - 号后面是文档名称，也就是二级菜单的名称。
+
+因此，最后文档的显示效果为：
+
+![api2doc-5.png](http://upload-images.jianshu.io/upload_images/4489584-73814ce5bde91b2d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+看，补充文档与 API 文档在排序上完美的组合在一起。
+
+
+## 定制欢迎页
+
+每次访问文档页面 http://localhost:8080/api2doc/home.html 时，
+中间的内容是非常简单的一句：
+
+```
+欢迎使用 Api2Doc ！
+```
+
+似乎有点不太好，不过没关系，我们可以编写自己的欢迎页。
+
+方法很简单，在 src/main/resources 目录的 api2doc 目录下编写一个名为
+welcome.md 的文件，然后用 md 语法编写内容就可以。
+
+
+## 配置标题及图标
+
+可以在 application.yml 中配置文档系统的标题及图标，如下所示：
+
+```yaml
+api2doc:
+  title: Api2Doc示例项目——接口文档
+  icon: https://spring.io/img/homepage/icon-spring-framework.svg
+```
+
+图标为一个全路径的或本站点相对路径的 URL 就行。
+
+配置后的显示效果为： 
+![api2doc-6.png](http://upload-images.jianshu.io/upload_images/4489584-494a0c8042aaffb3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 关闭 Api2Doc 服务 
+
+您可以在不同环境下，选择关闭 Api2Doc 服务，如：
+
+```yaml
+# 本地环境
+api2doc:
+  title: Api2Doc示例项目——接口文档
+  icon: https://spring.io/img/homepage/icon-spring-framework.svg
+
+---
+# 线上环境
+spring:
+  profiles: online
+
+api2doc:
+  enabled: false
+```
+
+api3doc.enabled 为 false 表示关闭 Api2Doc 服务，不写或为 true 表示启用。
+
+由于  Api2Doc 服务没有访问权限校验，
+建议您在受信任的网络环境（如公司内网）中才启用。

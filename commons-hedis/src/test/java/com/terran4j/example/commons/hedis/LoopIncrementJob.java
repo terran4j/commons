@@ -13,13 +13,13 @@ public class LoopIncrementJob {
 
 	private static final Logger log = LoggerFactory.getLogger(LoopIncrementJob.class);
 
-	private static final String key = "demo-scheduling-counter";
+	private static final String key = "demo3-scheduling-counter";
 
 	@Autowired
 	private CountService countService;
 
-	@DScheduling("demo-scheduling-lock")
-	@Scheduled(cron = "0/${demo.scheduling.runRate:5} * * * * *")
+	@DScheduling("demo3-scheduling-lock")
+	@Scheduled(cron = "0/${demo3.scheduling.runRate:5} * * * * *")
 	public void loopIncrement() {
 		int count = countService.incrementAndGet(key);
 		log.info("\nloopIncrement, counter = {}", count);

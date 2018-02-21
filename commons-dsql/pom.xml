@@ -42,15 +42,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/test/java</directory>
-                <includes>
-                    <include>**/*.ftl</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
-
 </project>

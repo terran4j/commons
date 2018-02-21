@@ -12,7 +12,7 @@ import com.terran4j.commons.util.error.BusinessException;
 @Service
 public class CountService {
 
-	@Value("${demo.scheduling.sleep:1000}")
+	@Value("${demo3.scheduling.sleep:1000}")
 	private long sleepTime;
 
 	@Autowired
@@ -46,7 +46,7 @@ public class CountService {
 	/**
 	 * 对 incrementAndGet 方法加上分布式并发控制。
 	 */
-	@DSynchronized("'demo-dsyn-' + #key")
+	@DSynchronized("'demo3-dsyn-' + #key")
 	public int dsynIncrementAndGet(@Param("key") String key) {
 		return incrementAndGet(key);
 	}
