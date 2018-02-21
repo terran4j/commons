@@ -4,11 +4,15 @@
 
 * 项目背景
 * DSQL 简介
+* 示例程序介绍
 * 引入 DSQL 依赖
-* 启用 RestPack
-* @RestPackController 注解
-* RestPack 异常处理
-* 日志输出
+* 定义实体类
+* 编写 JpaRepository
+* 编写 DsqlRepository
+* 省略 @Param 注解
+* 返回结果的类型映射
+* 使用 @Modifying 进行增删改操作
+* 总结
 
 
 ## 项目背景
@@ -95,8 +99,6 @@ ORDER BY distance <#if args.nearFirst>ASC<#else>DESC</#if>
 除此之外，不需要额外编写 XML 指定映射关系，
 是不是比 JPA 及 MyBatis 都简单呢？
 
-DSQL 定位是作为 JPA 的一个补充，
-提供一种编写原生的、动态复杂 SQL 的方式，以提高开发效率和代码可维护性。
 
 
 ## 示例程序介绍
@@ -675,4 +677,8 @@ WHERE id IN (
 代码语法都是一样的，就不多讲了。
 
 
+## 总结
 
+DSQL 定位是作为 JPA 的一个补充，提供了一种编写原生的、动态复杂 SQL 的方式，
+以提高开发效率和代码可维护性。
+希望对大家有帮助！
