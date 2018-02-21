@@ -1,7 +1,7 @@
 package com.terran4j.commons.test;
 
-import com.terran4j.commons.httpinvoker.HttpClientListener;
-import com.terran4j.commons.httpinvoker.HttpRequest;
+import com.terran4j.commons.hi.HttpClientListener;
+import com.terran4j.commons.hi.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;

@@ -1,9 +1,9 @@
 package com.terran4j.commons.test;
 
-import com.terran4j.commons.httpinvoker.HttpClient;
-import com.terran4j.commons.httpinvoker.HttpException;
-import com.terran4j.commons.httpinvoker.Request;
-import com.terran4j.commons.httpinvoker.Session;
+import com.terran4j.commons.hi.HttpClient;
+import com.terran4j.commons.hi.HttpException;
+import com.terran4j.commons.hi.Request;
+import com.terran4j.commons.hi.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
