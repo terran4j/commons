@@ -90,8 +90,9 @@ public void doSomethingRequiredLogon() {
 
 ## Api2Doc 简介
 
-Api2Doc 基于 Spring MVC 的基础上，专注于 Http API 文档的生成，
-它通过反射的方式，提取 Controller 代码的信息，然后全自动的生成简洁的 API 文档，
+Api2Doc 基于 Spring Boot MVC 的基础上，专注于 Http API 文档的自动生成，
+它的原理与 Swagger2 是类似的，都是通过反射的方式，分析 Controller 中的信息生成文档。
+但它的易用性要比 Swagger2 高很多。
 
 虽然 Api2Doc 也需要开发者在代码上添加注解，但比起 Swagger2 来看少了很多，
 我们看下使用 Api2Doc 注解修饰后的代码：
@@ -104,33 +105,14 @@ Api2Doc 基于 Spring MVC 的基础上，专注于 Http API 文档的生成，
 @RequestMapping(value = "/api2doc/demo2")
 public class UserController2 {
 
-    @ApiComment("根据用户id，查询此用户的信息")
-    @RequestMapping(name = "查询单个用户",
-            value = "/user/{id}", method = RequestMethod.GET)
-    public User getUser(@PathVariable("id") Long id) {
-        return null; // TODO:  还未实现。
-    }
-
-    @ApiComment("查询所有用户，按注册时间进行排序。")
-    @RequestMapping(name = "查询用户列表",
-            value = "/users", method = RequestMethod.GET)
-    public List<User> getUsers() {
-        return null; // TODO:  还未实现。
-    }
-
-    @ApiComment("根据指定的组名称，查询该组中的所有用户信息。")
-    @RequestMapping(name = "查询用户组",
-            value = "/group/{group}", method = RequestMethod.GET)
-    public UserGroup getGroup(@PathVariable("group") String group) {
-        return null; // TODO:  还未实现。
-    }
-
     @ApiComment("添加一个新的用户。")
     @RequestMapping(name = "新增用户",
             value = "/user", method = RequestMethod.POST)
     public User addUser(String group, String name, UserType type) {
         return null; // TODO:  还未实现。
     }
+    
+    // 其它方法，这里省略...
 }
 ```
 
