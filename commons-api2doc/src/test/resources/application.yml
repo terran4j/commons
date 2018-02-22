@@ -1,0 +1,13 @@
+
+# 本地环境
+api2doc:
+  title: Api2Doc示例项目——接口文档
+  icon: https://spring.io/img/homepage/icon-spring-framework.svg
+
+---
+# 线上环境
+spring:
+  profiles: online
+
+api2doc:
+  enabled: false
