@@ -60,8 +60,9 @@ public class UserController2Swagger2 {
 }
 ```
 
-其实，方法本身的定义就包含了很多信息，如HTTP Method、参数名、参数类型等等，
-像 @ApiImplicitParam 中除了 value 属性有用外，其它都是重复的信息。
+@ApiOperation、@ApiImplicitParam 都是 Swagger2 提供的注解，用于定义 API 信息。
+其实，API 方法本身就包含了很多信息，如HTTP Method、参数名、参数类型等等，
+像 @ApiImplicitParam 中除了 value 属性有用外，其它都是重复描述。
 
 第二，Swagger2 的页面排版不太友好，它是一个垂直排列的方式，不利于信息的展示。
 并且看 API 详细信息还要一个个展开，中间还夹杂着测试的功能，反正作为文档是不易于阅读；
@@ -76,6 +77,8 @@ public class UserController2Swagger2 {
 
 ```java
 @RequestMapping(value = "/do_something")
+public void doSomethingRequiredLogon() {
+}
 ``` 
 
 （Spring Boot 对没指定 method 时默认表示支持所有的 method）

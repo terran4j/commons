@@ -18,4 +18,8 @@ public class UserController3 {
     @RequestMapping(name = "接口2", value = "/m2")
     public void m2() {
     }
+
+    @RequestMapping(value = "/do_something")
+    public void doSomethingRequiredLogon() {
+    }
 }
