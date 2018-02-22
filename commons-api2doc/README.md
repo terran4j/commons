@@ -81,7 +81,7 @@ public void doSomethingRequiredLogon() {
 }
 ``` 
 
-（Spring Boot 对没指定 method 时默认表示支持所有的 method）
+（当没指定 method 时，Spring Boot 会默认让这个接口支持所有的 method）
 
 因此，考虑到与其长长久久忍受 Swagger2 的各种不爽，
 不如花些时间自己做一个更好用的“自动化文档系统”，
@@ -90,15 +90,14 @@ public void doSomethingRequiredLogon() {
 
 ## Api2Doc 简介
 
-Api2Doc 基于 Spring Boot MVC 的基础上，专注于 Http API 文档的自动生成，
+Api2Doc 专注于 Http API 文档的自动生成，
 它的原理与 Swagger2 是类似的，都是通过反射的方式，分析 Controller 中的信息生成文档。
-但它的易用性要比 Swagger2 高很多。
+但它的易用性要比 Swagger2 好很多。
 
-虽然 Api2Doc 也需要开发者在代码上添加注解，但比起 Swagger2 来看少了很多，
+举个例子： 虽然 Api2Doc 也需要开发者在代码上添加注解，但比起 Swagger2 来看少了很多，
 我们看下使用 Api2Doc 注解修饰后的代码：
 
 ```java
-
 @Api2Doc(id = "users2", name = "用户接口")
 @ApiComment(seeClass = User.class)
 @RestController
@@ -117,8 +116,11 @@ public class UserController2 {
 ```
 
 看，方法上仅加了一行 @ApiComment 注解代码，但生成的文档可一点不含糊：
-![api2doc-2-1.png](http://upload-images.jianshu.io/upload_images/4489584-7d4c65c38ff9d80e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-![api2doc-2-2.png](http://upload-images.jianshu.io/upload_images/4489584-bc27ca67a53f1b44.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+![api2doc-2-1.png](http://upload-images.jianshu.io/upload_images/4489584-98f94cb360c0ccde.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![api2doc-2-2.png](http://upload-images.jianshu.io/upload_images/4489584-fedf2897f5c217b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 有的朋友可能会觉得很奇怪：文档页面上的请求参数，有说明、有示例值，
 但代码中没有定义啊，这些是哪来的呢？
 
