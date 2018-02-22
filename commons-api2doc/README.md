@@ -6,6 +6,8 @@
 * 引入 Api2Doc 依赖
 * 启用 Api2Doc 服务
 * 给 Controller 类上添加文档注解
+* @Api2Doc 注解详述
+* @ApiComment 注解详述
 * 给文档菜单项排序
 * 补充自定义文档
 * 定制文档的欢迎页
@@ -178,7 +180,7 @@ public class User {
 
 ## 引入 Api2Doc 依赖
 
-如果是 maven ，要在 pom.xml 中添加依赖，如下所示：
+如果是 maven ，请在 pom.xml 中添加依赖，如下所示：
 
 ```xml
         <dependency>
@@ -186,6 +188,12 @@ public class User {
             <artifactId>terran4j-commons-api2doc</artifactId>
             <version>${api2doc.version}</version>
         </dependency>
+```
+
+如果是 gradle，请在 build.gradle 中添加依赖，如下所示：
+
+```groovy
+compile "com.github.terran4j:terran4j-commons-api2doc:${api2doc.version}"
 ```
 
 ${api2doc.version} **最新稳定版，请参考 [这里](https://github.com/terran4j/commons/blob/master/version.md)**
@@ -196,8 +204,8 @@ ${api2doc.version} **最新稳定版，请参考 [这里](https://github.com/ter
 本教程的示例代码在 src/test/java 目录的 com.terran4j.demo.api2doc 中，
 您也可以从 [这里](https://github.com/terran4j/commons/tree/master/commons-api2doc/src/test/java/com/terran4j/demo/api2doc) 获取到。
 
-首先，我们需要在 SpringBootApplication 类上面，
-添加 @EnableApi2Doc 注解以启用 Api2Doc 服务，
+首先，我们需要在有 @SpringBootApplication 注解的类上，
+添加 @EnableApi2Doc 注解，以启用 Api2Doc 服务，
 如下代码所示：
 
 ```java
@@ -220,6 +228,10 @@ public class Api2DocDemoApp {
 ``` 
 
 ## 给 Controller 类上添加文档注解
+
+然后我们在 RestController 类添加 @Api2Doc 注解，
+在需要有文档说明的地方添加 @ApiComment 注解即可，
+如下所示：
 
 ```java
 package com.terran4j.demo.api2doc;
@@ -246,7 +258,7 @@ public class UserController1 {
 }
 ```
 
-其中返回类型 User 类的定义为：
+这个方法的返回类型 User 类的定义为：
 
 ```java
 public class User {
@@ -294,6 +306,21 @@ public enum UserType {
 }
 ```
 
+编写好代码后，我们运行 main 函数，访问 Api2Doc 的主页面：
+
+```
+http://localhost:8080/api2doc/home.html
+```
+
+文档页面如下：
+
+![api2doc-2.png](http://upload-images.jianshu.io/upload_images/4489584-7ebd93408d4ec409.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+说明 Api2Doc 服务起作用了，就是这么简单！
+
+
+## @Api2Doc 注解详述
+
 Api2Doc 一共就两个注解：@Api2Doc 及 @ApiComment。
 
 @Api2Doc 用于对文档的生成进行控制。
@@ -303,11 +330,14 @@ Api2Doc 服务会扫描 Spring 容器中所有的 Controller 类，
 只有类上有 @Api2Doc 的类，才会被生成文档，
 一个类对应于文档页面左侧的一级菜单项，@Api2Doc 的 name 属性则表示这个菜单项的名称。
 
-@Api2Doc 也可以修饰在方法，不过在方法上的  @Api2Doc 是可以省略，
+@Api2Doc 也可以修饰在方法，不过在方法上的  @Api2Doc 通常是可以省略，
  Api2Doc 服务会扫描这个类的所有带有 @RequestMapping 的方法，
  每个这样的方法对应文档页面的左侧的二级菜单项，
  菜单项的名称取 @RequestMapping 的 name 属性，
  当然您仍然可以在方法上用  @Api2Doc 的 name 属性进行重定义。
+ 
+ 
+ ## @ApiComment 注解详述
  
  @ApiComment 用于对 API 进行说明，它可以修饰在很多地方：
  * 修饰在类上，表示对这组 API 接口进行说明；
@@ -339,16 +369,6 @@ public class UserController1 {
 虽然 group, name ,type 三个参数没有用 @ApiComment 进行说明，
 但由于这个类上有 @ApiComment(seeClass = User.class) ，
 因此只要 User 类中有 group, name ,type 字段并且有  @ApiComment 的说明就行了。
-
-
-最后我们运行 main 函数，访问 Api2Doc 的主页面：
-```
-http://localhost:8080/api2doc/home.html
-```
-
-文档页面如下：
-
-![api2doc-2.png](http://upload-images.jianshu.io/upload_images/4489584-7ebd93408d4ec409.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 ## 给文档菜单项排序

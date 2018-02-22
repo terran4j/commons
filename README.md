@@ -6,13 +6,16 @@
 本项目由多个子项目组成，每个子项目聚焦解决一个问题。
 这里先简单介绍下这些子项目：
 * [commons-api2doc](https://github.com/terran4j/commons/tree/master/commons-api2doc):  
-    Http API 文档自动化生成工具，它通过反射的方式，读取 Controller 类的信息，
+    简称 Api2Doc，是一款 Http API 文档自动化生成工具，
+    它通过反射的方式，读取 Controller 类的信息，
     然后自动生成易于阅读的在线 API 文档，节省开发者手工编写 API 文档的工作量。
 * [commons-restpack](https://github.com/terran4j/commons/tree/master/commons-restpack):  
-    Http API 的数据包装工具，可以将Http API 的返回结果包装成统一的报文格式。
+    简称 RestPack，是一款 Http API 数据包装框架，
+    它可以将 Http API 的返回结果包装成统一的报文格式。
 * [commons-dsql](https://github.com/terran4j/commons/tree/master/commons-dsql):  
-    在 JPA 的基础上进行扩展，可以基于 JPA 很容易的实现动态复杂的 SQL 操作，
-    从而让开发者享受到 JPA & MyBatis 两者的优点，大大提高了持久层代码的开发效率。
+    简称 DSQL，是一款从 SQL 到对象的自动映射框架，它尤其擅长动态复杂 SQL 的处理。
+    它结合了现在两大主流持久层框架 JPA 及 MyBatis 的优点，
+    从而更进一步的提高了持久层的开发效率。
 
 
 ## 适用用户
