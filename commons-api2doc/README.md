@@ -474,7 +474,8 @@ public class UserController3 {
 }
 ``` 
 
-@Api2Doc(id = "demo3", name = "用户接口3") 表示 id 为 demo3。
+@Api2Doc(id = "demo3", name = "用户接口3") 表示：
+对应的一级菜单“用户接口3”的 id 为 demo3。
 
 然后，我们在 src/main/resources 中创建目录  api2doc/demo3，
 前面的 api2doc 是固定的，后面的 demo3 表示这个目录中的文档是添加到
@@ -484,7 +485,7 @@ id 为 demo3 的一级文档菜单下。
 
 ![api2doc-4.png](http://upload-images.jianshu.io/upload_images/4489584-a76a84061f2771d3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-文件名的格式为 ${order}-${docName}.md，
+文件名的格式为 ${order}-${文档名称}.md，
 即 - 号前面的数字表示这个文档的排序，与 @Api2Doc 中的 order 属性是一样的，
 而 - 号后面是文档名称，也就是二级菜单的名称。
 
@@ -492,7 +493,8 @@ id 为 demo3 的一级文档菜单下。
 
 ![api2doc-5.png](http://upload-images.jianshu.io/upload_images/4489584-73814ce5bde91b2d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-看，补充文档与 API 文档在排序上完美的组合在一起。
+看，手工编写的补充文档与自动生成的 API 文档，
+通过 order 进行排序组合在一起，看起来毫无违和感。
 
 
 ## 定制文档的欢迎页
@@ -504,15 +506,16 @@ id 为 demo3 的一级文档菜单下。
 欢迎使用 Api2Doc ！
 ```
 
-似乎有点不太好，不过没关系，我们可以编写自己的欢迎页。
+这似乎有点不太好，不过没关系，我们可以编写自己的欢迎页。
 
-方法很简单，在 src/main/resources 目录的 api2doc 目录下编写一个名为
-welcome.md 的文件，然后用 md 语法编写内容就可以。
+方法很简单，在 src/main/resources 目录的 api2doc 目录下，
+创建一个名为 welcome.md 的文件（这个名称是固定的），
+然后用 md 语法编写内容就可以。
 
 
 ## 配置文档的标题及图标
 
-可以在 application.yml 中配置文档系统的标题及图标，如下所示：
+可以在 application.yml 中配置文档的标题及图标，如下所示：
 
 ```yaml
 api2doc:
@@ -520,15 +523,16 @@ api2doc:
   icon: https://spring.io/img/homepage/icon-spring-framework.svg
 ```
 
-图标为一个全路径的或本站点相对路径的 URL 就行。
+图标为一个全路径 URL，或本站点相对路径 URL 都行。
 
 配置后的显示效果为： 
+
 ![api2doc-6.png](http://upload-images.jianshu.io/upload_images/4489584-494a0c8042aaffb3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 ## 关闭 Api2Doc 服务 
 
-您可以在不同环境下，选择关闭 Api2Doc 服务，如：
+您在 application.yml 中配置 api3doc.enabled 属性，以开启或关闭 Api2Doc 服务，如：
 
 ```yaml
 # 本地环境
@@ -548,4 +552,4 @@ api2doc:
 api3doc.enabled 为 false 表示关闭 Api2Doc 服务，不写或为 true 表示启用。
 
 由于  Api2Doc 服务没有访问权限校验，
-建议您在受信任的网络环境（如公司内网）中才启用。
+建议您在受信任的网络环境（如公司内网）中才启用 Api2Doc 服务。
