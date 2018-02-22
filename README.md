@@ -18,7 +18,7 @@
     在 JPA 的基础上进行扩展，可以基于 JPA 很容易的实现动态复杂的 SQL 操作，
     从而让开发者享受到 JPA & MyBatis 两者的优点，大大提高了持久层代码的开发效率。
 * [commons-api2doc](https://github.com/terran4j/commons/tree/master/commons-api2doc):  
-    Http API 文档工具，它通过反射的方式，读取 Controller 类的信息，
+    Http API 文档自动化生成工具，它通过反射的方式，读取 Controller 类的信息，
     然后自动生成易于阅读的在线 API 文档，节省开发者手工编写 API 文档的工作量。
     
 
