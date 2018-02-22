@@ -8,6 +8,7 @@
 * 给 Controller 类上添加文档注解
 * @Api2Doc 注解详述
 * @ApiComment 注解详述
+* @ApiError 注解详述
 * 给文档菜单项排序
 * 补充自定义文档
 * 定制文档的欢迎页
@@ -322,7 +323,7 @@ http://localhost:8080/api2doc/home.html
 
 ## @Api2Doc 注解详述
 
-Api2Doc 一共就两个注解：@Api2Doc 及 @ApiComment。
+Api2Doc 一共有 3 个注解：@Api2Doc、@ApiComment 及 @ApiError 。
 
 @Api2Doc 用于对文档的生成进行控制。
 
@@ -370,6 +371,39 @@ public class UserController1 {
 虽然 group, name ,type 三个参数没有用 @ApiComment 进行说明，
 但由于这个类上有 @ApiComment(seeClass = User.class) ，
 因此只要 User 类中有 group, name ,type 字段并且有  @ApiComment 的说明就行了。
+
+
+## @ApiError 注解详述
+
+@ApiError 用于定义错误码，
+有的 API 在处理时会产生错误，这时返回的报文中要包含错误码，
+以方便客户端判断和处理，因此需要在 API 文档上也有错误码的说明。
+
+如下代码演示了 @ApiError 的用法：
+
+```java
+@Api2Doc(id = "demo", name = "用户接口", order = 0)
+@ApiComment(seeClass = User.class)
+@RestController
+@RequestMapping(value = "/src/test/resources/demo")
+public class UserController {
+    
+    @Api2Doc(order = 50)
+    @ApiComment("根据用户id，删除指定的用户")
+    @ApiError(value = "user.not.found", comment = "此用户不存在！")
+    @ApiError(value = "admin.cant.delete", comment = "不允许删除管理员用户！")
+    @RequestMapping(name = "删除指定用户",
+            value = "/user/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") Long id) {
+    }
+}
+```
+
+@ApiError 的 value 属性表示错误码，comment 表示错误码的说明。
+
+错误码信息会显示在文档的最后面，效果如下所示：
+
+![api2doc-7.png](http://upload-images.jianshu.io/upload_images/4489584-44a77bbb3c1e84da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 ## 给文档菜单项排序
