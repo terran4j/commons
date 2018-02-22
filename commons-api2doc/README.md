@@ -116,22 +116,11 @@ public class UserController2 {
 }
 ```
 
-看，每个方法仅加了一行 @ApiComment 注解代码，但生成的文档可一点不含糊：
-
-![api2doc-1.png](http://upload-images.jianshu.io/upload_images/4489584-7121ff16d7e20d9b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-有的朋友可能会觉得很奇怪，比如这个接口：
-
-```java
-    @ApiComment("添加一个新的用户。")
-    @RequestMapping(name = "新增用户",
-            value = "/user", method = RequestMethod.POST)
-    public User addUser(String group, String name, UserType type) {
-        return null; // TODO:  还未实现。
-    }
-```
-
-文档页面上有参数的中文名，但代码中没有定义啊，这是哪来的呢？
+看，方法上仅加了一行 @ApiComment 注解代码，但生成的文档可一点不含糊：
+![api2doc-2-1.png](http://upload-images.jianshu.io/upload_images/4489584-7d4c65c38ff9d80e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![api2doc-2-2.png](http://upload-images.jianshu.io/upload_images/4489584-bc27ca67a53f1b44.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+有的朋友可能会觉得很奇怪：文档页面上的请求参数，有说明、有示例值，
+但代码中没有定义啊，这些是哪来的呢？
 
 这里涉及到 Api2Doc 的核心设计理念，就是：
 它尽可能多的去“分析和推断”，自动补全文档所需的信息，从而让用户少写。
