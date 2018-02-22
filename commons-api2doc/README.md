@@ -314,7 +314,8 @@ http://localhost:8080/api2doc/home.html
 
 文档页面如下：
 
-![api2doc-2.png](http://upload-images.jianshu.io/upload_images/4489584-7ebd93408d4ec409.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![api2doc-3-1.png](http://upload-images.jianshu.io/upload_images/4489584-ef8f5a56917da47f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![api2doc-3-2.png](http://upload-images.jianshu.io/upload_images/4489584-55ea3a295a009855.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 说明 Api2Doc 服务起作用了，就是这么简单！
 
