@@ -17,7 +17,8 @@
 * [commons-dsql](https://github.com/terran4j/commons/tree/master/commons-dsql):  
     在 JPA 的基础上进行扩展，可以基于 JPA 很容易的实现动态复杂的 SQL 操作，
     从而让开发者享受到 JPA & MyBatis 两者的优点，大大提高了持久层代码的开发效率。
-    
+* [commons-api2doc](https://github.com/terran4j/commons/tree/master/commons-api2doc):  
+    Http API 文档工具，可以根据 SpringBoot 的 Controller 代码信息，自动生成易于阅读的在线 API 文档
     
 
 ## 适用用户
