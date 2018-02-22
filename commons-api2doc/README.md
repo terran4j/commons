@@ -121,19 +121,20 @@ public class UserController2 {
 ![api2doc-2-1.png](http://upload-images.jianshu.io/upload_images/4489584-98f94cb360c0ccde.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![api2doc-2-2.png](http://upload-images.jianshu.io/upload_images/4489584-fedf2897f5c217b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-有的朋友可能会觉得很奇怪：文档页面上的请求参数，有说明、有示例值，
-但代码中没有定义啊，这些是哪来的呢？
+有的朋友可能会觉得很奇怪：文档页面上的说明、示例值等内容，
+在代码中没有写啊，这些是哪来的呢？
 
 这里涉及到 Api2Doc 的核心设计理念，就是：
 它尽可能多的去“分析和推断”，自动补全文档所需的信息，从而让用户少写。
 
-具体我们来回答这个问题，请大家注意这个类上有一个注解：
+说得有点抽象哈，下面我们来回答下这个问题，请大家注意这个类上有一个注解：
 
 ```java
 @ApiComment(seeClass = User.class)
 ```
 
-它意思是： 在 API 方法上遇到没写注解的参数时，请参照 User 类中的定义。
+它意思是： 在 API 方法上遇到没写说明信息时，请参照 User 类中的定义的说明信息。
+
 下面是 User 类的代码：
 
 ```java
@@ -165,10 +166,12 @@ public class User {
 }
 ```
 
-大家明白了么？ API 方法中的参数，如果与 User 类的属性同名的话，
-就用类属性的 @ApiComment 注解信息自动填充。
-其实这也符合实际的业务逻辑，有的字段会在多个实体类、多个 API 方法中用到，
-完全没有必要重复定义其文档的描述信息，只要有一个地方定义其它地方参照就行了。
+大家看明白了没？ API 方法中的参数，如果与 User 类的属性同名的话，
+就用类属性的 @ApiComment 说明信息自动填充。
+
+其实这也符合实际的业务逻辑。
+因为在大部分项目中，有的字段会在多个实体类、多个 API 方法中用到，
+完全没有必要重复编写其说明信息，只要有一个地方定义好了，然后其它地方参照就行了。
 
 Api2Doc 专注于文档的自动化生成，让大家花最小的成本，完成高质量的文档编写工作。
 
