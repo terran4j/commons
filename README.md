@@ -1,34 +1,28 @@
 
-## 项目背景
-
-本项目作者 terran4j 是一位有十多年开发经验的互联网老兵，
-之前在多家传统 IT 企业及互联网公司工作过，
-现在为一名自由职业者，发起并维护一套项目开发常用的工具类库，
-也就是本项目 terran4j-commons，纯开源，欢迎大家免费使用。
-
 ## 项目简介
+
+本项目采用 SpringBoot 框架构建，致力于为 SpringBoot 应用程序的开发提升开发效率及编程体验。
 
 本项目由多个子项目组成，每个子项目聚焦解决一个问题。
 这里先简单介绍下这些子项目：
-* commons-util:  
-    通用工具类库，提供了常见的字符串操作、Java反射操作、异常处理等功能。
-* [commons-restpack](https://github.com/terran4j/commons/tree/master/commons-restpack):  
-    Http Restful 数据包装工具，可以将Http Restful API返回的结果包装成统一的格式。
-* [commons-dsql](https://github.com/terran4j/commons/tree/master/commons-dsql):  
-    在 JPA 的基础上进行扩展，可以基于 JPA 很容易的实现动态复杂的 SQL 操作，
-    从而让开发者享受到 JPA & MyBatis 两者的优点，大大提高了持久层代码的开发效率。
 * [commons-api2doc](https://github.com/terran4j/commons/tree/master/commons-api2doc):  
     Http API 文档自动化生成工具，它通过反射的方式，读取 Controller 类的信息，
     然后自动生成易于阅读的在线 API 文档，节省开发者手工编写 API 文档的工作量。
-    
+* [commons-restpack](https://github.com/terran4j/commons/tree/master/commons-restpack):  
+    Http API 的数据包装工具，可以将Http API 的返回结果包装成统一的报文格式。
+* [commons-dsql](https://github.com/terran4j/commons/tree/master/commons-dsql):  
+    在 JPA 的基础上进行扩展，可以基于 JPA 很容易的实现动态复杂的 SQL 操作，
+    从而让开发者享受到 JPA & MyBatis 两者的优点，大大提高了持久层代码的开发效率。
+
 
 ## 适用用户
 
-适合有 Java / Kotlin + Maven + SpringBoot 开发经验的开发者们使用。
+适合有 Java / Kotlin + SpringBoot 开发经验的开发者们使用。
 
 如果您有 Java 开发经验但对Spring Boot 还不熟悉的话，建议先阅读笔者写过的一本书
-[ 《Spring Boot 快速入门》 ](http://www.jianshu.com/nb/14688855?order_by=seq)。
-这本书的目标是帮助有 Java 开发经验的程序员们快速掌握使用 Spring Boot 开发的基本技巧，感受到 Spring Boot 的极简开发风格及超爽编程体验。
+[《Spring Boot 快速入门》](http://www.jianshu.com/nb/14688855?order_by=seq)。
+这本书的目标是帮助有 Java 开发经验的程序员们快速掌握 Spring Boot 开发技巧，
+感受到 Spring Boot 的极简开发风格及超爽编程体验。
 
 
 ## 软件版本

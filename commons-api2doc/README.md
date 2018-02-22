@@ -173,21 +173,22 @@ public class User {
 因为在大部分项目中，有的字段会在多个实体类、多个 API 方法中用到，
 完全没有必要重复编写其说明信息，只要有一个地方定义好了，然后其它地方参照就行了。
 
-Api2Doc 专注于文档的自动化生成，让大家花最小的成本，完成高质量的文档编写工作。
-
-下面我们就来正式讲解它的用法。
+当然，这只是 Api2Doc 比 Swagger2 好用的特性之一，
+下面我们就来全面讲解它的用法，希望可以帮助开发者们从文档编写的苦海中解脱出来。
 
 ## 引入 Api2Doc 依赖
+
+如果是 maven ，要在 pom.xml 中添加依赖，如下所示：
 
 ```xml
         <dependency>
             <groupId>com.github.terran4j</groupId>
             <artifactId>terran4j-commons-api2doc</artifactId>
-            <version>${terran4j.commons.version}</version>
+            <version>${api2doc.version}</version>
         </dependency>
 ```
 
-terran4j-commons-api2doc 的**最新稳定版，请参考 [这里](https://github.com/terran4j/commons/blob/master/version.md)**
+${api2doc.version} **最新稳定版，请参考 [这里](https://github.com/terran4j/commons/blob/master/version.md)**
 
 
 ## 启用 Api2Doc 服务

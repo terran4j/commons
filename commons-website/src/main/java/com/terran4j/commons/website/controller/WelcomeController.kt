@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 open class WelcomeController {
 
     @Value("\${server.website.welcome:index.html}")
-    private val welcomePath: String = "index.html"
+    var welcomePath: String = "index.html"
 
     /**
      * 欢迎页
@@ -21,7 +21,7 @@ open class WelcomeController {
     @RequestMapping("/")
     fun index(): String? {
         if (StringUtils.isEmpty(welcomePath)) {
-            return null
+            welcomePath = "index.html"
         }
         var path = welcomePath.trim()
         if ("/" == path) {
