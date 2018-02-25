@@ -42,8 +42,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.terran4j</groupId>
-			<artifactId>terran4j-commons-restpack</artifactId>
+			<artifactId>terran4j-commons-website</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.github.terran4j</groupId>
+            <artifactId>terran4j-commons-restpack</artifactId>
+        </dependency>
 
 		<!-- aspectj -->
 		<dependency>
