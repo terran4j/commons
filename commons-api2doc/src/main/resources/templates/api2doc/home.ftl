@@ -1,15 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/api2doc/css/index.css">
-    <script src="/api2doc/js/vue.min.js"></script>
-    <script src="/api2doc/js/index.js"></script>
-<#--<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
-    <script type="text/javascript">
-    </script>
-    <link rel="stylesheet" href="/api2doc/css/home.css">
     <title>${title}</title>
+    <!--
+    使用 rem 布局，使 H5 页面能适配不同设备屏幕尺寸
+    flexible-lite-1.0.js 用于计算 html 根元素的 font-size 大小
+    然后 css 或 less 中所有的尺寸值一定要用 rem 单位，而不是 px 或其它单位。
+-->
+    <meta charset="UTF-8" name="viewport"
+          content="width=device-width,initial-scale=1,user-scalable=0"/>
+    <script src="/website/flexible-lite/flexible-lite-1.0.js"></script>
+    <script type="text/javascript">
+        flex(1000);
+    </script>
+
+    <!-- 左侧菜单是用 element-ui 写的，element-ui 又用了 vue，因此都要引用 -->
+    <link href="/website/element-ui/element-ui.min.css" rel="stylesheet">
+    <script src="/website/vue/vue-2.5.10.min.js"></script>
+    <script src="/website/element-ui/element-ui.min.js"></script>
+
+    <!-- 使用 jQuery 操作，让菜单栏始终悬浮出现在屏幕上。 -->
+    <script src="/website/jquery/jquery-3.3.1.min.js"></script>
+
+    <!--
+            务必确保在 less.js 之前加载你的样式表。
+            如果加载多个 .less 样式表文件，每个文件都会被单独编译。
+            因此，一个文件中所定义的任何变量、mixin 或命名空间都无法在其它文件中访问。
+    -->
+    <link href="/api2doc/css/home.less?v=${v}" rel="stylesheet/less" type="text/css">
+    <script src="/website/less/less-3.0.0.min.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="app" class="doc-app" v-loading.fullscreen.lock="loading"
@@ -31,24 +50,29 @@
 
         <!-- 左侧栏菜单 -->
         <div class="doc-left">
-            <el-menu class="el-menu-vertical-demo" theme="light"
-                     default-active="${p}">
-            <#list menus as folder>
-                <el-submenu index="${folder.index}">
-                    <template slot="title">${folder.name}</template>
-                    <#list folder.children as doc>
-                        <el-menu-item index="${doc.index}">
-                            <a href="${doc.url}" target="doc-iframe-name">${doc.name}</a>
-                        </el-menu-item>
-                    </#list>
-                </el-submenu>
-            </#list>
-            </el-menu>
+            <div id="doc-menus">
+                <el-menu class="el-menu-vertical-demo" theme="light"
+                         default-active="${p}">
+                <#list menus as folder>
+                    <el-submenu index="${folder.index}">
+                        <template slot="title">${folder.name}</template>
+                        <#list folder.children as doc>
+                            <el-menu-item index="${doc.index}">
+                                <a href="${doc.url}" target="doc-frame-name">${doc.name}</a>
+                            </el-menu-item>
+                        </#list>
+                    </el-submenu>
+                </#list>
+                </el-menu>
+            </div>
         </div>
 
-        <!-- 页面内容 -->
-        <div class="doc-middle">
-            <iframe id="doc-iframe-id" name="doc-iframe-name" class="doc-iframe"
+        <!-- 左侧菜单栏与右侧内容区域的分隔 -->
+        <div class="doc-split"></div>
+
+        <!-- 页面内容区域 -->
+        <div class="doc-content">
+            <iframe id="doc-frame-id" name="doc-frame-name" class="doc-frame"
                     scrolling="no" frameborder="0" seamless="seamless"
                     onload="setIFrameHeight(this)"
                     src="${docPath}"></iframe>
@@ -59,6 +83,8 @@
 </div>
 </body>
 <script>
+
+    // 当页面加载时，调节子框架的高度。
     function setIFrameHeight(iframe) {
         if (iframe) {
             var iFrameWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
@@ -69,9 +95,26 @@
         }
     };
 
-    // 如果网速不给力导致加载太慢时，会让页面先出现一个
-    // “拼命加载中...”
-    // 的提示，加载完成后再显示文档内容。
+    jQuery(function () {
+        var docMenus = jQuery('#doc-menus');
+        docMenus.attr('docMenusTop', docMenus.offset().top); //存储原来的距离顶部的距离
+        jQuery(window).scroll(function () {
+            var st = Math.max(document.body.scrollTop || document.documentElement.scrollTop);
+            if (st > parseInt(docMenus.attr('docMenusTop'))) {
+                if (docMenus.css('position') != 'fixed') {
+                    docMenus.css({'position': 'fixed', top: 0})
+                    docMenus.css({'width': '20%'})
+                }
+            } else if (docMenus.css('position') != 'static') {
+                docMenus.css({'position': 'static'})
+                docMenus.css({'width': '100%'})
+            }
+        });
+    });
+
+    // 如果网速不给力导致加载太慢时，
+    // 会让页面先出现一个“拼命加载中...”的提示，
+    // 加载完成后再显示文档内容。
     new Vue({
         el: '#app',
         data: function () {
