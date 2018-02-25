@@ -99,9 +99,10 @@
         var docMenus = jQuery('#doc-menus');
 
         // 文档加载后，存储初始与顶部的距离
-        docMenus.attr('initTop', docMenus.offset().top);
+        var initTop = docMenus.offset().top;
+        docMenus.attr('initTop', initTop);
 
-        jQuery(window).scroll(function () {
+        function setMenusHeight() {
             // 窗口可视部分高度，简称“视口高度”
             var viewHeight = window.innerHeight || document.body.clientHeight;
             var currentTop = Math.max(document.body.scrollTop || document.documentElement.scrollTop);
@@ -127,6 +128,9 @@
                 var menusHeight = viewHeight - (initTop - currentTop);
                 docMenus.css({'height': menusHeight + "px"})
             }
+        }
+        jQuery(window).scroll(function () {
+            setMenusHeight();
         });
     });
 
