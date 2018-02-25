@@ -96,7 +96,7 @@ public class DocPageBuilder {
             model.put("title", title);
         }
         model.put("content", content);
-        model.put("v", apiDocService.getVersion());
+        model.put("v", apiDocService.getComponentVersion());
 
         String html = freeMarker.build(docTemplate, model);
         return html;

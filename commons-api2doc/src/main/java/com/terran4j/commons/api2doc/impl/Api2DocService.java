@@ -9,6 +9,8 @@ import com.terran4j.commons.util.value.KeyedList;
 
 @Service
 public class Api2DocService {
+
+    private static final String v = String.valueOf(System.currentTimeMillis());
 	
 	private final KeyedList<String, ApiFolderObject> folders = new KeyedList<>();
 	
@@ -31,13 +33,19 @@ public class Api2DocService {
 		return folders.getAll();
 	}
 
-    public String getVersion() {
-        return String.valueOf(System.currentTimeMillis());
+    public String addAppDocVersion(String path) {
+	    if (path.indexOf("?") > 0) {
+	        return path + "&v=" + getAppDocVersion();
+        } else {
+            return path + "?v=" + getAppDocVersion();
+        }
     }
 
-
-    public String addVersion(String path) {
-        return path + "?v=" + getVersion();
+    public String getAppDocVersion() {
+        return v;
     }
-	
+
+    public String getComponentVersion() {
+	    return "1";
+    }
 }

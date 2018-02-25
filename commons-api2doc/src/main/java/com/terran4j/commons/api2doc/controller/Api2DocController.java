@@ -73,17 +73,9 @@ public class Api2DocController {
         model.put("menus", menus);
 
         // 当前要显示的内容。
-        String docPath;
-        if (StringUtils.hasText(p)) {
-            int pos = p.indexOf("-");
-            String fid = p.substring(0, pos);
-            String id = p.substring(pos + 1);
-            docPath = String.format("/api2doc/api/%s/%s.html", fid, id);
-        } else {
-            docPath = "/api2doc/welcome.html";
-        }
-        model.put("docPath", apiDocService.addVersion(docPath));
-        model.put("v", apiDocService.getVersion());
+        String docPath = getDocPath(p);
+        model.put("docPath", docPath);
+        model.put("v", apiDocService.getComponentVersion());
 
         p = p == null ? "" : p;
         model.put("p", p);
@@ -92,6 +84,27 @@ public class Api2DocController {
             log.info("request home.html, model:\n{}", model);
         }
         return "api2doc/home";
+    }
+
+    private String getDocPath(String p) {
+        String docPath = null;
+        if (StringUtils.hasText(p)) {
+            String[] strs = p.split("-");
+            if (strs.length >= 3) {
+                String docType = strs[0];
+                String docGroup = strs[1];
+                String docId = strs[2];
+                docPath = String.format("/api2doc/%s/%s/%s.html",
+                        docType, docGroup, docId);
+            }
+
+        }
+
+        if (docPath == null){
+            docPath = "/api2doc/welcome.html";
+        }
+
+        return apiDocService.addAppDocVersion(docPath);
     }
 
     /**

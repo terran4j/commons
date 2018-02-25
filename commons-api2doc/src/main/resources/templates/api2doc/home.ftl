@@ -3,10 +3,10 @@
 <head>
     <title>${title}</title>
     <!--
-    使用 rem 布局，使 H5 页面能适配不同设备屏幕尺寸
-    flexible-lite-1.0.js 用于计算 html 根元素的 font-size 大小
-    然后 css 或 less 中所有的尺寸值一定要用 rem 单位，而不是 px 或其它单位。
--->
+        使用 rem 布局，使 H5 页面能适配不同设备屏幕尺寸
+        flexible-lite-1.0.js 用于计算 html 根元素的 font-size 大小
+        然后 css 或 less 中所有的尺寸值一定要用 rem 单位，而不是 px 或其它单位。
+    -->
     <meta charset="UTF-8" name="viewport"
           content="width=device-width,initial-scale=1,user-scalable=0"/>
     <script src="/website/flexible-lite/flexible-lite-1.0.js"></script>
@@ -58,7 +58,7 @@
                         <template slot="title">${folder.name}</template>
                         <#list folder.children as doc>
                             <el-menu-item index="${doc.index}">
-                                <a href="${doc.url}" target="doc-frame-name">${doc.name}</a>
+                                <a href="${doc.url}" target="_self">${doc.name}</a>
                             </el-menu-item>
                         </#list>
                     </el-submenu>
@@ -97,17 +97,35 @@
 
     jQuery(function () {
         var docMenus = jQuery('#doc-menus');
-        docMenus.attr('docMenusTop', docMenus.offset().top); //存储原来的距离顶部的距离
+
+        // 文档加载后，存储初始与顶部的距离
+        docMenus.attr('initTop', docMenus.offset().top);
+
         jQuery(window).scroll(function () {
-            var st = Math.max(document.body.scrollTop || document.documentElement.scrollTop);
-            if (st > parseInt(docMenus.attr('docMenusTop'))) {
+            // 窗口可视部分高度，简称“视口高度”
+            var viewHeight = window.innerHeight || document.body.clientHeight;
+            var currentTop = Math.max(document.body.scrollTop || document.documentElement.scrollTop);
+            var initTop = parseInt(docMenus.attr('initTop'));
+            if (currentTop > initTop) {
                 if (docMenus.css('position') != 'fixed') {
                     docMenus.css({'position': 'fixed', top: 0})
+
+                    // 悬浮状态下，父元素为文档根元素。
                     docMenus.css({'width': '20%'})
+
+                    // 悬浮状态下，菜单占整个视口高度。
+                    var menusHeight = viewHeight;
+                    docMenus.css({'height': menusHeight + "px"})
                 }
             } else if (docMenus.css('position') != 'static') {
                 docMenus.css({'position': 'static'})
+
+                // 非悬浮状态下，父元素为 doc-left 的 div。
                 docMenus.css({'width': '100%'})
+
+                // 悬浮状态下，菜单占整个视口高度。
+                var menusHeight = viewHeight - (initTop - currentTop);
+                docMenus.css({'height': menusHeight + "px"})
             }
         });
     });

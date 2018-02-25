@@ -6,6 +6,8 @@ import com.terran4j.commons.api2doc.domain.ApiFolderObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,31 +79,43 @@ public class DocMenuBuilder {
                 mdFileName.length() - ".md".length());
         String docId = ApiFolderObject.name2Id(mdFileName);
         MenuData menu = new MenuData();
-        menu.setId(folderId + "-" + docId);
-        menu.setIndex(folderId + "-" + docId);
+
+        String pageId = "md-" + folderId + "-" + docId;
+        menu.setId(pageId);
+        menu.setIndex(pageId);
+        String url = getPageURL(pageId);
+        menu.setUrl(url);
+
         menu.setFolder(false);
         menu.setName(docName);
         menu.setOrder(order);
-
-        String path = "/api2doc/md/" + folderId + "/" + docId + ".html";
-        path = apiDocService.addVersion(path);
-        menu.setUrl(path);
 
         return menu;
     }
 
     public MenuData getMenu(ApiDocObject doc, String folderId) {
         MenuData menu = new MenuData();
-        menu.setId(folderId + "-" + doc.getId());
-        menu.setIndex(folderId + "-" + doc.getId());
+
+        String pageId = "api-" + folderId + "-" + doc.getId();
+        menu.setId(pageId);
+        menu.setIndex(pageId);
+        String url = getPageURL(pageId);
+        menu.setUrl(url);
+
         menu.setFolder(false);
         menu.setName(doc.getName());
         menu.setOrder(doc.getOrder());
 
-        String path = "/api2doc/api/" + folderId + "/" + doc.getId() + ".html";
-        path = apiDocService.addVersion(path);
-        menu.setUrl(path);
         return menu;
     }
 
+    private String getPageURL(String pageId) {
+        try {
+            String p = URLEncoder.encode(pageId, "UTF-8");
+            String path = "/api2doc/home.html?p=" + p;
+            return apiDocService.addAppDocVersion(path);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Can't encoding: " + pageId, e);
+        }
+    }
 }
