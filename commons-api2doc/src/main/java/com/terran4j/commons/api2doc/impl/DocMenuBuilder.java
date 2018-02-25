@@ -17,7 +17,6 @@ public class DocMenuBuilder {
     @Autowired
     private Api2DocService apiDocService;
 
-
     public List<MenuData> getMenuGroups() {
         List<MenuData> menuGroups = new ArrayList<>();
 
@@ -83,7 +82,11 @@ public class DocMenuBuilder {
         menu.setFolder(false);
         menu.setName(docName);
         menu.setOrder(order);
-        menu.setUrl("/api2doc/md/" + folderId + "/" + docId + ".html");
+
+        String path = "/api2doc/md/" + folderId + "/" + docId + ".html";
+        path = apiDocService.addVersion(path);
+        menu.setUrl(path);
+
         return menu;
     }
 
@@ -94,7 +97,11 @@ public class DocMenuBuilder {
         menu.setFolder(false);
         menu.setName(doc.getName());
         menu.setOrder(doc.getOrder());
-        menu.setUrl("/api2doc/api/" + folderId + "/" + doc.getId() + ".html");
+
+        String path = "/api2doc/api/" + folderId + "/" + doc.getId() + ".html";
+        path = apiDocService.addVersion(path);
+        menu.setUrl(path);
         return menu;
     }
+
 }

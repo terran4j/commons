@@ -50,7 +50,7 @@
 			<div class="doc-middle">
 				<iframe id="doc-iframe-id" name="doc-iframe-name" class="doc-iframe"
 						scrolling="no" frameborder="0" seamless="seamless"
-						onload="setIframeHeight(this)"
+						onload="setIFrameHeight(this)"
 						src="${docPath}"></iframe>
 			</div>
 
@@ -59,12 +59,12 @@
 	</div>
 </body>
 <script>
-	function setIframeHeight (iframe) {
+	function setIFrameHeight (iframe) {
 		if (iframe) {
-			var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
-			if (iframeWin.document.body) {
-				iframe.height = iframeWin.document.documentElement.scrollHeight
-						|| iframeWin.document.body.scrollHeight;
+			var iFrameWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+			if (iFrameWin.document.body) {
+				iframe.height = iFrameWin.document.documentElement.scrollHeight
+						|| iFrameWin.document.body.scrollHeight;
 			}
 		}
 	};

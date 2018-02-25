@@ -30,5 +30,14 @@ public class Api2DocService {
 	public List<ApiFolderObject> getFolders() {
 		return folders.getAll();
 	}
+
+    public String getVersion() {
+        return String.valueOf(System.currentTimeMillis());
+    }
+
+
+    public String addVersion(String path) {
+        return path + "?v=" + getVersion();
+    }
 	
 }

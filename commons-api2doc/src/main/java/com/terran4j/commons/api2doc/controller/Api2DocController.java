@@ -1,5 +1,6 @@
 package com.terran4j.commons.api2doc.controller;
 
+import com.terran4j.commons.api2doc.impl.Api2DocService;
 import com.terran4j.commons.api2doc.impl.DocMenuBuilder;
 import com.terran4j.commons.api2doc.impl.DocPageBuilder;
 import org.slf4j.Logger;
@@ -41,6 +42,9 @@ public class Api2DocController {
     @Autowired
     private DocPageBuilder docPageBuilder;
 
+    @Autowired
+    private Api2DocService apiDocService;
+
     /**
      * http://localhost:8080/api2doc/home.html
      * 整个文档页面，包含顶部标题栏、左侧菜单栏、右侧用 iframe 嵌入的内容区。
@@ -78,7 +82,8 @@ public class Api2DocController {
         } else {
             docPath = "/api2doc/welcome.html";
         }
-        model.put("docPath", docPath);
+        model.put("docPath", apiDocService.addVersion(docPath));
+        model.put("v", apiDocService.getVersion());
 
         p = p == null ? "" : p;
         model.put("p", p);
