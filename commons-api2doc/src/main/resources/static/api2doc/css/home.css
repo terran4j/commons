@@ -10,7 +10,7 @@
 }
 
 .doc-top {
-	width: 100%;
+	width: 99%;
 	height: 80px;
 	border-bottom-color: rgb(221, 221, 221);
 	border-bottom-width: 1px;
@@ -34,7 +34,7 @@
 .doc-title {
 	float: left;
 	position: relative;
-	font-size: 31.5px;
+	font-size: 32px;
 	font-weight: bold;
 	line-height: 70px;
 	height: 70px;
@@ -57,22 +57,20 @@
 }
 
 .doc-left {
-	width: 18%;
+	width: 20%;
 	margin-right: 20px;
 	float: left;
 	position: relative;
 	padding-top: 10px;
-	border-right-color: rgb(221, 221, 221);
-	border-right-width: 1px;
-	border-right-style: solid;
-	overflow-y: auto;
+    border-right: 1px solid rgb(221, 221, 221);
+    overflow-y: auto;
 	display: block;
 	background-color: #eef1f6;
 	margin-right: 20px;
 }
 
 .doc-middle {
-	width: 60%;
+	width: 78%;
 	float: left;
 }
 

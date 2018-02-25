@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/api2doc/css/index.css">
 <script src="/api2doc/js/vue.min.js"></script>
 <script src="/api2doc/js/index.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<#--<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
 <script type="text/javascript">
 </script>
 <link rel="stylesheet" href="/api2doc/css/home.css">
@@ -26,12 +26,12 @@
             </div>
 			<div class="doc-end"></div>
 		</div>
-		
+
 		<div class="doc-body">
-		
+
 			<!-- 左侧栏菜单 -->
 			<div class="doc-left">
-			    <el-menu class="el-menu-vertical-demo" theme="light" 
+			    <el-menu class="el-menu-vertical-demo" theme="light"
 			    		default-active="${p}">
 			      <#list menus as folder>
 				  <el-submenu index="${folder.index}">
@@ -48,12 +48,12 @@
 
 			<!-- 页面内容 -->
 			<div class="doc-middle">
-				<iframe id="doc-iframe-id" name="doc-iframe-name" class="doc-iframe" 
-						scrolling="no" frameborder="0" seamless="seamless" 
+				<iframe id="doc-iframe-id" name="doc-iframe-name" class="doc-iframe"
+						scrolling="no" frameborder="0" seamless="seamless"
 						onload="setIframeHeight(this)"
 						src="${docPath}"></iframe>
 			</div>
-			
+
 			<div class="doc-end"></div>
 		</div>
 	</div>
@@ -63,12 +63,12 @@
 		if (iframe) {
 			var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
 			if (iframeWin.document.body) {
-				iframe.height = iframeWin.document.documentElement.scrollHeight 
+				iframe.height = iframeWin.document.documentElement.scrollHeight
 						|| iframeWin.document.body.scrollHeight;
 			}
 		}
 	};
-	
+
 	var doInit = function(initData, ajaxPath, ajaxParams) {
 		new Vue({
 			el : '#app',
@@ -82,14 +82,16 @@
 		    },
 			created : function() {
 				var _self = this;
-				if (ajaxPath == null) {
-					_self.loading = false;
-				} else {
-					jQuery.get(ajaxPath, ajaxParams, function(data) {
-						_self.data = data;
-						_self.loading = false;
-					});
-				}
+                _self.loading = false;
+
+//				if (ajaxPath == null) {
+//					_self.loading = false;
+//				} else {
+//					jQuery.get(ajaxPath, ajaxParams, function(data) {
+//						_self.data = data;
+//						_self.loading = false;
+//					});
+//				}
 			}
 		});
 	}

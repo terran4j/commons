@@ -79,8 +79,15 @@ public class UserController2Swagger2 {
 只是因为写这个方法时没有指定 method：
 
 ```java
-@RequestMapping(value = "/do_something")
-public void doSomethingRequiredLogon() {
+@RestController
+@RequestMapping(value = "/user2")
+public class UserController2Swagger2 {
+    
+    @RequestMapping(value = "/do_something")
+    public void doSomethingRequiredLogon() {
+    }
+    
+    // 其它方法，这里省略...
 }
 ``` 
 
@@ -132,7 +139,7 @@ public class UserController2 {
 
 说得有点抽象哈，下面我们来回答下这个问题，请大家注意这个类上有一个注解：
 
-```java
+```
 @ApiComment(seeClass = User.class)
 ```
 
