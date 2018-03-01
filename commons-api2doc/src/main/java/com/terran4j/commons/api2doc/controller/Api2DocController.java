@@ -33,8 +33,8 @@ public class Api2DocController {
     @Value("${api2doc.icon:}")
     private String api2docIcon;
 
-    @Value("${api2doc.client.enable:false}")
-    private boolean api2docClientEnable = false;
+//    @Value("${api2doc.client.enable:false}")
+//    private boolean api2docClientEnable = false;
 
     @Autowired
     private DocMenuBuilder docMenuBuilder;

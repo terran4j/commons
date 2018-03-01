@@ -206,7 +206,7 @@ public enum ApiDataType {
 
     private final String name;
 
-    private ApiDataType(String name) {
+    ApiDataType(String name) {
         this.name = name;
     }
 

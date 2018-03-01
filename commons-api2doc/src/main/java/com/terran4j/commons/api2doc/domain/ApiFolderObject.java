@@ -30,8 +30,6 @@ public class ApiFolderObject extends ApiObject {
         this.sourceClass = sourceClass;
     }
 
-
-
     public final List<ApiDocObject> getDocs() {
         return docs.getAll();
     }

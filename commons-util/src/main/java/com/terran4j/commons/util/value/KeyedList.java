@@ -126,7 +126,9 @@ public final class KeyedList<K, V> implements ValueSource<K, V> {
 		List<V> all = new ArrayList<V>();
 		for (K key : list) {
 			V item = map.get(key);
-			all.add(item);
+			if (item != null) {
+                all.add(item);
+            }
 		}
 		return all;
 	}

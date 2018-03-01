@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(Api2DocCollector.class);
 
-    private LocalVariableTableParameterNameDiscoverer parameterNameDiscoverer
+    private final LocalVariableTableParameterNameDiscoverer parameterNameDiscoverer
             = new LocalVariableTableParameterNameDiscoverer();
 
     @Autowired
@@ -273,7 +274,7 @@ public class Api2DocCollector implements BeanPostProcessor {
         paths = combine(basePaths, paths);
         doc.setPaths(paths);
 
-        doc.setMethods(mapping.method());
+        doc.setMethods(toRequestMethod(mapping));
 
         // 收集参数信息。
         List<ApiParamObject> apiParams = toApiParams(method, defaultSeeClass);
@@ -330,6 +331,17 @@ public class Api2DocCollector implements BeanPostProcessor {
         }
 
         return doc;
+    }
+
+    private RequestMethod[] toRequestMethod(RequestMapping mapping) {
+        if (mapping == null) {
+            return RequestMethod.values();
+        }
+        RequestMethod[] methods = mapping.method();
+        if (methods == null || methods.length == 0) {
+            return RequestMethod.values();
+        }
+        return methods;
     }
 
     public List<ApiParamObject> toApiParams(Method method, Class<?> defaultSeeClass) {

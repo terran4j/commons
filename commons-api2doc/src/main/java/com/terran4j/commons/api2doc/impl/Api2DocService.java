@@ -1,7 +1,9 @@
 package com.terran4j.commons.api2doc.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.terran4j.commons.api2doc.meta.ClassMeta;
 import org.springframework.stereotype.Service;
 
 import com.terran4j.commons.api2doc.domain.ApiFolderObject;
@@ -48,4 +50,5 @@ public class Api2DocService {
     public String getComponentVersion() {
 	    return "1";
     }
+
 }
