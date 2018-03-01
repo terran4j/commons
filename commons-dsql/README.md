@@ -307,7 +307,7 @@ spring.jpa.jackson.serialization.indent_output = true
 package com.terran4j.demo.dsql;
 
 import com.terran4j.commons.dsql.DsqlRepository;
-import com.terran4j.commons.dsql.Query;
+import com.terran4j.commons.dsql.DsqlQuery;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;

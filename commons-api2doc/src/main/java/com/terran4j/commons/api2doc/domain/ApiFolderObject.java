@@ -12,6 +12,8 @@ public class ApiFolderObject extends ApiObject {
 
     private Class<?> sourceClass;
 
+    private final KeyedList<String, ApiDocObject> docs = new KeyedList<>();
+
     public Map<String, String> getMds() {
         return mds;
     }
@@ -28,7 +30,7 @@ public class ApiFolderObject extends ApiObject {
         this.sourceClass = sourceClass;
     }
 
-    private final KeyedList<String, ApiDocObject> docs = new KeyedList<>();
+
 
     public final List<ApiDocObject> getDocs() {
         return docs.getAll();

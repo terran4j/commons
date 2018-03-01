@@ -1,9 +1,9 @@
 package com.terran4j.commons.dsql.impl;
 
 import com.terran4j.commons.dsql.DsqlExecutor;
+import com.terran4j.commons.dsql.DsqlQuery;
 import com.terran4j.commons.dsql.DsqlRepository;
-import com.terran4j.commons.dsql.Modifying;
-import com.terran4j.commons.dsql.Query;
+import com.terran4j.commons.dsql.DsqlModifying;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.ErrorCodes;
 import org.springframework.cglib.proxy.Enhancer;
@@ -74,20 +74,20 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
 
         Map<String, Object> context = getContext(method, objects);
 
-        Query query = method.getAnnotation(Query.class);
+        DsqlQuery query = method.getAnnotation(DsqlQuery.class);
         if (query != null) {
             String sqlName = query.value();
             return doQuery(sqlName, context, method, executor);
         }
 
-        Modifying modifying = method.getAnnotation(Modifying.class);
+        DsqlModifying modifying = method.getAnnotation(DsqlModifying.class);
         if (modifying != null) {
             String sqlName = modifying.value();
             return doModifying(sqlName, context, method, executor);
         }
 
         throw new IllegalStateException(method +
-                " MUST has @Query or @Modifying annotation.");
+                " MUST has @DsqlQuery or @DsqlModifying annotation.");
     }
 
     private Object doModifying(String sqlName, Map<String, Object> args,
@@ -105,7 +105,7 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
         throw new BusinessException(ErrorCodes.CONFIG_ERROR)
                 .put("method", method).put("returnType", returnType)
                 .setMessage("Unknown returnType: ${returnType}, " +
-                        "@Modifying method ONLY support  returnTypes: " +
+                        "@DsqlModifying method ONLY support  returnTypes: " +
                         "Long, long, Integer, int");
     }
 
@@ -141,7 +141,7 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
                 .put("method", method).put("returnType", returnType)
                 .put("elementType", elementType.getSimpleName())
                 .setMessage("Unknown returnType: ${returnType}, " +
-                        "@Query method ONLY support  returnTypes: " +
+                        "@DsqlQuery method ONLY support  returnTypes: " +
                         "List<${elementType}>, ${elementType}, " +
                         "Long, long, Integer, int.");
     }

@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
-public @interface Modifying {
+public @interface DsqlQuery {
 
     String value();
 }
