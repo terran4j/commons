@@ -15,15 +15,17 @@ public class ValueSources<K, V> implements ValueSource<K, V> {
 		if (stack.size() == 0) {
 			return null;
 		}
-		
-		for (int i = 0; i< stack.size(); i++) {
-			ValueSource<K, V> values = stack.get(i);
-			V value = values.get(key);
-			if (value != null) {
-				return value;
-			}
-		}
-		
+
+		synchronized (stack) {
+            for (int i = stack.size() - 1; i >= 0; i--) {
+                ValueSource<K, V> values = stack.get(i);
+                V value = values.get(key);
+                if (value != null) {
+                    return value;
+                }
+            }
+        }
+
 		return null;
 	}
 

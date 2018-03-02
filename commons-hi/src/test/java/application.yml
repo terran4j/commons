@@ -1,3 +1,5 @@
 
-url:  http://localhost:8080
+
+HttpClientTest:
+  k1: 111
 
