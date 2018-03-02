@@ -143,6 +143,7 @@ public final class HttpRequest {
             }
             return response;
         } catch (Exception e) {
+            log.error("http failed: " +e.getMessage(), e);
             throw new HttpException(HttpErrorCode.HTTP_REQUEST_ERROR, e)
                     .put("curl", toCurl(httpRequest))
                     .as(HttpException.class);

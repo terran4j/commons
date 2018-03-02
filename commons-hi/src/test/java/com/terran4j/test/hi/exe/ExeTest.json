@@ -1,0 +1,26 @@
+{
+  "locals": {
+    "result": "0"
+  },
+  "actions": [
+    {
+      "id": "plus",
+      "name": "两数相加",
+      "url": "/exe/plus",
+      "method": "POST",
+      "params": {
+        "a": "{a}",
+        "b": "{b}"
+      },
+      "writes": [
+        { "key": "result", "value": "${sum}" }
+      ]
+    },
+    {
+      "id": "echo",
+      "name": "重复返回",
+      "url": "/exe/echo",
+      "method": "GET"
+    }
+  ]
+}

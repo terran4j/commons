@@ -132,21 +132,7 @@ public class HttpClient {
         }
     }
 
-    @SuppressWarnings({"unchecked"})
     private void init(JsonObject config) {
-//        JsonElement element = config.get("environments");
-//        if (element != null) {
-//            JsonObject envs = element.getAsJsonObject();
-//            Set<Entry<String, JsonElement>> set = envs.entrySet();
-//            if (set != null && set.size() > 0) {
-//                for (Entry<String, JsonElement> entry : set) {
-//                    String key = entry.getKey();
-//                    JsonElement data = entry.getValue();
-//                    JsonValueSource values = new JsonValueSource(data.getAsJsonObject());
-//                    environments.put(key, values);
-//                }
-//            }
-//        }
 
         JsonElement element = config.get("locals");
         if (element != null) {
@@ -155,7 +141,7 @@ public class HttpClient {
 
          element = config.get("actions");
         if (element != null) {
-            actions = new HashMap<String, Action>();
+            actions = new HashMap<>();
             JsonArray array = element.getAsJsonArray();
             for (int i = 0; i < array.size(); i++) {
                 Action invoker = gson.fromJson(array.get(i), Action.class);
@@ -173,22 +159,6 @@ public class HttpClient {
         this.config = config;
     }
 
-//    public Map<String, String> cloneParams() {
-//        Map<String, String> cloneParams = new HashMap<String, String>();
-//        cloneParams.putAll(params);
-//        return cloneParams;
-//    }
-//
-//    public Map<String, String> cloneHeaders() {
-//        Map<String, String> cloneHeaders = new HashMap<String, String>();
-//        cloneHeaders.putAll(headers);
-//        return cloneHeaders;
-//    }
-//
-//    public ValueSource<String, String> getEnvironment(String profile) {
-//        return environments.get(profile);
-//    }
-//
     public Map<String, String> cloneLocals() {
         Map<String, String> cloneLocals = new HashMap<String, String>();
         cloneLocals.putAll(locals);
@@ -199,7 +169,7 @@ public class HttpClient {
         return actions;
     }
 
-    public Session create() {
+    public Session createSession() {
         return new Session(this, context);
     }
 

@@ -20,7 +20,7 @@ public class HttpClientApp {
                 HttpClientApp.class, "demo.json", context);
 
         // 创建一个 session，它会在客户端维护一些会话信息。
-        Session session = httpClient.create();
+        Session session = httpClient.createSession();
 
         // 调用 plus 接口，输入参数 input = 3.
         Response response = session.createRequest("plus").param("input", "3").exe();

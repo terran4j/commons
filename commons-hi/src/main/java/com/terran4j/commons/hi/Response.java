@@ -13,18 +13,32 @@ public final class Response {
 	private final Gson gson = new Gson();
 	
 	private final Session session;
+
+	private final JsonElement result;
 	
 	private final JsonValueSource values;
 	
-	public Response(JsonObject result, Session session) {
+	public Response(JsonElement result, Session session) {
 		super();
 		this.session = session;
-		this.values = new JsonValueSource(result);
+		this.result = result;
+		if (result != null && result.isJsonObject()) {
+            this.values = new JsonValueSource(result.getAsJsonObject());
+        } else {
+		    this.values = null;
+        }
 	}
 	
-	public JsonObject getJsonRoot() {
-		return values.getSource();
+	public JsonElement getResult() {
+		return result;
 	}
+
+    public <T> T getResult(Class<T> clazz) {
+	    if (result == null) {
+	        return null;
+        }
+        return gson.fromJson(result, clazz);
+    }
 	
 	public JsonElement getJson(String key) {
 		JsonElement jsonElement = values.getElement(key);
@@ -47,18 +61,19 @@ public final class Response {
 		return gson.fromJson(jsonElement, clazz);
 	}
 
-	public Response assertEqual(String key, String expectalue) {
-		String actualValue = values.get(key);
-		org.junit.Assert.assertEquals(expectalue, actualValue);
-		return this;
-	}
-	
-	public Response assertContains(String key) {
-		String actualValue = values.get(key);
-		Assert.isTrue(!StringUtils.isEmpty(actualValue), "reponse should contains key: " + key);
-		return this;
-	}
-	
+//
+//	public Response assertEqual(String key, String expectValue) {
+//		String actualValue = values.get(key);
+//		org.junit.Assert.assertEquals(expectValue, actualValue);
+//		return this;
+//	}
+//
+//	public Response assertContains(String key) {
+//		String actualValue = values.get(key);
+//		Assert.isTrue(!StringUtils.isEmpty(actualValue), "reponse should contains key: " + key);
+//		return this;
+//	}
+//
 //	public Response save(String key, String alias) {
 //		String actualValue = values.get(key);
 //		session.setAttribute(alias, actualValue);
