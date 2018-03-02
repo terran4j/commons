@@ -7,7 +7,7 @@
 			"id": "plus",
 			"name": "两数相加",
 			"url": "${url}/calculator/plus",
-			"method": "POS",
+			"method": "POST",
 			"params": {
 				"a": "${total}",
 				"b": "${input}"

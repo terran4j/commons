@@ -14,7 +14,7 @@ public class Write {
 	
 	private String value;
 	
-	private String to;
+//	private String to;
 
 	public String getKey() {
 		return key;
@@ -32,29 +32,30 @@ public class Write {
 		this.value = value;
 	}
 
-	public String getTo() {
-		return to;
-	}
-
-	public void setTo(String to) {
-		this.to = to;
-	}
+//	public String getTo() {
+//		return to;
+//	}
+//
+//	public void setTo(String to) {
+//		this.to = to;
+//	}
 
 	public void doWrite(Session session, final ValueSources<String, String> values) {
 		String actualValue = Strings.format(value, values);
-		WriteTo writeTo = WriteTo.valueOf(to);
-		if (writeTo == WriteTo.headers) {
-			session.getHeaders().put(key, actualValue);
-			if (log.isInfoEnabled()) {
-				log.info("write to {}[{} = {}]", to, key, actualValue);
-			}
-		}
-		if (writeTo == WriteTo.locals) {
-			session.getLocals().put(key, actualValue);
-			if (log.isInfoEnabled()) {
-				log.info("write to {}[{} = {}]", to, key, actualValue);
-			}
-		}
+//		WriteTo writeTo = WriteTo.valueOf(to);
+//		if (writeTo == WriteTo.headers) {
+//			session.getHeaders().put(key, actualValue);
+//			if (log.isInfoEnabled()) {
+//				log.info("write to {}[{} = {}]", to, key, actualValue);
+//			}
+//		}
+        session.getLocals().put(key, actualValue);
+        if (log.isInfoEnabled()) {
+            log.info("write to {}[{} = {}]", key, actualValue);
+        }
+//		if (writeTo == WriteTo.locals) {
+//
+//		}
 	}
 	
 }

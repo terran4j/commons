@@ -33,7 +33,8 @@
 
 ### 解决方案
 
-commons-http 提供了一种配置化的方式来使对 HTTP API 调用更加简单，并使代码更易于理解。
+commons-hi （下面简称为 hi）提供了一种配置化的方式，
+使对 HTTP API 调用更加简单，并使代码更易于理解。
 
 下一节，我们将用一个示例程序来体验一下它是如何工作的。
 
@@ -46,7 +47,7 @@ commons-http 提供了一种配置化的方式来使对 HTTP API 调用更加简
 3. 客户端将 result 值赋值给 total，以保存累加计算的值。
 4. 可以不停执行 2 ~ 3 步，以实现“累加计算”。
 
-这个程序有点无聊，但它足够简单，通过它能快速演示 commons-http 提供的功能。
+这个程序有点无聊，但它足够简单，通过它能快速演示 hi 提供的功能。
 
 ##### 服务端实现
 
@@ -121,9 +122,9 @@ public class CalculatorController {
 
 ##### 客户端实现
 
-现在，我们的重点来了，我们将用 commons-http 实现客户端功能。
+现在，我们的重点来了，我们将用 hi 实现客户端功能。
 传统的方式，是用 HttpConnection 或 HttpClient 之类的工具类，直接硬编码实现对 Http 接口的调用，
-而在 commons-http 中，我们将先编写一个`http.config.json`文件来定义对这个 HTTP 接口的调用细节：
+而在 hi 中，我们将先编写一个`http.config.json`文件来定义对这个 HTTP 接口的调用细节：
 
 ```json
 {
@@ -168,7 +169,7 @@ url:  http://localhost:8080
 
 它完全遵循 Spring Boot 的原理，指定了不同的环境，可以加载对应这个环境的配置值。
 
-*  locals 中的值，也就是 commons-http 给当前会话提供的本地变量，这个本地变量可能会被改写。
+*  locals 中的值，也就是 hi 给当前会话提供的本地变量，这个本地变量可能会被改写。
 
 * 调用 action 时的入参，如`session.action("plus").param("input", "3").exe()`这次调用，指定了一个入参 input = 3。
 
@@ -211,14 +212,17 @@ http.config.json 文件放在 classpth 的根路径即可。
 在编写完`http.config.json`文件之后，调用 HTTP API 的 java 代码就特别简单了，如下所示：
 
 ```java
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = { HttpClientApp.class }, webEnvironment = WebEnvironment.DEFINED_PORT)
+public class HttpClientTest {
+    
 	@Autowired
 	protected ApplicationContext context;
 	
 	@Test
 	public void testHttpClient() throws HttpException {
 		
-		// 创建一个 httpClient 对象，它会加载 http.config.json 文件中定义的信息。
+		// 创建一个 httpClient 对象，它会加载本地 http.config.json 文件中定义的信息。
 		HttpClient httpClient = HttpClient.create(context);
 		
 		// 创建一个 session 对象，它会在客户端维护一些会话信息，如 locals 变量、cookies 变量之类的。
@@ -236,6 +240,8 @@ http.config.json 文件放在 classpth 的根路径即可。
 		total = response.getJson("result").getAsInt();
 		Assert.assertEquals(8, total);
 	}
+	
+}
 ```
 
 上面的代码很好理解吧 :-)
@@ -243,6 +249,7 @@ http.config.json 文件放在 classpth 的根路径即可。
 
 ### 总结
 
-commons-http 的好处是对 HTTP 的调用细节从代码提取到配置文件中描述，让真正调用 HTTP 接口时特别简单、容易理解，从而提高了代码的可维护性。
+hi 的好处是对 HTTP 的调用细节从代码提取到配置文件中描述，
+让真正调用 HTTP 接口时特别简单、容易理解，从而提高了代码的可维护性。
 
 笔者目前用它最多的场景是编写 HTTP 接口的 Test Case 代码。

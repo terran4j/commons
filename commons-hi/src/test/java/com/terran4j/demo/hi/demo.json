@@ -1,0 +1,17 @@
+{
+  "locals": {
+    "total": 0
+  },
+  "actions": [
+    {
+      "id": "plus",
+      "name": "两数相加",
+      "url": "/calculator/plus",
+      "method": "POST",
+      "params": {
+        "a": "{total}",
+        "b": "{input}"
+      }
+    }
+  ]
+}

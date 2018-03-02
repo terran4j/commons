@@ -4,5 +4,5 @@ public interface HttpClientListener {
 
 	void beforeExecute(HttpRequest request);
 	
-	String afterExecute(HttpRequest request, String reponse);
+	String afterExecute(HttpRequest request, String response);
 }

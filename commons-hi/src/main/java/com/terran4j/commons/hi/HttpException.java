@@ -7,7 +7,7 @@ public class HttpException extends BusinessException {
 	private static final long serialVersionUID = 3426759523831086859L;
 
 	public HttpException(HttpErrorCode code) {
-		super(code);
+		super(code.getName());
 	}
 
 	public HttpException(HttpErrorCode code, Throwable cause) {

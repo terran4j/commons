@@ -59,17 +59,17 @@ public final class Response {
 		return this;
 	}
 	
-	public Response save(String key, String alias) {
-		String actualValue = values.get(key);
-		session.setAttribute(alias, actualValue);
-		return this;
-	}
-	
-	public Response save(String key) {
-		String actualValue = values.get(key);
-		session.setAttribute(key, actualValue);
-		return this;
-	}
+//	public Response save(String key, String alias) {
+//		String actualValue = values.get(key);
+//		session.setAttribute(alias, actualValue);
+//		return this;
+//	}
+//
+//	public Response save(String key) {
+//		String actualValue = values.get(key);
+//		session.setAttribute(key, actualValue);
+//		return this;
+//	}
 	
 	public String getByPath(String path) {
 		return values.get(path);

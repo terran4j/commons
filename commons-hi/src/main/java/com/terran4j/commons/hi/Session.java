@@ -9,42 +9,42 @@ public final class Session {
 
 	private final HttpClient httpClient;
 
-	public HttpClient getHttpClient() {
-		return httpClient;
-	}
-
 	private final ApplicationContext applicationContext;
 	
-	private Map<String, String> params = new HashMap<String, String>();
-
-	private Map<String, String> headers = new HashMap<String, String>();
+//	private Map<String, String> params = new HashMap<>();
+//
+//	private Map<String, String> headers = new HashMap<>();
+//
+//	private final Map<String, String> attrs = new HashMap<>();
 	
-	private final Map<String, String> attrs = new HashMap<String, String>();
-	
-	private Map<String, String> locals = new HashMap<String, String>();
+	private Map<String, String> locals = new HashMap<>();
 
 	Session(HttpClient service, ApplicationContext context) {
 		super();
 		this.httpClient = service;
 		this.applicationContext = context;
-		this.params = service.cloneParams();
-		this.headers = service.cloneHeaders();
-		this.locals = service.cloneLocals();
+        this.locals = service.cloneLocals();
+//		this.params = service.cloneParams();
+//		this.headers = service.cloneHeaders();
 	}
-	
-	public Map<String, String> getParams() {
-		return params;
-	}
+//
+//	public Map<String, String> getActualParams() {
+//		return params;
+//	}
+
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
 	
 	public Map<String, String> getLocals() {
 		return locals;
 	}
 
-	public Map<String, String> getHeaders() {
-		return headers;
-	}
+//	public Map<String, String> getHeaders() {
+//		return headers;
+//	}
 
-	public Request action(String action) throws HttpException {
+	public Request createRequest(String action) throws HttpException {
 		Action actionObject = httpClient.getActions().get(action);
 		if (actionObject == null) {
 			throw new HttpException(HttpErrorCode.ACTION_NOT_FOUND)
@@ -57,13 +57,13 @@ public final class Session {
 	public HttpClient getService() {
 		return httpClient;
 	}
-
-	public void setAttribute(String key, String value) {
-		this.attrs.put(key, value);
-	}
 	
 	public Session local(String key, String value) {
 		this.locals.put(key, value);
 		return this;
 	}
+
+	public String local(String key) {
+	    return this.locals.get(key);
+    }
 }

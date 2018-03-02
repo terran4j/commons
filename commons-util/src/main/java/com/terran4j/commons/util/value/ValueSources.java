@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class ValueSources<K, V> implements ValueSource<K, V> {
 	
-	private Stack<ValueSource<K, V>> stack = new Stack<ValueSource<K, V>>();
+	private Stack<ValueSource<K, V>> stack = new Stack<>();
 
 	@Override
 	public V get(K key) {

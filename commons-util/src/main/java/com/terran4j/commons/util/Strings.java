@@ -228,20 +228,15 @@ public class Strings {
      * @return 格式化之后的具体文本内容。
      */
     public static String format(String str, final Map<String, Object> args, final boolean nullAsEmpty) {
-        ValueSource<String, String> values = new ValueSource<String, String>() {
-
-            @Override
-            public String get(String key) {
-                Object value = null;
-                if (args != null) {
-                    value = args.get(key);
-                }
-                if (nullAsEmpty && value == null) {
-                    value = "";
-                }
-                return Objects.toString(value);
+        ValueSource<String, String> values = key -> {
+            Object value = null;
+            if (args != null) {
+                value = args.get(key);
             }
-
+            if (nullAsEmpty && value == null) {
+                value = "";
+            }
+            return Objects.toString(value);
         };
         return format(str, values, "${", "}", null);
     }

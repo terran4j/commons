@@ -1,4 +1,4 @@
-package com.terran4j.commons.http;
+package com.terran4j.demo.hi;
 
 public class Calculator {
 

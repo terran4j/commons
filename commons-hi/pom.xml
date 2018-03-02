@@ -14,25 +14,23 @@
 	<url>https://github.com/terran4j/commons</url>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.github.terran4j</groupId>
-			<artifactId>terran4j-commons-util</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.github.terran4j</groupId>
-			<artifactId>terran4j-commons-jfinger</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.github.terran4j</groupId>
+            <artifactId>terran4j-commons-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.terran4j</groupId>
+            <artifactId>terran4j-commons-api2doc</artifactId>
+        </dependency>
 		
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 		</dependency>
-	</dependencies>
+    </dependencies>
 	
 </project>

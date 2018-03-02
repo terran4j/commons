@@ -30,7 +30,9 @@ public class Action {
 
 	private String method = RequestMethod.GET.name();
 
-	private Map<String, String> params = new HashMap<String, String>();
+    private Map<String, String> params = new HashMap<>();
+
+    private Map<String, String> headers = new HashMap<>();
 
 	private List<Write> writes = new ArrayList<Write>();
 
@@ -70,10 +72,26 @@ public class Action {
 		return params;
 	}
 
+    public String param(String key) {
+        return String.valueOf(params.get(key));
+    }
+
 	public void setParams(Map<String, String> params) {
 		this.params = params;
 	}
-	
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
+    }
+
+    public String header(String key) {
+        return String.valueOf(headers.get(key));
+    }
+
 	public HttpClient getHttpClient() {
 		return httpClient;
 	}
@@ -83,11 +101,12 @@ public class Action {
 	}
 
 	private String parse(String str, ValueSource<String, String> values) {
-		return Strings.format(str, values, "${", "}", null);
-	}
+		String result =  Strings.format(str, values, "{", "}", null);
+        return result;
+    }
 
 	private Map<String, String> parse(Map<String, String> map, ValueSource<String, String> values) {
-		Map<String, String> newMap = new HashMap<String, String>();
+		Map<String, String> newMap = new HashMap<>();
 		if (map != null) {
 			Iterator<String> it = map.keySet().iterator();
 			while (it.hasNext()) {
@@ -100,31 +119,31 @@ public class Action {
 		return newMap;
 	}
 
-	public JsonObject exe(final ValueSources<String, String> context, Session session,
-			final Map<String, String> inputParams) throws HttpException {
 
-		String actualURL = parse(url, context);
+	public JsonObject exe(final ValueSources<String, String> context, Session session,
+			final String actualURL, final Map<String, String> inputParams) throws HttpException {
+
 		HttpRequest request = new HttpRequest(actualURL);
 
 		request.setMethod(RequestMethod.valueOf(method));
 
-		Map<String, String> commonParams = parse(session.getParams(), context);
-		Map<String, String> actionParams = parse(params, context);
-		request.setParam(commonParams).setParam(actionParams).setParam(inputParams);
+//		Map<String, String> commonParams = parse(session.getActualParams(), context);
+//		Map<String, String> actionParams = parse(params, context);
+		request.setParam(inputParams);
 
-		Map<String, String> commonHeaders = parse(session.getHeaders(), context);
-		request.setHeaders(commonHeaders);
+//		Map<String, String> commonHeaders = parse(session.getHeaders(), context);
+//		request.setHeaders(commonHeaders);
 
 		List<HttpClientListener> listeners = this.getHttpClient().getListeners();
 		for (HttpClientListener listener : listeners) {
 			listener.beforeExecute(request);
 		}
-		String reponse = request.execute();
+		String response = request.execute();
 		for (HttpClientListener listener : listeners) {
-			reponse = listener.afterExecute(request, reponse);
+			response = listener.afterExecute(request, response);
 		}
-		
-		JsonElement element = parser.parse(reponse);
+
+		JsonElement element = parser.parse(response);
 		JsonObject result = element.getAsJsonObject();
 
 		if (writes != null && writes.size() > 0) {

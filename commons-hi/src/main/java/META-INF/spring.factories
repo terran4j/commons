@@ -1,3 +1,0 @@
-### Auto configuration
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.terran4j.commons.hi.HiConfiguration

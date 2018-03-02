@@ -1,0 +1,21 @@
+{
+  "locals": {
+    "total": "0",
+    "token": "qds"
+  },
+  "actions": [
+    {
+      "id": "plus",
+      "name": "两数相加",
+      "url": "/calculator/plus",
+      "method": "POST",
+      "headers": {
+        "token": "{token}"
+      },
+      "params": {
+        "a": "{total}",
+        "b": "{number}"
+      }
+    }
+  ]
+}
