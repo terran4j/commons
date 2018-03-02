@@ -52,7 +52,7 @@ public class HttpClient {
         return temp;
     }
 
-    public static final HttpClient create(
+    public static final HttpClient createByApi2Doc(
             @NotNull String host, int port,
             ApplicationContext context) throws IOException {
         JsonObject config = Api2DocSupport.loadConfig(host, port);
@@ -181,19 +181,22 @@ public class HttpClient {
         return host;
     }
 
-    public void setHost(String host) {
+    public HttpClient setHost(String host) {
         this.host = host;
+        return this;
     }
 
     public int getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public HttpClient setPort(int port) {
         this.port = port;
+        return this;
     }
 
     public String local(String key) {
         return String.valueOf(this.locals.get(key));
     }
+
 }
