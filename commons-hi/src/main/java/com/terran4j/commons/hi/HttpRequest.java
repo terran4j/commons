@@ -2,10 +2,7 @@ package com.terran4j.commons.hi;
 
 import org.apache.commons.collections4.MapUtils;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -109,6 +106,12 @@ public final class HttpRequest {
                 URI uri = uriBuilder.build();
                 final HttpPut httpPut = new HttpPut(uri);
                 httpRequest = httpPut;
+            } else if (method == RequestMethod.DELETE) {
+                URIBuilder uriBuilder = new URIBuilder(url);
+                addParams(uriBuilder, params);
+                URI uri = uriBuilder.build();
+                final HttpDelete httpDelete = new HttpDelete(uri);
+                httpRequest = httpDelete;
             }
         } catch (URISyntaxException e) {
             throw new HttpException(HttpErrorCode.URI_SYNTAX_ERROR, e)
@@ -120,7 +123,9 @@ public final class HttpRequest {
                     .put("method", method)
                     .put("supportedMethods", new RequestMethod[]{
                             RequestMethod.PUT, RequestMethod.GET, RequestMethod.POST
-                    }).as(HttpException.class);
+                    })
+                    .setMessage("NOT supported method: ${method}")
+                    .as(HttpException.class);
         }
 
         if (headers.size() > 0) {

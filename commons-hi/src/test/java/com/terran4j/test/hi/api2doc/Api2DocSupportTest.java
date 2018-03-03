@@ -56,4 +56,22 @@ public class Api2DocSupportTest {
         Assert.assertEquals(6, plusObject.getResult());
     }
 
+    @Test
+    public void testPut() throws Exception {
+        Session session = createClient().createSession();
+        Request request = session.createRequest("test-put");
+        Response response = request.input("id", "1").input("name", "abc").exe();
+        String data = response.getByPath("data");
+        Assert.assertEquals("1-abc", data);
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        Session session = createClient().createSession();
+        Request request = session.createRequest("test-delete");
+        Response response = request.input("id", "1").exe();
+        String resultCode = response.getByPath("resultCode");
+        Assert.assertEquals("success", resultCode);
+    }
+
 }
