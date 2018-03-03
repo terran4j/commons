@@ -27,8 +27,6 @@ public final class Request {
 
     private final Map<String, String> inputs = new HashMap<>();
 
-//	private final Map<String, String> expects = new HashMap<>();
-
     private final ValueSources<String, String> context;
 
     public Request(Action action, Session session, ApplicationContext applicationContext) {
@@ -44,6 +42,9 @@ public final class Request {
 
         // 从 spring 环境配置中取值。
         final ValueSource<String, String> springContext = key -> {
+            if (applicationContext == null) {
+                return null;
+            }
             String value = applicationContext.getEnvironment().getProperty(key);
             return value;
         };
@@ -93,24 +94,19 @@ public final class Request {
         return this;
     }
 
-//	public Request expect(String key, String expectedValue) {
-//		if (expectedValue == null) {
-//			throw new NullPointerException("expectedValue is null.");
-//		}
-//		expects.put(key, expectedValue);
-//		return this;
-//	}
-
     public void exe(final int threadCount, final int exeCountPerThread,
                     final int intervalTime) throws HttpException {
         if (threadCount < 1) {
-            throw new InvalidParameterException("threadCount must more than 0: " + threadCount);
+            throw new InvalidParameterException(
+                    "threadCount must more than 0: " + threadCount);
         }
         if (exeCountPerThread < 1) {
-            throw new InvalidParameterException("exeCountPerThread must more than 0: " + exeCountPerThread);
+            throw new InvalidParameterException(
+                    "exeCountPerThread must more than 0: " + exeCountPerThread);
         }
         if (intervalTime < 0) {
-            throw new InvalidParameterException("intervalTime must more than -1: " + intervalTime);
+            throw new InvalidParameterException(
+                    "intervalTime must more than -1: " + intervalTime);
         }
         Thread[] threads = new Thread[threadCount];
         final List<HttpException> errors = new ArrayList<HttpException>();
