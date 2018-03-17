@@ -3,7 +3,6 @@ package com.terran4j.commons.api2doc.domain;
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.impl.FlexibleString;
 import com.terran4j.commons.util.Strings;
-import org.jetbrains.annotations.NotNull;
 
 public class ApiObject implements Comparable<ApiObject>{
 
@@ -67,9 +66,9 @@ public class ApiObject implements Comparable<ApiObject>{
     }
 
     @Override
-    public int compareTo(@NotNull ApiObject o) {
+    public int compareTo(ApiObject other) {
         ApiObject o1 = this;
-        ApiObject o2 = o;
+        ApiObject o2 = other;
 
         // 优先按用户指定排序。
         if (o1.getOrder() < o2.getOrder()) {

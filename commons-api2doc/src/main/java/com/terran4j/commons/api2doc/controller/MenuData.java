@@ -2,7 +2,6 @@ package com.terran4j.commons.api2doc.controller;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.util.Strings;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -83,9 +82,9 @@ public class MenuData implements Comparable<MenuData>{
     }
 
     @Override
-    public int compareTo(@NotNull MenuData o) {
+    public int compareTo( MenuData other) {
         MenuData o1 = this;
-        MenuData o2 = o;
+        MenuData o2 = other;
 
         if (o1.getOrder() < o2.getOrder()) {
             return -1;
