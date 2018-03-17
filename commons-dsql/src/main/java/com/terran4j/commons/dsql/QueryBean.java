@@ -27,4 +27,5 @@ public class QueryBean {
     public String toString() {
         return Strings.toString(this);
     }
+
 }
