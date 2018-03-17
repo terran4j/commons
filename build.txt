@@ -3,13 +3,16 @@
 mvn versions:set "-DnewVersion=1.0.1-SNAPSHOT"
 mvn versions:commit
 
+## 当版本为 SNAPSHOT 时的部署：
+mvn clean deploy -DskipTests
+
 ## 所有项目一起部署太慢了，容易失败，所有分开部署：
-mvn clean deploy -DskipTests -pl commons-util -am
-mvn clean deploy -DskipTests -pl commons-website
-mvn clean deploy -DskipTests -pl commons-restpack
-mvn clean deploy -DskipTests -pl commons-api2doc
-mvn clean deploy -DskipTests -pl commons-hedis
-mvn clean deploy -DskipTests -pl commons-jfinger
-mvn clean deploy -DskipTests -pl commons-hi
-mvn clean deploy -DskipTests -pl commons-test
-mvn clean deploy -DskipTests -pl commons-dsql
+mvn clean deploy -DskipTests -P release -pl commons-util -am
+mvn clean deploy -DskipTests -P release -pl commons-website
+mvn clean deploy -DskipTests -P release -pl commons-restpack
+mvn clean deploy -DskipTests -P release -pl commons-api2doc
+mvn clean deploy -DskipTests -P release -pl commons-hedis
+mvn clean deploy -DskipTests -P release -pl commons-jfinger
+mvn clean deploy -DskipTests -P release -pl commons-hi
+mvn clean deploy -DskipTests -P release -pl commons-test
+mvn clean deploy -DskipTests -P release -pl commons-dsql
