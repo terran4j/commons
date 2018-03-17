@@ -26,8 +26,10 @@
         <module>commons-hi</module>
         <module>commons-test</module>
         <module>commons-dsql</module>
-        <module>commons-reflux</module>
-        <module>commons-api2page</module>
+
+        <!-- 以下模块暂不发布： -->
+        <!--<module>commons-reflux</module>-->
+        <!--<module>commons-api2page</module>-->
     </modules>
 
     <properties>
