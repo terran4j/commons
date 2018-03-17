@@ -1,6 +1,7 @@
 
 ## 统一修改版本号
-mvn versions:set "-DnewVersion=1.0.0.RELEASE"
+mvn versions:set "-DnewVersion=1.0.1-SNAPSHOT"
+mvn versions:commit
 
 ## 所有项目一起部署太慢了，容易失败，所有分开部署：
 mvn clean deploy -DskipTests -pl commons-util -am
