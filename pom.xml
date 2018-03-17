@@ -5,7 +5,7 @@
 
     <groupId>com.github.terran4j</groupId>
     <artifactId>terran4j-commons-parent</artifactId>
-    <version>Virgo.0.2-SNAPSHOT</version>
+    <version>1.0.0.RELEASE</version>
     <packaging>pom</packaging>
     <name>terran4j-commons-parent</name>
     <url>https://github.com/terran4j/commons</url>
@@ -27,6 +27,7 @@
         <module>commons-test</module>
         <module>commons-dsql</module>
         <module>commons-reflux</module>
+        <module>commons-api2page</module>
     </modules>
 
     <properties>

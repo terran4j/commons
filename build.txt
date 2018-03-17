@@ -1,2 +1,5 @@
 
+
+mvn versions:set "-DnewVersion=1.0.0.RELEASE"
+
 mvn clean deploy -DskipTests
