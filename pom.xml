@@ -449,7 +449,6 @@
                 构建 snapshot 版本时不要用这些插件；
                 需要发布 release 版时再用。
             -->
-            <!--
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -488,7 +487,6 @@
                     </execution>
                 </executions>
             </plugin>
-            -->
         </plugins>
     </build>
 
