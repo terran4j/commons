@@ -26,10 +26,8 @@
         <module>commons-hi</module>
         <module>commons-test</module>
         <module>commons-dsql</module>
-
-        <!-- 以下模块暂不发布： -->
-        <!--<module>commons-reflux</module>-->
-        <!--<module>commons-api2page</module>-->
+        <module>commons-reflux</module>
+        <module>commons-api2page</module>
     </modules>
 
     <properties>
@@ -38,7 +36,6 @@
         <java.version>1.8</java.version>
         <jackson.version>2.8.8</jackson.version>
         <shiro.version>1.2.3</shiro.version>
-        <!--<kotlin.version>1.2.30</kotlin.version>-->
     </properties>
 
     <developers>
@@ -408,7 +405,6 @@
         </testResources>
 
         <plugins>
-
             <!-- 生成 java 源代码包。 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -422,31 +418,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--<plugin>-->
-            <!--<groupId>org.jetbrains.kotlin</groupId>-->
-            <!--<artifactId>kotlin-maven-plugin</artifactId>-->
-            <!--<version>${kotlin.version}</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>compile</id>-->
-            <!--<phase>compile</phase>-->
-            <!--<goals>-->
-            <!--<goal>compile</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--<execution>-->
-            <!--<id>test-compile</id>-->
-            <!--<phase>test-compile</phase>-->
-            <!--<goals>-->
-            <!--<goal>test-compile</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<jvmTarget>1.8</jvmTarget>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 
