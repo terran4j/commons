@@ -1,14 +1,2 @@
-mvn clean install deploy -f commons/commons-parent
-mvn clean install deploy -f commons/commons-util
-mvn clean install deploy -f commons/commons-jfinger
-mvn clean install deploy -f commons/commons-restpack
-mvn clean install deploy -f commons/commons-api2doc
-mvn clean install deploy -f commons/commons-redis-cow
-mvn clean install deploy -f commons/commons-http-invoker
-mvn clean install deploy -f commons/commons-reflux
-mvn clean install deploy -f commons/commons-test
-mvn clean install deploy -f commons/commons-dsql
-mvn clean install deploy -f commons/commons-website
 
-mvn clean install deploy -DskipTests
-
+mvn clean deploy -DskipTests
