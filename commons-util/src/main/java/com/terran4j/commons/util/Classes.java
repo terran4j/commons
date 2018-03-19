@@ -78,7 +78,14 @@ public class Classes {
                 continue;
             }
             Class<?> argClass = arg.getClass();
-            if (equals(argClass, paramClasses[i]) || isSuperClass(argClass, paramClasses[i])) {
+            Class<?> paramClass = paramClasses[i];
+            if (equals(argClass, paramClass)) {
+                continue;
+            }
+            if (isSuperClass(argClass, paramClass)) {
+                continue;
+            }
+            if (paramClass.isInterface() && isInterfaceExtends(argClass, paramClass)) {
                 continue;
             }
 
