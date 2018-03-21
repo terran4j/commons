@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MockRedisCowConfig {
+public class MockHedisConfig {
 
     public static final MockCacheService cacheService = new MockCacheService();
 
