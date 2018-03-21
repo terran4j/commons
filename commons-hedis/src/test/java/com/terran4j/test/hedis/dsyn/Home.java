@@ -1,4 +1,4 @@
-package com.terran4j.test.commons.hedis.dsyn;
+package com.terran4j.test.hedis.dsyn;
 
 public class Home {
 

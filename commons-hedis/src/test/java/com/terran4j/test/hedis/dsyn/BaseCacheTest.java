@@ -1,5 +1,7 @@
-package com.terran4j.test.commons.hedis.dsyn;
+package com.terran4j.test.hedis.dsyn;
 
+import com.terran4j.test.hedis.BaseSpringBootTest;
+import com.terran4j.test.hedis.MockitoInitializer;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -11,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.TestExecutionListeners;
 
 import com.terran4j.commons.hedis.cache.CacheService;
-import com.terran4j.test.commons.hedis.BaseSpringBootTest;
-import com.terran4j.test.commons.hedis.MockitoInitializer;
 
 @SpringBootTest(classes = { CacheTestApplication.class }, webEnvironment = WebEnvironment.NONE)
 @TestExecutionListeners({ MockitoInitializer.class })

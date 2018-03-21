@@ -1,4 +1,4 @@
-package com.terran4j.example.commons.hedis;
+package com.terran4j.demo.hedis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package com.terran4j.test.commons.hedis;
+package com.terran4j.test.hedis;
 
 import org.junit.runner.RunWith;
 import org.springframework.test.context.TestExecutionListeners;

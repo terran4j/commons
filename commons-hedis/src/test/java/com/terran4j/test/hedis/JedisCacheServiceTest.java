@@ -1,4 +1,4 @@
-package com.terran4j.test.commons.hedis;
+package com.terran4j.test.hedis;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.terran4j.commons.util.error.BusinessException;
-import com.terran4j.test.commons.hedis.dsyn.BaseCacheTest;
-import com.terran4j.test.commons.hedis.dsyn.Home;
+import com.terran4j.test.hedis.dsyn.BaseCacheTest;
+import com.terran4j.test.hedis.dsyn.Home;
 
 public class JedisCacheServiceTest extends BaseCacheTest {
 	

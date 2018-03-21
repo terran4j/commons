@@ -18,25 +18,28 @@ import com.terran4j.commons.util.error.CommonErrorCode;
 @ControllerAdvice
 public class HttpErrorHandler {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HttpErrorHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(HttpErrorHandler.class);
 
 	@ResponseBody
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public HttpResult handleAllException(Exception e, HttpServletRequest request) {
-		logger.error("[Handled] unknown exception", e);
+		log.error("[Handled] unknown exception", e);
 		return HttpResult.fail(new BusinessException(CommonErrorCode.UNKNOWN_ERROR, e));
 	}
 
 	@ResponseBody
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	@ResponseStatus(HttpStatus.OK)
-	public HttpResult handleMissingServletRequestParameterException(MissingServletRequestParameterException e,
-			HttpServletRequest request) {
-		if (logger.isInfoEnabled()) {
-			logger.info("missing param: {}", e.getParameterName());
+	public HttpResult handleMissingServletRequestParameterException(
+	        MissingServletRequestParameterException e, HttpServletRequest request) {
+		if (log.isInfoEnabled()) {
+			log.info("missing param: {} in path: {}",
+                    e.getParameterName(), request.getPathInfo());
 		}
-		return HttpResult.fail(new BusinessException(ErrorCodes.NULL_PARAM).put("key", e.getParameterName()));
+		return HttpResult.fail(new BusinessException(ErrorCodes.NULL_PARAM)
+                .put("key", e.getParameterName())
+                .setMessage("参数 ${key} 不能为空！"));
 	}
 
 }

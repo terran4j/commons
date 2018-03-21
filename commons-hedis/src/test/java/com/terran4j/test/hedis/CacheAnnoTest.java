@@ -1,11 +1,11 @@
-package com.terran4j.test.commons.hedis;
+package com.terran4j.test.hedis;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.terran4j.test.commons.hedis.dsyn.BaseCacheTest;
-import com.terran4j.test.commons.hedis.dsyn.Home;
-import com.terran4j.test.commons.hedis.dsyn.HomeService;
+import com.terran4j.test.hedis.dsyn.BaseCacheTest;
+import com.terran4j.test.hedis.dsyn.Home;
+import com.terran4j.test.hedis.dsyn.HomeService;
 
 public class CacheAnnoTest extends BaseCacheTest {
 	

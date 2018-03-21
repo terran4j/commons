@@ -1,4 +1,4 @@
-package com.terran4j.test.commons.hedis;
+package com.terran4j.test.hedis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,12 +7,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import com.terran4j.commons.hedis.EnableRedisCow;
+import com.terran4j.commons.hedis.config.EnableHedis;
 import com.terran4j.commons.hedis.dschedule.DScheduling;
 import com.terran4j.commons.util.error.BusinessException;
-import com.terran4j.test.commons.hedis.dsyn.CountService;
+import com.terran4j.test.hedis.dsyn.CountService;
 
-@EnableRedisCow // 一定要加这个，不然不会启动任务调度。
+@EnableHedis // 一定要加这个，不然不会启动任务调度。
 @SpringBootApplication
 public class SchedulingApplication {
 	

@@ -1,4 +1,4 @@
-package com.terran4j.example.commons.hedis;
+package com.terran4j.demo.hedis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.terran4j.commons.hedis;
+package com.terran4j.commons.hedis.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +28,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
-public class RedisCowConfiguration {
+public class HedisConfiguration {
 
-	private static final Logger log = LoggerFactory.getLogger(RedisCowConfiguration.class);
+	private static final Logger log = LoggerFactory.getLogger(HedisConfiguration.class);
 
 	@Value("${spring.redis.host:127.0.0.1}")
 	private String host;

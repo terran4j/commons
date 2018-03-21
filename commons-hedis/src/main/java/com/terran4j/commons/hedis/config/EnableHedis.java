@@ -1,4 +1,4 @@
-package com.terran4j.commons.hedis;
+package com.terran4j.commons.hedis.config;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Documented
 @EnableCaching
 @EnableScheduling
-@Import(RedisCowConfiguration.class)
-public @interface EnableRedisCow {
+@Import(HedisConfiguration.class)
+public @interface EnableHedis {
 
 }
