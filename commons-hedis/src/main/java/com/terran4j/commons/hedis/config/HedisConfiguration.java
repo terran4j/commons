@@ -24,6 +24,7 @@ import com.terran4j.commons.hedis.dschedule.DSchedulingAspect;
 import com.terran4j.commons.hedis.dsyn.DSynchronizedAspect;
 import com.terran4j.commons.util.Strings;
 
+import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -37,6 +38,9 @@ public class HedisConfiguration {
 
 	@Value("${spring.redis.port:6379}")
 	private int port;
+
+    @Value("${spring.redis.password:}")
+    private String password;
 
 	@Value("${spring.redis.pool.max-idle:8}")
 	private int maxIdle;
@@ -78,6 +82,9 @@ public class HedisConfiguration {
 		JedisConnectionFactory factory = new JedisConnectionFactory();
 		factory.setHostName(host);
 		factory.setPort(port);
+		if (StringUtils.hasText(password)) {
+            factory.setPassword(password.trim());
+        }
 		factory.setPoolConfig(config);
 		if (log.isInfoEnabled()) {
 			log.info("Jedis config done:\n{}", Strings.toString(config));
