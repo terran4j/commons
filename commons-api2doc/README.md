@@ -107,19 +107,44 @@ Api2Doc 专注于 Restful API 文档的自动生成，
 
 最大的不同是： **Api2Doc 比 Swagger2 要少写很多代码**。
 
-举个例子，我们看下使用 Api2Doc 注解修饰后的代码：
+举个例子，使用 Swagger2 的代码是这样的：
 
 ```java
-@Api2Doc(id = "users2", name = "用户接口")
+
+@RestController
+@RequestMapping(value = "/user")
+public class UserController {
+
+    @ApiOperation(value = "添加用户", httpMethod = "POST",
+            notes = "向用户组中添加用户，可以指定用户的类型")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "group", value = "用户组名",
+                    paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "name", value = "用户名",
+                    paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "type", value = "用户类型",
+                                paramType = "query", required = true, dataType = "String")
+    })
+    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+    public User addUser(String group, String name, String type) {
+        return null; // TODO:  还未实现。
+    }
+}
+```
+
+我们看下使用 Api2Doc 注解修饰后的代码：
+
+```java
+@Api2Doc(id = "users")
 @ApiComment(seeClass = User.class)
 @RestController
 @RequestMapping(value = "/api2doc/demo2")
 public class UserController2 {
 
-    @ApiComment("添加一个新的用户。")
-    @RequestMapping(name = "新增用户",
+    @ApiComment("向用户组中添加用户，可以指定用户的类型")
+    @RequestMapping(name = "添加用户",
             value = "/user", method = RequestMethod.POST)
-    public User addUser(String group, String name, UserType type) {
+    public User addUser(String group, String name, String type) {
         return null; // TODO:  还未实现。
     }
     
@@ -127,8 +152,8 @@ public class UserController2 {
 }
 ```
 
-看，方法上仅加上了 @Api2Doc @ApiComment 注解代码，
-但生成的文档可一点不含糊，如下图所示：
+看，Api2Doc 仅需要在方法上加上 @Api2Doc @ApiComment 注解等极少数代码，
+但它生成的文档可一点不含糊，如下图所示：
 
 ![api2doc-2-1.png](http://upload-images.jianshu.io/upload_images/4489584-98f94cb360c0ccde.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![api2doc-2-2.png](http://upload-images.jianshu.io/upload_images/4489584-fedf2897f5c217b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -185,8 +210,10 @@ public class User {
 因为在大部分项目中，有的字段会在多个实体类、多个 API 方法中用到，
 完全没有必要重复编写其说明信息，只要有一个地方定义好了，然后其它地方参照就行了。
 
-当然，这只是 Api2Doc 比 Swagger2 好用的特性之一，
+当然，这只是 Api2Doc 比 Swagger2 好用的特性之一，还有不少比 Swagger2 好用的地方。
+
 下面我们就来全面讲解它的用法，希望可以帮助开发者们从文档编写的苦海中解脱出来。
+
 
 ## 引入 Api2Doc 依赖
 
