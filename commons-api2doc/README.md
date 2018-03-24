@@ -1,6 +1,8 @@
 
+本文介绍一个非常好用的自动化生成 Restful API 文档的工具——Api2Doc
+它基于 SpringBoot ，原理类似于 Swagger2，但比 Swagger2 要简单好用。
 
-本项目已经放到 github 中，需要源码的朋友请点击
+此项目已经放到 github 中，需要源码的朋友请点击
 [这里](https://github.com/terran4j/commons/tree/master/commons-api2doc)
 
 ## 目录
@@ -31,13 +33,12 @@
 
 但问题是，编写 Restful API 文档是一件既繁琐、又费时、还对提高技术能力没啥帮助的苦差事，
 尤其在是快速迭代、需求频繁修改的项目中，改了代码还要同步改文档，
-哪点改错了或改漏了都可能产生前后端实现的不一致，
-导致联调时发现 BUG，这个锅最终还是要后台工程师来背（宝宝心里苦啊...）。
+哪点改错了或改漏了都可能产生前后端实现的不一致，导致联调时发现 BUG，
+这个锅最终还是要后台工程师来背（宝宝心里苦啊...）。
 
 因此，业界就出现了一些**根据代码自动生成 Restful API 文档**的开源项目，
-与 Spring Boot 结合比较好的是 Swagger2，
-Swagger2 通过读取 Controller 代码中的注解信息，来自动生成 API 文档，
-可以节省大量的手工编写文档的工作量。
+与 Spring Boot 结合比较好的是 Swagger2，Swagger2 通过读取 Controller 
+代码中的注解信息，来自动生成 API 文档，可以节省大量的手工编写文档的工作量。
 
 本项目作者之前也是用的 Swagger2，但发现 Swagger2 也有好多地方用得不爽：
 
@@ -80,8 +81,8 @@ public class UserController2Swagger2 {
 
 ![swgger2-1.png](http://upload-images.jianshu.io/upload_images/4489584-575b3f94d746d921.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-红框中的 API 其实对应的是同一个方法，之所以有这么多，
-只是因为写这个方法时没有指定 method：
+红框中的 API 其实对应的是同一个方法，之所以有这么多，只是因为写这个方法
+时没有指定 method：
 
 ```java
 @RestController
@@ -98,16 +99,14 @@ public class UserController2Swagger2 {
 
 （当没指定 method 时，Spring Boot 会默认让这个接口支持所有的 method）
 
-因此，考虑到与其长长久久忍受 Swagger2 的各种不爽，
-不如花些时间自己做一个更好用的“自动化文档系统”，
-于是就诞生了本项目： Api2Doc 。 
+因此，考虑到与其长长久久忍受 Swagger2 的各种不爽，不如花些时间做一个
+更好用的“自动化文档系统”，于是就诞生了本项目： Api2Doc 。 
 
 
 ## Api2Doc 简介
 
-Api2Doc 专注于 Restful API 文档的自动生成，
-它的原理与 Swagger2 是类似的，都是通过反射的方式，分析 Controller 中的信息生成文档。
-但它的易用性要比 Swagger2 好很多。
+Api2Doc 专注于 Restful API 文档的自动生成，它的原理与 Swagger2 是类似的，
+都是通过反射，分析 Controller 中的信息生成文档，但它要比 Swagger2 好很多。
 
 最大的不同是： **Api2Doc 比 Swagger2 要少写很多代码**。
 
@@ -162,11 +161,11 @@ public class UserController2 {
 ![api2doc-2-1.png](http://upload-images.jianshu.io/upload_images/4489584-98f94cb360c0ccde.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![api2doc-2-2.png](http://upload-images.jianshu.io/upload_images/4489584-fedf2897f5c217b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-有的朋友可能会觉得很奇怪：文档页面上的说明、示例值等内容，
-在代码中没有写啊，这些是哪来的呢？
+有的朋友可能会觉得很奇怪：文档页面上的说明、示例值等内容，在代码中没有写啊，
+这些是哪来的呢？
 
-这里涉及到 Api2Doc 的核心设计理念，就是：
-**它尽可能通过智能分析，自动收集生成文档所需的信息，从而让用户少写代码**。
+这里涉及到 Api2Doc 的核心设计理念，就是：它尽可能通过智能分析，自动收集
+生成文档所需的信息，从而**让用户少写代码**。
 
 说得有点抽象哈，下面我们来正面回答这个问题，请大家注意这个类上有一个注解：
 
@@ -207,12 +206,12 @@ public class User {
 }
 ```
 
-大家看明白了没？ API 方法中的参数，如果与 User 类的属性同名的话，
-就用类属性的 @ApiComment 说明信息自动填充。
+大家看明白了没？ API 方法中的参数，如果与 User 类的属性同名的话，就用类
+属性的 @ApiComment 说明信息自动填充。
 
-其实这也符合实际的业务逻辑。
-因为在大部分项目中，有的字段会在多个实体类、多个 API 方法中用到，
-完全没有必要重复编写其说明信息，只要有一个地方定义好了，然后其它地方参照就行了。
+其实这也符合实际的业务逻辑。因为在大部分项目中，有的字段会在多个实体类、
+多个 API 方法中用到，完全没有必要重复编写其说明信息，只要有一个地方定义好了，
+然后其它地方参照就行了。
 
 当然，这只是 Api2Doc 比 Swagger2 好用的特性之一，还有不少比 Swagger2 好用的地方。
 
@@ -245,9 +244,8 @@ ${api2doc.version} **最新稳定版，请参考 [这里](https://github.com/ter
 本教程的示例代码在 src/test/java 目录的 com.terran4j.demo.api2doc 中，
 您也可以从 [这里](https://github.com/terran4j/commons/tree/master/commons-api2doc/src/test/java/com/terran4j/demo/api2doc) 获取到。
 
-首先，我们需要在有 @SpringBootApplication 注解的类上，
-添加 @EnableApi2Doc 注解，以启用 Api2Doc 服务，
-如下代码所示：
+首先，我们需要在有 @SpringBootApplication 注解的类上，添加 @EnableApi2Doc 
+注解，以启用 Api2Doc 服务，如下代码所示：
 
 ```java
 package com.terran4j.demo.api2doc;
@@ -270,9 +268,8 @@ public class Api2DocDemoApp {
 
 ## 给 Controller 类上添加文档注解
 
-然后我们在 RestController 类添加 @Api2Doc 注解，
-在需要有文档说明的地方添加 @ApiComment 注解即可，
-如下所示：
+然后我们在 RestController 类添加 @Api2Doc 注解，在需要有文档说明的地方
+添加 @ApiComment 注解即可，如下所示：
 
 ```java
 package com.terran4j.demo.api2doc;
@@ -367,16 +364,16 @@ Api2Doc 一共有 3 个注解：@Api2Doc、@ApiComment 及 @ApiError 。
 
 @Api2Doc 用于对文档的生成进行控制。
 
-@Api2Doc 修饰在类上，表示这个类会参与到文档生成过程中，
-Api2Doc 服务会扫描 Spring 容器中所有的 Controller 类，
-只有类上有 @Api2Doc 的类，才会被生成文档，
-一个类对应于文档页面左侧的一级菜单项，@Api2Doc 的 name 属性则表示这个菜单项的名称。
+@Api2Doc 修饰在类上，表示这个类会参与到文档生成过程中，Api2Doc 服务
+会扫描 Spring 容器中所有的 Controller 类，只有类上有 @Api2Doc 的类，
+才会被生成文档，一个类对应于文档页面左侧的一级菜单项，@Api2Doc 的 
+name 属性则表示这个菜单项的名称。
 
 @Api2Doc 也可以修饰在方法，不过在方法上的  @Api2Doc 通常是可以省略，
  Api2Doc 服务会扫描这个类的所有带有 @RequestMapping 的方法，
- 每个这样的方法对应文档页面的左侧的二级菜单项，
- 菜单项的名称取 @RequestMapping 的 name 属性，
- 当然您仍然可以在方法上用  @Api2Doc 的 name 属性进行重定义。
+ 每个这样的方法对应文档页面的左侧的二级菜单项， 菜单项的名称取 
+ @RequestMapping 的 name 属性，当然您仍然可以在方法上用  @Api2Doc 
+ 的 name 属性进行重定义。
  
  
  ## @ApiComment 注解详述
@@ -415,9 +412,8 @@ public class UserController1 {
 
 ## @ApiError 注解详述
 
-@ApiError 用于定义错误码，
-有的 API 方法在执行业务逻辑时会产生错误，出错后会在返回报文包含错误码，
-以方便客户端根据错误码作进一步的处理，
+@ApiError 用于定义错误码，有的 API 方法在执行业务逻辑时会产生错误，
+出错后会在返回报文包含错误码，以方便客户端根据错误码作进一步的处理，
 因此也需要在 API 文档上体现错误码的说明。
 
 如下代码演示了 @ApiError 的用法：
@@ -449,9 +445,8 @@ public class UserController {
 
 ## 给文档菜单项排序
 
-我们可以用 @Api2Doc 中的 order 属性给菜单项排序，
-order 的值越小，该菜单项就越排在前面，
-比如对于这段代码：
+我们可以用 @Api2Doc 中的 order 属性给菜单项排序，order 的值越小，
+该菜单项就越排在前面，比如对于这段代码：
 
 ```java
 package com.terran4j.demo.api2doc;
@@ -520,8 +515,7 @@ public class UserController2 {
 有时候光有自动生成的 API 文档似乎还不太完美，或许我们想补充点别的什么东西，
 比如： 对项目的背景介绍、技术架构说明之类，那这个要怎么弄呢？
 
-Api2Doc 允许用 md 语法手工编写文档，并集成到自动生成的 API 文档之中，
-方法如下：
+Api2Doc 允许用 md 语法手工编写文档，并集成到自动生成的 API 文档之中，方法如下：
 
 首先，要在类上的 @Api2Doc 定义 id 属性，比如对下面这个类：
 
@@ -549,8 +543,8 @@ public class UserController3 {
 }
 ``` 
 
-@Api2Doc(id = "demo3", name = "用户接口3") 表示：
-对应的一级菜单“用户接口3”的 id 为 demo3。
+@Api2Doc(id = "demo3", name = "用户接口3") 表示：对应的一级菜单“用户接口3”
+的 id 为 demo3。
 
 然后，我们在 src/main/resources 中创建目录  api2doc/demo3，
 前面的 api2doc 是固定的，后面的 demo3 表示这个目录中的文档是添加到
@@ -560,16 +554,15 @@ id 为 demo3 的一级文档菜单下。
 
 ![api2doc-4.png](http://upload-images.jianshu.io/upload_images/4489584-a76a84061f2771d3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-文件名的格式为 ${order}-${文档名称}.md，
-即 - 号前面的数字表示这个文档的排序，与 @Api2Doc 中的 order 属性是一样的，
-而 - 号后面是文档名称，也就是二级菜单的名称。
+文件名的格式为 ${order}-${文档名称}.md，即 - 号前面的数字表示这个文档的排序，
+与 @Api2Doc 中的 order 属性是一样的，而 - 号后面是文档名称，也就是二级菜单的名称。
 
 因此，最后文档的显示效果为：
 
 ![api2doc-5.png](http://upload-images.jianshu.io/upload_images/4489584-73814ce5bde91b2d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-看，手工编写的补充文档与自动生成的 API 文档，
-通过 order 进行排序组合在一起，看起来毫无违和感。
+看，手工编写的补充文档与自动生成的 API 文档，通过 order 进行排序组合在一起，
+看起来毫无违和感。
 
 
 ## 定制文档的欢迎页
@@ -583,9 +576,8 @@ id 为 demo3 的一级文档菜单下。
 
 这似乎有点不太好，不过没关系，我们可以编写自己的欢迎页。
 
-方法很简单，在 src/main/resources 目录的 api2doc 目录下，
-创建一个名为 welcome.md 的文件（这个名称是固定的），
-然后用 md 语法编写内容就可以。
+方法很简单，在 src/main/resources 目录的 api2doc 目录下，创建一个名为 
+welcome.md 的文件（这个名称是固定的），然后用 md 语法编写内容就可以。
 
 
 ## 配置文档的标题及图标
@@ -626,8 +618,8 @@ api2doc:
 
 api3doc.enabled 为 false 表示关闭 Api2Doc 服务，不写或为 true 表示启用。
 
-由于  Api2Doc 服务没有访问权限校验，
-建议您在受信任的网络环境（如公司内网）中才启用 Api2Doc 服务。
+由于  Api2Doc 服务没有访问权限校验，建议您在受信任的网络环境（如公司内网）
+中才启用 Api2Doc 服务。
 
 
 ##  TODO 列表
