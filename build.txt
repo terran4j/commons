@@ -1,6 +1,6 @@
 
 ## 统一修改版本号
-mvn versions:set "-DnewVersion=1.0.1-SNAPSHOT"
+mvn versions:set "-DnewVersion=1.0.1"
 mvn versions:commit
 
 ## 当版本为 SNAPSHOT 时的部署：
