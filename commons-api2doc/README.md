@@ -599,7 +599,7 @@ api2doc:
 
 ## 关闭 Api2Doc 服务 
 
-您在 application.yml 中配置 api3doc.enabled 属性，以开启或关闭 Api2Doc 服务，如：
+您在 application.yml 中配置 api2doc.enabled 属性，以开启或关闭 Api2Doc 服务，如：
 
 ```yaml
 # 本地环境
@@ -616,7 +616,7 @@ api2doc:
   enabled: false
 ```
 
-api3doc.enabled 为 false 表示关闭 Api2Doc 服务，不写或为 true 表示启用。
+api2doc.enabled 为 false 表示关闭 Api2Doc 服务，不写或为 true 表示启用。
 
 由于  Api2Doc 服务没有访问权限校验，建议您在受信任的网络环境（如公司内网）
 中才启用 Api2Doc 服务。
