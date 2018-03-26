@@ -314,7 +314,7 @@ import java.util.List;
 
 public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
 
-    @Query("address-nearest")
+    @DsqlQuery("address-nearest")
     AddressDistance getNearest(
             @Param("lat") double lat, @Param("lon") double lon);
 
@@ -322,8 +322,8 @@ public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
 ```
 
 注意，这里的 @Param 仍复用了 JPA 提供的注解，
-但 @Query 却是由 DSQL 所定义的，其值定义了一个动态 SQL 文件的名称，
-如上面的 @Query("address-nearest") 表示要在这个接口所在的包里面，
+但 @DsqlQuery 却是由 DSQL 所定义的，其值定义了一个动态 SQL 文件的名称，
+如上面的 @DsqlQuery("address-nearest") 表示要在这个接口所在的包里面，
 定义一个名为 address-nearest.sql.ftl 的文件。
 之所以要用 .sql.ftl 作为文件的后缀名，是因为文件里面本质上是要写一段 SQL ，
 但可以用 Freemarker 的语法进行渲染，使其具备动态性，
@@ -513,7 +513,7 @@ DSQL 会对 SQL 经过两次处理：
 如对于方法：
 
 ```java
-    @Query("address-nearest-2")
+    @DsqlQuery("address-nearest-2")
     AddressDistance getNearest2(double lat, double lon);
 ``` 
 
@@ -538,7 +538,7 @@ limit 0, 1
 还可以用 args 表示这个参数，如对于 DAO 方法：
 
 ```java
-    @Query("address-list")
+    @DsqlQuery("address-list")
     List<AddressDistance> getAll(AddressQuery params);
 ```
 
@@ -607,13 +607,13 @@ FreeMarker 是 Web 开发中非常常用的模板引擎工具，
 ```java
 public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
 
-    @Query("address-nearest")
+    @DsqlQuery("address-nearest")
     AddressDistance getNearest(@Param("lat") double lat, @Param("lon") double lon);
 
-    @Query("address-list")
+    @DsqlQuery("address-list")
     List<AddressDistance> getAll(AddressQuery params);
 
-    @Query("address-count")
+    @DsqlQuery("address-count")
     int count(@Param("lat") double lat, @Param("lon") double lon,
               @Param("maxDistance") int maxDistance);
 }
@@ -629,11 +629,11 @@ public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
 ```java
 public interface AddressDistanceDAO extends DsqlRepository<AddressDistance> {
     
-    @Modifying("address-update-nearest")
+    @DsqlModifying("address-update-nearest")
     int updateNearest(@Param("name") String name,
                       @Param("lat") double lat, @Param("lon") double lon);
 
-    @Modifying("address-delete-nearest")
+    @DsqlModifying("address-delete-nearest")
     int deleteNearest(@Param("lat") double lat, @Param("lon") double lon);
 }
 ```
@@ -681,4 +681,5 @@ WHERE id IN (
 
 DSQL 定位是作为 JPA 的一个补充，提供了一种编写原生的、动态复杂 SQL 的方式，
 以提高开发效率和代码可维护性。
+
 希望对大家有帮助！
