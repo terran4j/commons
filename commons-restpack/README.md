@@ -103,11 +103,12 @@ RestPack 一词中， Rest 代表 Http Restful API 的意思，
 		<dependency>
 			<groupId>terran4j</groupId>
 			<artifactId>terran4j-commons-restpack</artifactId>
-			<version>Virgo.0.1</version>
+			<version>${restpack.version}</version>
 		</dependency>
 ```
 
 整个 pom.xml 内容类似于：
+
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -139,13 +140,20 @@ RestPack 一词中， Rest 代表 Http Restful API 的意思，
 		<dependency>
 			<groupId>terran4j</groupId>
 			<artifactId>terran4j-commons-restpack</artifactId>
-			<version>Virgo.0.1</version>
+			<version>${restpack.version}</version>
 		</dependency>
 	</dependencies>
 
 </project>
 ```
-**目前 `terran4j-commons-restpack` 的最新稳定版是 Virgo.0.1 ，后续有新的稳定版本会更新到本文档中。**
+
+如果是 gradle，请在 build.gradle 中添加依赖，如下所示：
+
+```groovy
+compile "com.github.terran4j:terran4j-commons-restpack:${restpack.version}"
+```
+
+${restpack.version} **最新稳定版，请参考 [这里](https://github.com/terran4j/commons/blob/master/version.md)**
 
 
 ## 启用 RestPack 
