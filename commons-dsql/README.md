@@ -37,7 +37,7 @@ JPA 的优点是：
     但这种把 SQL 逻辑写到代码的方式，实在是不敢恭维，
     万一开发人员要请 DBA 帮忙对 SQL 进行优化咋办，让 DBA 先学一遍 Java 和 JPA ？  
     有人或许会问：“@Query(nativeQuery) 不是可以嵌入原生 SQL 么？”，
-    问题是 @Query 注解中的 SQL 不能动态啊，如果要根据参数不现，执行的 SQL 也不同咋办？
+    问题是 @Query 注解中的 SQL 不能动态啊，如果要根据参数不同，执行的 SQL 也不同咋办？
 
 所以 JPA 更适合快速迭代的中小型项目，
 开发时对象的变更非常频繁，又没有大量的复杂 SQL 需求。
@@ -124,17 +124,17 @@ ORDER BY distance <#if args.nearFirst>ASC<#else>DESC</#if>
 		<dependency>
 			<groupId>terran4j</groupId>
 			<artifactId>terran4j-commons-dsql</artifactId>
-			<version>Virgo.0.1</version>
+			<version>${dsql.version}</version>
 		</dependency>
 ```
 
-**目前 terran4j-commons 的最新稳定版是 Virgo.0.1 ，后续有新的稳定版本会更新到本文档中。**
+如果是 gradle，请在 build.gradle 中添加依赖，如下所示：
 
-使用 gradle 就更简单了：
-```
-complie "terran4j:terran4j-commons-dsql:Virgo.0.1"
+```groovy
+compile "com.github.terran4j:terran4j-commons-dsql:${dsql.version}"
 ```
 
+${dsql.version} **最新稳定版，请参考 [这里](https://github.com/terran4j/commons/blob/master/version.md)**
 
  ## 定义实体类
  
