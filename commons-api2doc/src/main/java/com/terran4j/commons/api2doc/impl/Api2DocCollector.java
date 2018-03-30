@@ -21,11 +21,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -97,7 +96,7 @@ public class Api2DocCollector implements BeanPostProcessor {
         }
 
         List<MappingMethod> methods = MappingMethod.getMappingMethods(clazz);
-                // Classes.getMethods(RequestMapping.class, clazz);
+        // Classes.getMethods(RequestMapping.class, clazz);
         if (methods == null || methods.size() == 0) {
             // 整个类中都没有任何 RequestMapping 的方法，不用收集。
 //            if (log.isInfoEnabled()) {
@@ -366,7 +365,7 @@ public class Api2DocCollector implements BeanPostProcessor {
                     }
                 } else {
                     // 从参数本身中获取注释信息。
-                    String paramName = null;
+                    String paramName;
                     if (paramNames != null) {
                         paramName = paramNames[i];
                     } else {
@@ -395,6 +394,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 
     /**
      * 从类的属性中获取注释信息。
+     *
      * @param beanClass
      * @param defaultSeeClass
      * @return
@@ -462,8 +462,10 @@ public class Api2DocCollector implements BeanPostProcessor {
         return error;
     }
 
-    ApiParamObject toApiParam(AnnotatedElement element, String elementName,
-                              Class<?> elementType, Class<?> defaultSeeClass) {
+    ApiParamObject toApiParam(
+            AnnotatedElement element, String elementName,
+            Class<?> elementType, Class<?> defaultSeeClass) {
+
         ApiParamObject apiParamObject = new ApiParamObject();
 
         ApiParamLocation.collects(apiParamObject, element);
@@ -480,8 +482,7 @@ public class Api2DocCollector implements BeanPostProcessor {
         apiParamObject.setId(name);
 
         ApiComment apiComment = element.getAnnotation(ApiComment.class);
-        ApiCommentUtils.setApiComment(
-                apiComment, defaultSeeClass, apiParamObject);
+        ApiCommentUtils.setApiComment(apiComment, defaultSeeClass, apiParamObject);
 
         apiParamObject.setSourceType(elementType);
 

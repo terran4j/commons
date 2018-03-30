@@ -73,7 +73,7 @@ public class ParseApiCommentOnParam {
 
         ApiParamObject asRoot = params.get(1);
 		Assert.assertEquals("asRoot", asRoot.getId());
-        Assert.assertEquals(ApiParamLocation.Param, asRoot.getLocation());
+        Assert.assertEquals(ApiParamLocation.RequestParam, asRoot.getLocation());
 
         ApiParamObject id = params.get(2);
         Assert.assertEquals("id", id.getId());

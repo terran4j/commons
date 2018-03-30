@@ -1,13 +1,9 @@
 package com.terran4j.commons.api2doc.domain;
 
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ValueConstants;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Parameter;
 
 /**
  * API 参数在 HTTP 协议中的位置。
@@ -16,7 +12,7 @@ import java.lang.reflect.Parameter;
  */
 public enum ApiParamLocation {
 
-    Header {
+    RequestHeader {
         @Override
         boolean doCollect(ApiParamObject apiParamObject, AnnotatedElement element) {
             RequestHeader requestHeader = element.getAnnotation(RequestHeader.class);
@@ -48,7 +44,7 @@ public enum ApiParamLocation {
         }
     },
 
-    Param {
+    RequestParam {
         @Override
         boolean doCollect(ApiParamObject apiParamObject, AnnotatedElement element) {
             RequestParam requestParam = element.getAnnotation(RequestParam.class);
@@ -80,7 +76,39 @@ public enum ApiParamLocation {
         }
     },
 
-    Path {
+    CookieValue {
+        @Override
+        boolean doCollect(ApiParamObject apiParamObject, AnnotatedElement element) {
+            CookieValue cookieValue = element.getAnnotation(CookieValue.class);
+            if (cookieValue == null) {
+                return false;
+            }
+
+            String name = null;
+            if (StringUtils.hasText(cookieValue.value())) {
+                name = cookieValue.value();
+            }
+            if (StringUtils.hasText(cookieValue.name())) {
+                name = cookieValue.name();
+            }
+            apiParamObject.setName(name);
+
+            boolean required = cookieValue.required();
+            apiParamObject.setRequired(required);
+
+            String paramSample = cookieValue.defaultValue();
+            if (StringUtils.hasText(paramSample)) {
+                if (ValueConstants.DEFAULT_NONE.equals(paramSample)) {
+                    paramSample = "";
+                }
+                apiParamObject.setSample(paramSample);
+            }
+
+            return true;
+        }
+    },
+
+    PathVariable {
         @Override
         boolean doCollect(ApiParamObject apiParamObject, AnnotatedElement element) {
             PathVariable pathVariable = element.getAnnotation(PathVariable.class);
@@ -105,12 +133,12 @@ public enum ApiParamLocation {
     };
 
     public static final ApiParamLocation[] API_PARAM_LOCATIONS =
-            new ApiParamLocation[]{Param, Path, Header};
+            new ApiParamLocation[]{RequestParam, PathVariable, RequestHeader, CookieValue};
 
     abstract boolean doCollect(ApiParamObject apiParamObject, AnnotatedElement param);
 
     public static final void collects(ApiParamObject apiParamObject, AnnotatedElement element) {
-        ApiParamLocation currentLocation = ApiParamLocation.Param;
+        ApiParamLocation currentLocation = ApiParamLocation.RequestParam;
         for (ApiParamLocation location : API_PARAM_LOCATIONS) {
             if (location.doCollect(apiParamObject, element)) {
                 currentLocation = location;

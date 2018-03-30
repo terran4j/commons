@@ -261,18 +261,19 @@ public class RetrofitCodeWriter {
     }
 
     private String toParamAnnoName(ApiParamLocation location, RequestMethod requestMethod) {
-        if (location == ApiParamLocation.Header) {
+        if (location == ApiParamLocation.RequestHeader) {
             return "Header";
-        } else if (location == ApiParamLocation.Path) {
+        } else if (location == ApiParamLocation.PathVariable) {
             return "Path";
-        } else if (location == ApiParamLocation.Param) {
+        } else if (location == ApiParamLocation.RequestParam) {
             if (requestMethod == RequestMethod.POST) {
                 return "Field";
             } else {
                 return "Query";
             }
         } else {
-            throw new RuntimeException("ApiParamLocation location unsupported: " + location);
+            throw new RuntimeException("ApiParamLocation" +
+                    " location unsupported: " + location);
         }
     }
 

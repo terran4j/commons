@@ -53,14 +53,14 @@ public class Api2DocUtils {
         Map<String, String> getParams = new HashMap<>();
         if (params != null) {
             for (ApiParamObject param : params) {
-                if (param.getLocation() == ApiParamLocation.Path) {
+                if (param.getLocation() == ApiParamLocation.PathVariable) {
                     String value = param.getSample().getValue();
                     if (StringUtils.isEmpty(value)) {
                         value = param.getDataType().getDefault();
                     }
                     pathParams.put(param.getId(), value);
                 }
-                if (param.getLocation() == ApiParamLocation.Param) {
+                if (param.getLocation() == ApiParamLocation.RequestParam) {
                     String value = param.getSample().getValue();
                     if (StringUtils.isEmpty(value)) {
                         continue;
