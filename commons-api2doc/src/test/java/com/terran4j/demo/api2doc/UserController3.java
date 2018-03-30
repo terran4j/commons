@@ -21,9 +21,6 @@ public class UserController3 {
     public void m2() {
     }
 
-    @GetMapping
-    @PostMapping
-
     @RequestMapping(value = "/do_something")
     public void doSomethingRequiredLogon() {
     }

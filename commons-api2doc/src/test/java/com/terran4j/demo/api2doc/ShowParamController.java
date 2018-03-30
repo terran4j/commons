@@ -3,18 +3,19 @@ package com.terran4j.demo.api2doc;
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import org.springframework.web.bind.annotation.*;
 
-@Api2Doc(value = "param", name = "演示各种参数的写法")
+/**
+ * TODO: 还未实现，只是计划要实现。
+ */
+@Api2Doc(value = "param", name = "演示各种参数生成文档")
 @RestController
 @RequestMapping(value = "/param")
 public class ShowParamController {
 
-    @RequestMapping(value = "/path/{id}", method = RequestMethod.GET,
-            name = "@PathVariable")
+    @RequestMapping(value = "/path/{id}", name = "@PathVariable")
     public void pathVariable(@PathVariable Long id) {
     }
 
-    @RequestMapping(value = "/header", method = RequestMethod.GET,
-            name = "@RequestHeader")
+    @RequestMapping(value = "/header", name = "@RequestHeader")
     public void header(@RequestHeader("key") String key) {
     }
 
