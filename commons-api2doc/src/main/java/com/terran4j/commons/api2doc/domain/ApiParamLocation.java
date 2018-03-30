@@ -76,6 +76,30 @@ public enum ApiParamLocation {
         }
     },
 
+    RequestPart {
+        @Override
+        boolean doCollect(ApiParamObject apiParamObject, AnnotatedElement element) {
+            RequestPart requestPart = element.getAnnotation(RequestPart.class);
+            if (requestPart == null) {
+                return false;
+            }
+
+            String name = null;
+            if (StringUtils.hasText(requestPart.value())) {
+                name = requestPart.value();
+            }
+            if (StringUtils.hasText(requestPart.name())) {
+                name = requestPart.name();
+            }
+            apiParamObject.setName(name);
+
+            boolean required = requestPart.required();
+            apiParamObject.setRequired(required);
+
+            return true;
+        }
+    },
+
     CookieValue {
         @Override
         boolean doCollect(ApiParamObject apiParamObject, AnnotatedElement element) {
@@ -132,8 +156,9 @@ public enum ApiParamLocation {
         }
     };
 
-    public static final ApiParamLocation[] API_PARAM_LOCATIONS =
-            new ApiParamLocation[]{RequestParam, PathVariable, RequestHeader, CookieValue};
+    public static final ApiParamLocation[] API_PARAM_LOCATIONS = new ApiParamLocation[]{
+            RequestParam, PathVariable, RequestHeader, CookieValue, RequestPart
+    };
 
     abstract boolean doCollect(ApiParamObject apiParamObject, AnnotatedElement param);
 

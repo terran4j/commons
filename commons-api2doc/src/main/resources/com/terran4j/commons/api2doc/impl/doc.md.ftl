@@ -29,10 +29,10 @@
 <#if doc.params?? && (doc.params?size > 0) >
 **请求参数**
 
-| 参数名 | 是否必须 | 类型   | 说明 | 示例值 |
-|:----  |-----  |-----   |-----    |-----   |
+| 参数名 | 是否必须 | 参数形式 | 数据类型 | 说明    | 示例值 |
+|:-----    |-----         |-----        |-----         |------   |-----     |
 <#list doc.params as param>
-| ${param.id} | ${param.requiredName} | ${param.typeName} | ${param.comment.html()!} | ${param.sample.html()!} |
+| ${param.id} | ${param.requiredName} | ${param.location} | ${param.typeName} | ${param.comment.html()!} | ${param.sample.html()!} |
 </#list>
 </#if>
 
@@ -52,7 +52,7 @@
 <#if result.groupId??><span id="${result.groupId}"><br /></span></#if>
 **${result.groupName!}类型说明：**
 
-| 参数名 | 类型   | 说明 | 示例值 |
+| 字段名 | 类型   | 说明 | 示例值 |
 |:---- |----- |-----  |----- |
 <#list result.children as item>
 | ${item.id} | <#if item.refGroupId??>[${item.typeName}](#${item.refGroupId})<#else>${item.typeName}</#if> | ${item.comment.html()!} | ${item.sample.html()!} |
@@ -66,8 +66,8 @@
 <#if doc.errors?? && (doc.errors?size > 0) >
 **错误码**
 
-| 错误码    | 说明 |
-|:----    |-----   |
+| 错误码  | 说明   |
+|:----      |-----   |
 <#list doc.errors as error>
 | ${error.id} | ${error.comment.html()!} |
 </#list>
