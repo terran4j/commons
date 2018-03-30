@@ -72,9 +72,6 @@ public class DSchedulingAspect {
         jobExeInfo.setClassName(className);
         jobExeInfo.setMethodName(methodName);
         final Logger log = LoggerFactory.getLogger(targetClass);
-        if (log.isInfoEnabled()) {
-            log.info("doDistributedScheduling, jobExeInfo:\n{}", Strings.toString(jobExeInfo));
-        }
 
         // 只有用 @DScheduling 修饰的方法，才会使用并发控制。
         Object[] args = point.getArgs();
@@ -180,6 +177,9 @@ public class DSchedulingAspect {
             jobExeInfo.setEndTime(endTime);
             jobExeInfo.setRunning(false);
             cacheService.setObject(jobInfoKey, jobExeInfo, jobInfoExpired);
+            if (log.isInfoEnabled()) {
+                log.info("done DScheduling, jobExeInfo:\n{}", jobExeInfo);
+            }
 
             // 释放锁。
             cacheService.remove(lockKey);
