@@ -20,7 +20,7 @@
 * 定制文档的欢迎页
 * 定制文档的标题及图标
 * 关闭 Api2Doc 服务
-
+* 后续开发计划
 
 ## 项目背景
 
@@ -622,6 +622,6 @@ api2doc.enabled 为 false 表示关闭 Api2Doc 服务，不写或为 true 表示
 中才启用 Api2Doc 服务。
 
 
-## 后续计划
+## 后续开发计划
 
-参见[开发计划](https://github.com/terran4j/commons/blob/master/commons-api2doc/TODO.md)
+参见[后续开发计划](https://github.com/terran4j/commons/blob/master/commons-api2doc/TODO.md)
