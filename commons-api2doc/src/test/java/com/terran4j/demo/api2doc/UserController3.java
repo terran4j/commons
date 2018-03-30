@@ -1,6 +1,8 @@
 package com.terran4j.demo.api2doc;
 
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +20,9 @@ public class UserController3 {
     @RequestMapping(name = "接口2", value = "/m2")
     public void m2() {
     }
+
+    @GetMapping
+    @PostMapping
 
     @RequestMapping(value = "/do_something")
     public void doSomethingRequiredLogon() {

@@ -1,5 +1,7 @@
 package com.terran4j.commons.hedis.dschedule;
 
+import com.terran4j.commons.util.Strings;
+
 public class JobExeInfo {
 
 	private Long beginTime;
@@ -10,7 +12,7 @@ public class JobExeInfo {
 	
 	private String methodName;
 	
-	private int resultCode;
+	private String resultCode;
 	
 	private String message;
 	
@@ -49,14 +51,14 @@ public class JobExeInfo {
 	/**
 	 * @return the resultCode
 	 */
-	public final int getResultCode() {
+	public final String getResultCode() {
 		return resultCode;
 	}
 
 	/**
 	 * @param resultCode the resultCode to set
 	 */
-	public final void setResultCode(int resultCode) {
+	public final void setResultCode(String resultCode) {
 		this.resultCode = resultCode;
 	}
 
@@ -129,5 +131,8 @@ public class JobExeInfo {
 	public final void setRunning(boolean running) {
 		this.running = running;
 	}
-	
+
+	public final String toString() {
+	    return Strings.toString(this);
+    }
 }

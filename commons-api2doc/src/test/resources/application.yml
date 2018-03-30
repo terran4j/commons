@@ -4,6 +4,11 @@ api2doc:
   title: Api2Doc示例项目——接口文档
   icon: https://spring.io/img/homepage/icon-spring-framework.svg
 
+server:
+  port:  8081
+  ## 这个 url 会在文档页面 URL 示例中被用到。
+  url: http://doc.terran4j.com:8081
+
 ---
 # 线上环境
 spring:

@@ -11,7 +11,7 @@ import java.util.List;
 @Api2Doc(id = "demo", name = "用户接口", order = 0)
 @ApiComment(seeClass = User.class)
 @RestController
-@RequestMapping(value = "/src/test/resources/demo")
+@RequestMapping(value = "/api2doc/demo")
 public class UserController {
 
     // http://localhost:8080/api2doc/demo/user/1
