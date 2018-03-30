@@ -21,11 +21,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -93,16 +93,17 @@ public class Api2DocCollector implements BeanPostProcessor {
             return null;
         }
         if (log.isInfoEnabled()) {
-            log.info("prepare to get API Info by bean, beanName = {}", beanName);
+            log.info("prepare to get API Info by bean:  {}", beanName);
         }
 
-        Method[] methods = Classes.getMethods(RequestMapping.class, clazz);
-        if (methods == null || methods.length == 0) {
+        List<MappingMethod> methods = MappingMethod.getMappingMethods(clazz);
+                // Classes.getMethods(RequestMapping.class, clazz);
+        if (methods == null || methods.size() == 0) {
             // 整个类中都没有任何 RequestMapping 的方法，不用收集。
-            if (log.isInfoEnabled()) {
-                log.info("No any @RequestMapping method, no need to get, " +
-                        "beanName = {}", beanName);
-            }
+//            if (log.isInfoEnabled()) {
+//                log.info("No any @RequestMapping /  method, no need to get, " +
+//                        "beanName = {}", beanName);
+//            }
             return null;
         }
 
@@ -116,8 +117,9 @@ public class Api2DocCollector implements BeanPostProcessor {
             return null;
         }
 
-        List<Method> ali2DocMethods = new ArrayList<>();
-        for (Method method : methods) {
+        List<MappingMethod> ali2DocMethods = new ArrayList<>();
+        for (MappingMethod mappingMethod : methods) {
+            Method method = mappingMethod.getMethod();
             Api2Doc api2Doc = method.getAnnotation(Api2Doc.class);
             if (classApi2Doc == null && api2Doc == null) {
                 // 本方法的文档被忽略。
@@ -127,7 +129,7 @@ public class Api2DocCollector implements BeanPostProcessor {
                 // 本方法的文档被忽略。
                 continue;
             }
-            ali2DocMethods.add(method);
+            ali2DocMethods.add(mappingMethod);
         }
         if (classApi2Doc == null && ali2DocMethods.size() == 0) {
             // 整个类中的方法，都忽略从 API 生成文档，不用收集。
@@ -196,7 +198,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 
         // 根据方法生成 API 文档。
         List<ApiDocObject> docs = new ArrayList<>();
-        for (Method method : ali2DocMethods) {
+        for (MappingMethod method : ali2DocMethods) {
             ApiDocObject doc = getApiDoc(method, basePaths, beanName,
                     classApi2Doc, defaultSeeClass);
             if (doc == null) {
@@ -224,8 +226,11 @@ public class Api2DocCollector implements BeanPostProcessor {
     }
 
     ApiDocObject getApiDoc(
-            Method method, String[] basePaths, String beanName, Api2Doc classApi2Doc,
+            MappingMethod mappingMethod, String[] basePaths,
+            String beanName, Api2Doc classApi2Doc,
             Class<?> defaultSeeClass) throws BusinessException {
+
+        Method method = mappingMethod.getMethod();
 
         // 只要有 @ApiDoc 注解（无论是本方法上，还是类上），有会生成文档，没有这个注解就不会。
         Api2Doc api2Doc = method.getAnnotation(Api2Doc.class);
@@ -237,6 +242,7 @@ public class Api2DocCollector implements BeanPostProcessor {
 
         doc.setSourceMethod(method);
 
+        // 获取文档的 id，以 @Api2Doc、方法名 为顺序获取。
         String id = method.getName();
         if (api2Doc != null && StringUtils.hasText(api2Doc.value())) {
             id = api2Doc.value();
@@ -247,34 +253,35 @@ public class Api2DocCollector implements BeanPostProcessor {
         doc.setId(id);
         checkId(id);
 
+        // 获取文档的排序。
         if (api2Doc != null) {
             doc.setOrder(api2Doc.order());
         }
 
+        // 获取文档名称，按 @Api2Doc 、@Mapping、方法名的顺序获取。
         String name = method.getName();
-        RequestMapping mapping = method.getAnnotation(RequestMapping.class);
-        if (StringUtils.hasText(mapping.name())) {
-            name = mapping.name();
+        String mappingName = mappingMethod.getName();
+        if (StringUtils.hasText(mappingName)) {
+            name = mappingName;
         }
         if (api2Doc != null && StringUtils.hasText(api2Doc.name())) {
             name = api2Doc.name();
         }
         doc.setName(name);
 
+        // 获取 API 的注释信息。
         ApiComment apiComment = method.getAnnotation(ApiComment.class);
-        defaultSeeClass = ApiCommentUtils.getDefaultSeeClass(
-                apiComment, defaultSeeClass);
+        defaultSeeClass = ApiCommentUtils.getDefaultSeeClass(apiComment, defaultSeeClass);
+        doc.setComment(ApiCommentUtils.getComment(apiComment, defaultSeeClass, name));
+        doc.setSample(ApiCommentUtils.getSample(apiComment, defaultSeeClass, name));
 
-        doc.setComment(ApiCommentUtils.getComment(
-                apiComment, defaultSeeClass, name));
-        doc.setSample(ApiCommentUtils.getSample(
-                apiComment, defaultSeeClass, name));
-
-        String[] paths = getPath(mapping);
+        // 获取 API 的访问路径。
+        String[] paths = mappingMethod.getPath();
         paths = combine(basePaths, paths);
         doc.setPaths(paths);
 
-        doc.setMethods(toRequestMethod(mapping));
+        // 获取 HTTP 方法。
+        doc.setMethods(mappingMethod.getRequestMethod());
 
         // 收集参数信息。
         List<ApiParamObject> apiParams = toApiParams(method, defaultSeeClass);
@@ -333,16 +340,6 @@ public class Api2DocCollector implements BeanPostProcessor {
         return doc;
     }
 
-    private RequestMethod[] toRequestMethod(RequestMapping mapping) {
-        if (mapping == null) {
-            return RequestMethod.values();
-        }
-        RequestMethod[] methods = mapping.method();
-        if (methods == null || methods.length == 0) {
-            return RequestMethod.values();
-        }
-        return methods;
-    }
 
     public List<ApiParamObject> toApiParams(Method method, Class<?> defaultSeeClass) {
         List<ApiParamObject> result = new ArrayList<>();
@@ -523,23 +520,27 @@ public class Api2DocCollector implements BeanPostProcessor {
         }
 
         if (paramType.equals(Integer.class)
-                || paramType.equals(Short.class) || paramType.equals(Byte.class)) {
+                || paramType.equals(Short.class)
+                || paramType.equals(Byte.class)) {
             return ApiDataType.INT;
         }
 
         // Date 类型返回为 long 格式。
-        if (paramType.equals(Date.class) || paramType.equals(java.sql.Date.class)
+        if (paramType.equals(Date.class)
+                || paramType.equals(java.sql.Date.class)
                 || paramType.equals(Long.class)) {
             return ApiDataType.LONG;
         }
 
-        if (paramType.equals(Float.class) || paramType.equals(Double.class)) {
+        if (paramType.equals(Float.class)
+                || paramType.equals(Double.class)) {
             return ApiDataType.NUMBER;
         }
 
-        if (paramType.equals(String.class) || paramType.equals(Character.class)
-                || paramType.equals(StringBuffer.class) //
-                || paramType.equals(StringBuilder.class)) { //
+        if (paramType.equals(String.class)
+                || paramType.equals(Character.class)
+                || paramType.equals(StringBuffer.class)
+                || paramType.equals(StringBuilder.class)) {
             return ApiDataType.STRING;
         }
 
