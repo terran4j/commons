@@ -5,9 +5,9 @@ api2doc:
   icon: https://spring.io/img/homepage/icon-spring-framework.svg
 
 server:
-  port:  8081
+  port:  8080
   ## 这个 url 会在文档页面 URL 示例中被用到。
-  url: http://doc.terran4j.com:8081
+  url: http://doc.terran4j.com:8080
 
 ---
 # 线上环境
