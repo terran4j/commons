@@ -136,7 +136,7 @@ public class DocPageBuilder {
 
             String curl = CurlBuilder.toCurl(doc, serverURL);
             if (StringUtils.hasText(curl)) {
-                model.put("curl", curl);
+//                model.put("curl", curl);
             }
 
             String folderId = folder.getId();

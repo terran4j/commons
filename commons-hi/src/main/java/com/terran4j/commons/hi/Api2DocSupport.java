@@ -81,13 +81,13 @@ public class Api2DocSupport {
             String key = paramMeta.getId();
             String value = "{" + key + "}";
             String location = paramMeta.getLocation();
-            if ("Header".equals(location)) {
+            if ("RequestHeader".equals(location)) {
                 headers.addProperty(key, value);
             }
-            if ("Path".equals(location)) {
+            if ("PathVariable".equals(location)) {
                 continue;
             }
-            if ("Param".equals(location)) {
+            if ("RequestParam".equals(location)) {
                 params.addProperty(key, value);
             }
         }
