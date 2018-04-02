@@ -134,9 +134,9 @@ public class DocPageBuilder {
             model.put("folder", folder);
             model.put("doc", doc);
 
-            String docURL = Api2DocUtils.toURL(doc, serverURL);
-            if (StringUtils.hasText(docURL)) {
-                model.put("docURL", docURL);
+            String curl = CurlBuilder.toCurl(doc, serverURL);
+            if (StringUtils.hasText(curl)) {
+                model.put("curl", curl);
             }
 
             String folderId = folder.getId();

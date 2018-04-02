@@ -7,7 +7,7 @@ api2doc:
 server:
   port:  8080
   ## 这个 url 会在文档页面 URL 示例中被用到。
-  url: http://doc.terran4j.com:8080
+  url: http://localhost:8080
 
 ---
 # 线上环境

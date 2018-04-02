@@ -36,9 +36,11 @@
 </#list>
 </#if>
 
-<#if docURL??>
-**URL示例**
- - [${docURL}](${docURL})
+<#if curl??>
+**请求示例**
+```
+${curl}
+```
 </#if>
 
 <br/>
