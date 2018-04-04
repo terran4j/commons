@@ -624,4 +624,4 @@ api2doc.enabled 为 false 表示关闭 Api2Doc 服务，不写或为 true 表示
 
 ## 后续开发计划
 
-参见[后续开发计划](https://github.com/terran4j/commons/blob/master/commons-api2doc/TODO.md)
+参见[后续开发计划](https://github.com/terran4j/commons/blob/master/commons-api2doc/doc/TODO.md)
