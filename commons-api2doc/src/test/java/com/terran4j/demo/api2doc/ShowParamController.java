@@ -16,6 +16,7 @@ import java.io.IOException;
 @RequestMapping(value = "/params")
 public class ShowParamController {
 
+    @ApiComment(value = "返回消息文本", sample = "requestParam, key = 简单")
     @RequestMapping(value = "/param", name = "@RequestParam（默认）")
     public String requestParam(
             @ApiComment(value = "请求参数", sample = "简单") String key) {
@@ -75,55 +76,6 @@ public class ShowParamController {
                 FileInfo.parse(file1, name + "-1"),
                 FileInfo.parse(file2, name + "-2")
         };
-    }
-
-    private static final class FileInfo {
-
-        private String name;
-
-        private String content;
-
-        private String msg;
-
-        public FileInfo() {
-        }
-
-        public static FileInfo parse(MultipartFile file, String name) throws IOException {
-            String fileName = file.getOriginalFilename();
-            String content = Strings.getString(file.getInputStream());
-            String msg = "requestPart, file = " + fileName;
-            return new FileInfo(name, content, msg);
-        }
-
-        public FileInfo(String name, String content, String msg) {
-            this.name = name;
-            this.content = content;
-            this.msg = msg;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
-
-        public void setMsg(String msg) {
-            this.msg = msg;
-        }
     }
 
 }

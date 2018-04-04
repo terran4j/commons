@@ -116,6 +116,24 @@ public class ApiResultObjectTest {
         Assert.assertTrue(User.class == object.getSourceType());
     }
 
+    @ApiComment("消息内容")
+    public final String getMessage() {
+        return "Got the message!";
+    }
+
+    @Test
+    public void testParseResultTypeWithSimple() throws Exception {
+        log.info("testParseResultTypeWithSimple");
+        Method method = ReflectionUtils.findMethod(getClass(), "getMessage");
+        Assert.assertNotNull(method);
+        KeyedList<String, ApiResultObject> totalResults = new KeyedList<>();
+        ApiResultObject resultObject = ApiResultObject.parseResultType(method, totalResults);
+        Assert.assertNotNull(resultObject);
+        Assert.assertEquals(0, totalResults.size());
+        Assert.assertTrue(ApiDataType.STRING == resultObject.getDataType());
+        Assert.assertTrue(String.class == resultObject.getSourceType());
+    }
+
     @Test
     public void testParseResultTypeWithIgnore() throws Exception {
         log.info("testParseResultTypeWithIgnore");

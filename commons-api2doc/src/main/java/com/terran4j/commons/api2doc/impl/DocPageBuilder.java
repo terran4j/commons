@@ -1,7 +1,12 @@
 package com.terran4j.commons.api2doc.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.terran4j.commons.api2doc.Api2DocMocker;
+import com.terran4j.commons.api2doc.domain.ApiDataType;
 import com.terran4j.commons.api2doc.domain.ApiDocObject;
 import com.terran4j.commons.api2doc.domain.ApiFolderObject;
+import com.terran4j.commons.api2doc.domain.ApiResultObject;
+import com.terran4j.commons.restpack.HttpResult;
 import com.terran4j.commons.util.Strings;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ext.spec.example.SpecExampleExtension;
@@ -23,6 +28,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -47,11 +53,41 @@ public class DocPageBuilder {
 
     private Template docTemplate = null;
 
+    private Parser parser = null;
+
+    private HtmlRenderer renderer = null;
+
     @PostConstruct
     public void init() {
         try {
             mdTemplate = freeMarker.getTemplate(DocPageBuilder.class, FILE_DOC_MD);
             docTemplate = freeMarker.getTemplate(DocPageBuilder.class, FILE_DOC_HTML);
+
+            MutableDataSet options = new MutableDataSet();
+            options.setFrom(ParserEmulationProfile.GITHUB_DOC);
+            options.set(Parser.EXTENSIONS, Arrays.asList(
+                    TablesExtension.create(), // 表格渲染插件。
+                    SpecExampleExtension.create() // 代码渲染插件。
+            ));
+
+            // References compatibility
+            options.set(Parser.REFERENCES_KEEP, KeepType.LAST);
+
+            // Set GFM table parsing options
+            options.set(TablesExtension.COLUMN_SPANS, false) //
+                    .set(TablesExtension.MIN_HEADER_ROWS, 1) //
+                    .set(TablesExtension.MAX_HEADER_ROWS, 1) //
+                    .set(TablesExtension.APPEND_MISSING_COLUMNS, true) //
+                    .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true) //
+                    .set(TablesExtension.WITH_CAPTION, false) //
+                    .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true);
+
+            // Setup List Options for GitHub profile which is kramdown for documents
+            options.setFrom(ParserEmulationProfile.GITHUB_DOC);
+
+            // You can re-use parser and renderer instances
+            parser = Parser.builder(options).build();
+            renderer = HtmlRenderer.builder(options).build();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -59,35 +95,6 @@ public class DocPageBuilder {
 
     public String md2Html(String content) throws Exception {
 
-        MutableDataSet options = new MutableDataSet();
-        options.setFrom(ParserEmulationProfile.GITHUB_DOC);
-        options.set(Parser.EXTENSIONS, Arrays.asList(
-                TablesExtension.create(), // 表格渲染插件。
-                SpecExampleExtension.create() // 代码渲染插件。
-        ));
-
-        // References compatibility
-        options.set(Parser.REFERENCES_KEEP, KeepType.LAST);
-
-        // Set GFM table parsing options
-        options.set(TablesExtension.COLUMN_SPANS, false) //
-                .set(TablesExtension.MIN_HEADER_ROWS, 1) //
-                .set(TablesExtension.MAX_HEADER_ROWS, 1) //
-                .set(TablesExtension.APPEND_MISSING_COLUMNS, true) //
-                .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true) //
-                .set(TablesExtension.WITH_CAPTION, false) //
-                .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true);
-
-        // Setup List Options for GitHub profile which is kramdown for documents
-        options.setFrom(ParserEmulationProfile.GITHUB_DOC);
-
-        //
-//        options.set(SpecExampleExtension.COLUMN_SPANS, false) //
-
-        Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
-
-        // You can re-use parser and renderer instances
         Node document = parser.parse(content);
         String html = renderer.render(document);
         return html;
@@ -145,6 +152,15 @@ public class DocPageBuilder {
                 if (StringUtils.hasText(curl)) {
                     model.put("curl", curl);
                 }
+            }
+
+            Object mockResult = doc.toMockResult();
+            if (folder.isRestPack()) {
+                mockResult = HttpResult.successFully(mockResult);
+            }
+            String resultJson = Strings.toString(mockResult);
+            if (StringUtils.hasText(resultJson)) {
+                model.put("resultJson", resultJson);
             }
 
             String folderId = folder.getId();

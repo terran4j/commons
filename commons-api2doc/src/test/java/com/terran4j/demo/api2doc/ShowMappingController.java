@@ -17,6 +17,7 @@ public class ShowMappingController {
 
     private static final Logger log = LoggerFactory.getLogger(ShowMappingController.class);
 
+    @ApiComment(value = "返回 doRequest 的消息文本", sample = "doRequest, id = 123")
     @RequestMapping(value = "/doRequest/{id}", name = "演示 @RequestMapping 方法")
     public String doRequest(
             @ApiComment("用户id") @PathVariable("id") Long id) {

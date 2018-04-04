@@ -1,5 +1,6 @@
 package com.terran4j.commons.api2doc.domain;
 
+import com.terran4j.commons.api2doc.Api2DocMocker;
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.impl.Api2DocUtils;
@@ -28,6 +29,10 @@ public class ApiResultObject extends ApiObject {
 
     private ApiDataType dataType;
 
+    /**
+     * 如果类型是数组类型，此类是里面元素的类型
+     * 否则是这个类型本身。
+     */
     private Class<?> sourceType;
 
     private String typeName = "";

@@ -5,6 +5,7 @@ import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.annotations.ApiError;
 import com.terran4j.commons.api2doc.annotations.ApiErrors;
 import com.terran4j.commons.api2doc.domain.*;
+import com.terran4j.commons.restpack.RestPackController;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.value.KeyedList;
@@ -183,6 +184,10 @@ public class Api2DocCollector implements BeanPostProcessor {
         }
         folder.setName(name);
 
+        // 这组 API 是否用了 RestPack
+        RestPackController restPackController = clazz.getAnnotation(RestPackController.class);
+        folder.setRestPack(restPackController != null);
+
         // API 组的注释。
         ApiComment apiComment = clazz.getAnnotation(ApiComment.class);
         folder.setComment(ApiCommentUtils.getComment(
@@ -271,8 +276,10 @@ public class Api2DocCollector implements BeanPostProcessor {
         // 获取 API 的注释信息。
         ApiComment apiComment = method.getAnnotation(ApiComment.class);
         defaultSeeClass = ApiCommentUtils.getDefaultSeeClass(apiComment, defaultSeeClass);
-        doc.setComment(ApiCommentUtils.getComment(apiComment, defaultSeeClass, name));
-        doc.setSample(ApiCommentUtils.getSample(apiComment, defaultSeeClass, name));
+        String docComment = ApiCommentUtils.getComment(apiComment, defaultSeeClass, name);
+        doc.setComment(docComment);
+        String docSample = ApiCommentUtils.getSample(apiComment, defaultSeeClass, name);
+        doc.setSample(docSample);
 
         // 获取 API 的访问路径。
         String[] paths = mappingMethod.getPath();
@@ -292,8 +299,14 @@ public class Api2DocCollector implements BeanPostProcessor {
 
         // 收集返回值信息。
         KeyedList<String, ApiResultObject> totalResults = new KeyedList<>();
-        ApiResultObject.parseResultType(method, totalResults);
+        ApiResultObject resultObject = ApiResultObject.parseResultType(method, totalResults);
+        if (resultObject != null) {
+            resultObject.setComment(docComment);
+            resultObject.setSample(docSample);
+        }
+        doc.setResultType(resultObject);
         doc.setResults(totalResults.getAll());
+
 
         // 确定返回类型的描述。
         String returnTypeDesc = null;

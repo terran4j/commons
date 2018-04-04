@@ -1,5 +1,6 @@
 package com.terran4j.commons.api2doc.impl;
 
+import com.terran4j.commons.api2doc.Api2DocMocker;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.domain.ApiDataType;
 import com.terran4j.commons.util.Classes;
@@ -22,6 +23,22 @@ import java.util.Stack;
 public class Api2DocObjectFactory {
 
     private static final Logger log = LoggerFactory.getLogger(Api2DocObjectFactory.class);
+
+    public static Object createObject(ApiDataType dataType,
+                                      Class<?> elementType, String defaultValue) {
+        if (dataType.isArrayType()) {
+            int size = getArraySize(defaultValue, 2);
+            return createList(elementType, size);
+        } else if (dataType.isObjectType()) {
+            return createBean(elementType);
+        } else {
+            if (StringUtils.hasText(defaultValue)) {
+                return defaultValue;
+            } else {
+                return dataType.getDefault();
+            }
+        }
+    }
 
     public static <T> T createBean(Class<T> clazz) {
         Stack<Class<?>> classStack = new Stack<Class<?>>();
@@ -222,15 +239,7 @@ public class Api2DocObjectFactory {
             if (apiComment != null) {
                 String sizeText = ApiCommentUtils.getSample(
                         apiComment, defaultSeeClass, field.getName());
-                if (StringUtils.hasText(sizeText)) {
-                    try {
-                        size = Integer.parseInt(sizeText);
-                    } catch (Exception e) {
-                        log.warn("List 或 Array 类型的字段上，" +
-                                "@ApiComment 注解的 sample 属性应该是数字" +
-                                "（代表它在 mock 时元素的个数）, sample = {}", sizeText);
-                    }
-                }
+                size = getArraySize(sizeText, size);
             }
             Class<?> elementClass = getArrayElementClass(field);
             if (fieldClass.isArray()) {
@@ -252,6 +261,19 @@ public class Api2DocObjectFactory {
                     "fieldValue = {}, \n" +
                     "失败原因： {}", clazz, setMethod, fieldValue, e.getMessage());
         }
+    }
+
+    private static int getArraySize(String sizeText, int defaultValue) {
+        if (StringUtils.hasText(sizeText)) {
+            try {
+                return Integer.parseInt(sizeText);
+            } catch (Exception e) {
+                log.warn("List 或 Array 类型的字段上，" +
+                        "@ApiComment 注解的 sample 属性应该是数字" +
+                        "（代表它在 mock 时元素的个数）, sample = {}", sizeText);
+            }
+        }
+        return defaultValue;
     }
 
     private static Object adaptSimpleType(Object sourceValue, Class<?> targetType) {

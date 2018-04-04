@@ -50,6 +50,20 @@ public class HttpResult {
 		response.setData(data);
 		return response;
 	}
+
+	private static final long defaultServerTime = System.currentTimeMillis();
+
+	private static final String defaultRequestId = RestPackAspect.generateRequestId();
+
+    public static HttpResult successFully(Object data) {
+        HttpResult response = new HttpResult();
+        response.setRequestId(defaultRequestId);
+        response.setSpendTime(5);
+        response.setServerTime(defaultServerTime);
+        response.setResultCode(SUCCESS_CODE);
+        response.setData(data);
+        return response;
+    }
 	
 	public static HttpResult fail(ErrorCode errorCode, String msg) {
 		if (errorCode == null) {

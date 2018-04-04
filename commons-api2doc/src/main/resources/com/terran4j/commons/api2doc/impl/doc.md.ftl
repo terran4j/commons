@@ -46,13 +46,29 @@ ${curl}
 
 <br/>
 
+<#if resultJson??>
+
+**返回数据示例**
+
+```json
+${resultJson}
+```
+</#if>
+
 <#if doc.results?? && (doc.results?size > 0) >
+<!-- 复杂数据类型的情况 -->
 
 **返回数据说明**
 - [${doc.returnTypeDesc}](#${doc.results[0].groupId}) （参见下面的类型说明）
 
+<!-- 所有的子类型的列表说明 -->
 <#list doc.results as result>
-<#if result.groupId??><span id="${result.groupId}"><br /></span></#if>
+
+<!-- 给子类型定义一个锚，好点到这里。 -->
+<#if result.groupId??>
+<span id="${result.groupId}"><br /></span>
+</#if>
+
 **${result.groupName!}类型说明：**
 
 | 字段名 | 类型   | 说明 | 示例值 |
@@ -60,18 +76,16 @@ ${curl}
 <#list result.children as item>
 | ${item.id} | <#if item.refGroupId??>[${item.typeName}](#${item.refGroupId})<#else>${item.typeName}</#if> | ${item.comment.html()!} | ${item.sample.html()!} |
 </#list>
-
 </#list>
 
-**返回数据示例**
+<#elseif doc.resultType?? >
+<!-- 简单数据类型的情况。 -->
 
-```json
-{
-    "requestId": "aaaaaaaaa",
-    "resultCode": 0
-}
-```
+**返回数据说明**
 
+| 类型  | 说明 | 示例值 |
+|:----   |-----  |-----     |
+|  ${doc.resultType.typeName} |  ${doc.resultType.comment.html()!} | ${doc.resultType.sample.html()!} |
 </#if>
 
 <br/>

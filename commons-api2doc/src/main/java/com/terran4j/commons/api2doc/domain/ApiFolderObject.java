@@ -8,11 +8,21 @@ import java.util.Map;
 
 public class ApiFolderObject extends ApiObject {
 
+    private boolean restPack = false;
+
     private Map<String, String> mds;
 
     private Class<?> sourceClass;
 
     private final KeyedList<String, ApiDocObject> docs = new KeyedList<>();
+
+    public boolean isRestPack() {
+        return restPack;
+    }
+
+    public void setRestPack(boolean restPack) {
+        this.restPack = restPack;
+    }
 
     public Map<String, String> getMds() {
         return mds;
@@ -61,7 +71,7 @@ public class ApiFolderObject extends ApiObject {
 
     public static final String name2Id(String name) {
         int hash = name.hashCode();
-        String id = null;
+        String id;
         if (hash < 0) {
             id = "n" + Math.abs(hash);
         } else {

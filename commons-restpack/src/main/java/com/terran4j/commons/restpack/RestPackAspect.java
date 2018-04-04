@@ -161,7 +161,7 @@ public class RestPackAspect {
         ExceptionHolder.set(e);
     }
 
-    static String generateRequestId() {
+    public static String generateRequestId() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
