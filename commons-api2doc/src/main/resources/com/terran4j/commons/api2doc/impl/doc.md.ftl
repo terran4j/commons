@@ -47,7 +47,7 @@ ${curl}
 
 <#if doc.results?? && (doc.results?size > 0) >
 
-**返回结果**
+**返回数据说明**
 - [${doc.returnTypeDesc}](#${doc.results[0].groupId}) （参见下面的类型说明）
 
 <#list doc.results as result>
@@ -61,6 +61,16 @@ ${curl}
 </#list>
 
 </#list>
+
+**返回数据示例**
+
+```json
+{
+    "requestId": "aaaaaaaaa",
+    "resultCode": 0
+}
+```
+
 </#if>
 
 <br/>

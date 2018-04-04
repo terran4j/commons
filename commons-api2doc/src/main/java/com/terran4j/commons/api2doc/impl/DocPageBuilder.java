@@ -4,6 +4,7 @@ import com.terran4j.commons.api2doc.domain.ApiDocObject;
 import com.terran4j.commons.api2doc.domain.ApiFolderObject;
 import com.terran4j.commons.util.Strings;
 import com.vladsch.flexmark.ast.Node;
+import com.vladsch.flexmark.ext.spec.example.SpecExampleExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
@@ -61,8 +62,10 @@ public class DocPageBuilder {
 
         MutableDataSet options = new MutableDataSet();
         options.setFrom(ParserEmulationProfile.GITHUB_DOC);
-        options.set(Parser.EXTENSIONS, //
-                Arrays.asList(TablesExtension.create()));
+        options.set(Parser.EXTENSIONS, Arrays.asList(
+                TablesExtension.create(), // 表格渲染插件。
+                SpecExampleExtension.create() // 代码渲染插件。
+        ));
 
         // References compatibility
         options.set(Parser.REFERENCES_KEEP, KeepType.LAST);
@@ -78,6 +81,9 @@ public class DocPageBuilder {
 
         // Setup List Options for GitHub profile which is kramdown for documents
         options.setFrom(ParserEmulationProfile.GITHUB_DOC);
+
+        //
+//        options.set(SpecExampleExtension.COLUMN_SPANS, false) //
 
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();
@@ -136,7 +142,7 @@ public class DocPageBuilder {
 
             String curl = CurlBuilder.toCurl(doc, serverURL);
             if (StringUtils.hasText(curl)) {
-//                model.put("curl", curl);
+                model.put("curl", curl);
             }
 
             String folderId = folder.getId();
