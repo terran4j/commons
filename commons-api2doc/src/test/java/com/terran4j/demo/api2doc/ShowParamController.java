@@ -11,9 +11,9 @@ import java.io.IOException;
 /**
  *
  */
-@Api2Doc(value = "params", name = "演示各种参数生成文档")
+@Api2Doc(value = "params", name = "演示各种参数生成文档", order = 200)
 @RestController
-@RequestMapping(value = "/params")
+@RequestMapping(value = "/api2doc/demo/params")
 public class ShowParamController {
 
     @ApiComment(value = "返回消息文本", sample = "requestParam, key = 简单")

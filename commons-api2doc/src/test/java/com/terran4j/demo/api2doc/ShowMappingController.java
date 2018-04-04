@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 /**
  *
  */
-@Api2Doc(value = "mapping", name = "演示各种Mapping生成文档")
+@Api2Doc(value = "mapping", name = "演示各种Mapping生成文档", order = 100)
 @RestPackController
-@RequestMapping(value = "/mapping")
+@RequestMapping(value = "/api2doc/demo/mapping")
 public class ShowMappingController {
 
     private static final Logger log = LoggerFactory.getLogger(ShowMappingController.class);

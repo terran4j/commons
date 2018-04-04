@@ -1,6 +1,5 @@
 package com.terran4j.commons.api2doc.domain;
 
-import com.terran4j.commons.api2doc.Api2DocMocker;
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.impl.Api2DocUtils;
@@ -209,7 +208,7 @@ public class ApiResultObject extends ApiObject {
             // 数组类型，但元素是基本类型的，也直接处理。
             if (elementDataType != null && elementDataType.isSimpleType()) {
                 return createSimple(elementType, clazz,
-                        elementDataType, typeName);
+                        dataType, typeName);
             }
         }
 
@@ -350,9 +349,9 @@ public class ApiResultObject extends ApiObject {
         return groupId;
     }
 
-    private static ApiResultObject createSimple(
-            Class<?> sourceType, Class<?> clazz,
-            ApiDataType dataType, String typeName) {
+    private static ApiResultObject createSimple(Class<?> sourceType,
+                                                Class<?> clazz, ApiDataType dataType,
+                                                String typeName) {
         ApiResultObject result = new ApiResultObject();
         result.setSourceType(sourceType);
         result.setDataType(dataType);

@@ -174,11 +174,4 @@ public class CurlBuilder {
         }
     }
 
-    public static final void main(String[] args) throws UnsupportedEncodingException {
-        String str = encode("我的 home");
-        System.out.println(str);
-        str = URLDecoder.decode(str, Encoding.UTF8.getName());
-        System.out.println(str);
-    }
-
 }
