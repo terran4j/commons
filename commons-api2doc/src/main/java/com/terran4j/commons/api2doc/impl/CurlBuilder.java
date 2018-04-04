@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,8 +63,11 @@ public class CurlBuilder {
             }
         }
 
-        StringBuilder sb = new StringBuilder("curl ");
-        sb.append(enter);
+        RequestMethod[] requestMethods = docObject.getMethods();
+        RequestMethod requestMethod = requestMethods[0];
+        StringBuilder sb = new StringBuilder("curl")
+                .append(" -X ").append(requestMethod.name())
+                .append(enter);
 
         // 将 Header 参数拼接起来。
         if (headers.size() > 0) {
@@ -95,8 +99,7 @@ public class CurlBuilder {
 
         // 将“参数”拼起来。
         if (params.size() > 0) {
-            RequestMethod[] requestMethods = docObject.getMethods();
-            if (requestMethods.length == 1 && requestMethods[0] == RequestMethod.POST) {
+            if (requestMethod == RequestMethod.POST) {
                 sb.append(" -d \"").append(joinText(params, "&", "="))
                         .append("\" ").append(enter);
             } else {
@@ -136,10 +139,19 @@ public class CurlBuilder {
 
     private static String encode(String value) {
         try {
-            return URLEncoder.encode(value, Encoding.UTF8.getName());
+            // 对于空格的编码，有的地方不认 + ，所以统一转成： %20
+            String str = URLEncoder.encode(value, Encoding.UTF8.getName());
+            return str.replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static final void main(String[] args) throws UnsupportedEncodingException {
+        String str = encode("我的 home");
+        System.out.println(str);
+        str = URLDecoder.decode(str, Encoding.UTF8.getName());
+        System.out.println(str);
     }
 
 }

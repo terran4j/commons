@@ -8,6 +8,15 @@ import java.util.*;
 
 public class MappingMethod {
 
+    /**
+     * 目前只支持这 5 种方法，其它的都用得太少，暂时不支持。
+     */
+    static final RequestMethod[] SUPPORT_METHODS = new RequestMethod[] {
+            RequestMethod.GET, RequestMethod.POST,
+            RequestMethod.PUT, RequestMethod.DELETE,
+            RequestMethod.PATCH
+    };
+
     private final Method method;
 
     private MappingMethod(Method method) {
@@ -52,12 +61,12 @@ public class MappingMethod {
         return null;
     }
 
-    public RequestMethod[] getRequestMethod() {
+    RequestMethod[] getRequestMethod() {
         RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
         if (requestMapping != null) {
             RequestMethod[] methods = requestMapping.method();
             if (methods == null || methods.length == 0) {
-                return RequestMethod.values();
+                return SUPPORT_METHODS;
             }
             return methods;
         }
@@ -87,7 +96,7 @@ public class MappingMethod {
             return new RequestMethod[]{RequestMethod.DELETE};
         }
 
-        return RequestMethod.values();
+        return SUPPORT_METHODS;
     }
 
     public String[] getPath() {
