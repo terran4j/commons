@@ -16,7 +16,6 @@ import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -140,10 +139,12 @@ public class DocPageBuilder {
             model.put("folder", folder);
             model.put("doc", doc);
 
-            String serverURL = api2DocProperties.getServerURL();
-            String curl = CurlBuilder.toCurl(doc, serverURL);
-            if (StringUtils.hasText(curl)) {
-                model.put("curl", curl);
+            if (api2DocProperties.isShowCurl()) {
+                String serverURL = api2DocProperties.getServerURL();
+                String curl = CurlBuilder.toCurl(doc, serverURL);
+                if (StringUtils.hasText(curl)) {
+                    model.put("curl", curl);
+                }
             }
 
             String folderId = folder.getId();

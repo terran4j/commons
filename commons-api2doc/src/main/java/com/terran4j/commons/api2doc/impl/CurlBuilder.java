@@ -24,7 +24,7 @@ public class CurlBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(CurlBuilder.class);
 
-    private static final String enter = "\\\n";
+    private static final String enter = " \\\n";
 
     public static String toCurl(ApiDocObject docObject, String serverURL) {
 
@@ -33,6 +33,7 @@ public class CurlBuilder {
         final KeyedList<String, String> params = new KeyedList<>();
         final KeyedList<String, String> cookies = new KeyedList<>();
         final Map<String, String> pathVars = new HashMap<>();
+        final KeyedList<String, String> parts = new KeyedList<>();
 
         if (allParams.size() > 0) {
             for (ApiParamObject param : allParams) {
@@ -60,14 +61,20 @@ public class CurlBuilder {
                 if (param.getLocation() == ApiParamLocation.CookieValue) {
                     cookies.add(key, value);
                 }
+                if (param.getLocation() == ApiParamLocation.RequestPart) {
+                    parts.add(key, value);
+                }
             }
         }
 
         RequestMethod[] requestMethods = docObject.getMethods();
         RequestMethod requestMethod = requestMethods[0];
-        StringBuilder sb = new StringBuilder("curl")
-                .append(" -X ").append(requestMethod.name())
-                .append(enter);
+        StringBuilder sb = new StringBuilder("curl");
+        if (parts.size() == 0) {
+            // 没有上传文件，才指定方法。
+            sb.append(" -X ").append(requestMethod.name());
+        }
+        sb.append(enter);
 
         // 将 Header 参数拼接起来。
         if (headers.size() > 0) {
@@ -75,14 +82,14 @@ public class CurlBuilder {
                 String key = headers.getKey(i);
                 String value = headers.get(i);
                 sb.append(" -H \"").append(key).append(": ").append(value)
-                        .append("\" ").append(enter);
+                        .append("\"").append(enter);
             }
         }
 
         if (cookies.size() > 0) {
             sb.append(" -b \"");
             sb.append(joinText(cookies, ";", "="));
-            sb.append("\" ").append(enter);
+            sb.append("\"").append(enter);
         }
 
         // 将 URL 中的 {xx} 变量用参数的示例值代替。
@@ -99,11 +106,31 @@ public class CurlBuilder {
 
         // 将“参数”拼起来。
         if (params.size() > 0) {
-            if (requestMethod == RequestMethod.POST) {
+            if (parts.size() > 0) {
+                // 参数按 multipart 的方法传。
+                for (int i = 0; i < params.size(); i++) {
+                    String key = params.getKey(i);
+                    String value = params.get(i);
+                    sb.append(" -F \"").append(key).append("=").append(value)
+                            .append("\"").append(enter);
+                }
+            } else if (requestMethod == RequestMethod.POST) {
+                // 参数按 post 的方法传。
                 sb.append(" -d \"").append(joinText(params, "&", "="))
-                        .append("\" ").append(enter);
+                        .append("\"").append(enter);
             } else {
+                // 参数附加到 URL 后面。
                 url += ("?" + joinText(params, "&", "="));
+            }
+        }
+
+        // 追加 multipart 参数。
+        if (parts.size() > 0) {
+            for (int i = 0; i < parts.size(); i++) {
+                String key = parts.getKey(i);
+                String value = parts.get(i);
+                sb.append(" -F \"").append(key).append("=@").append(value)
+                        .append("\"").append(enter);
             }
         }
 

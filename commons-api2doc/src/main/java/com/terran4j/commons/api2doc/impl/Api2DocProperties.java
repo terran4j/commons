@@ -9,7 +9,7 @@ public class Api2DocProperties {
     @Value("${server.url:http://localhost:8080}")
     private String serverURL;
 
-    @Value("${api2doc.title:true}")
+    @Value("${api2doc.showCurl:true}")
     private boolean showCurl = true;
 
     @Value("${service.name:}")

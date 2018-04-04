@@ -46,6 +46,7 @@ public class ShowParamController {
 
     /**
      * TODO: Cookie 中不能有空格，否则传到服务端是 + 号。
+     *
      * @param c1
      * @param c2
      * @return
@@ -61,15 +62,19 @@ public class ShowParamController {
         return msg;
     }
 
-    @RequestMapping(value = "/part", method = RequestMethod.PUT,
+    @RequestMapping(value = "/part", method = RequestMethod.POST,
             name = "@RequestPart")
-    public FileInfo requestPart(
-            @ApiComment(value = "上传的文件", sample = "我的文件.txt")
-            @RequestPart("file") MultipartFile file) throws IOException {
-        String name = file.getOriginalFilename();
-        String msg = "requestPart, file = " + name;
-        String content = Strings.getString(file.getInputStream());
-        return new FileInfo(name, content, msg);
+    public FileInfo[] requestPart(
+            @ApiComment(value = "文件名称", sample = "my-file")
+                    String name,
+            @ApiComment(value = "上传文件1", sample = "我的文件1.txt")
+            @RequestPart("file1") MultipartFile file1,
+            @ApiComment(value = "上传文件2", sample = "我的文件2.txt")
+            @RequestPart("file2") MultipartFile file2) throws IOException {
+        return new FileInfo[]{
+                FileInfo.parse(file1, name + "-1"),
+                FileInfo.parse(file2, name + "-2")
+        };
     }
 
     private static final class FileInfo {
@@ -81,6 +86,13 @@ public class ShowParamController {
         private String msg;
 
         public FileInfo() {
+        }
+
+        public static FileInfo parse(MultipartFile file, String name) throws IOException {
+            String fileName = file.getOriginalFilename();
+            String content = Strings.getString(file.getInputStream());
+            String msg = "requestPart, file = " + fileName;
+            return new FileInfo(name, content, msg);
         }
 
         public FileInfo(String name, String content, String msg) {
