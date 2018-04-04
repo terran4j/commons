@@ -48,7 +48,7 @@ public class Api2DocService {
     }
 
     public String getComponentVersion() {
-	    return "1";
+	    return v;
     }
 
 }

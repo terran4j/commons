@@ -1,16 +1,53 @@
-//@CHARSET "UTF-8";
 
-//@base-font-size: 1rem;
-
+//////////////////////////    整个 html、 body 及公共的样式   /////////////////
 html {
-  //font-size: 100%;
   overflow-y: scroll;
-  //-webkit-text-size-adjust: 100%;
-  //-ms-text-size-adjust: 100%;
 }
 
-body {
+@media only screen and (min-width: 48rem) {
+  body {
+    font-size: 1.4rem;
+  }
 }
+
+@media only screen and (min-width: 76.8rem) {
+  body {
+    font-size: 1.6rem;
+  }
+}
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 1.5rem 0;
+}
+
+////////////////////////////    文档标题及内容块的样式    ///////////////////////
+
+.title {
+  color: rgb(51, 51, 51);
+  font-family: "Microsoft Yahei, 微软雅黑, Tahoma, Arial, Helvetica, STHeiti";
+  font-size: 2.4rem;
+  font-weight: bold;
+  text-align: left;
+  text-rendering: optimizeLegibility;
+  text-size-adjust: 100%;
+  height: 4rem;
+  line-height: 4rem;
+  margin: 1rem 0rem 1rem 3rem;
+  padding-bottom: 2rem;
+  padding-top: 3rem;
+}
+
+.content {
+  padding-top: 1rem;
+  word-break: break-all;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  font-size: 1.6rem;
+  line-height: 1.7rem;
+  margin-left: 3rem;
+}
+
+////////////////////////////////   各种型号的标题的样式  ////////////////////
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
@@ -23,13 +60,11 @@ h1 {
 }
 
 h2 {
-  //border-bottom: 2px solid #CCCCCC;
   color: #000000;
   font-size: 2.4rem;
 }
 
 h3 {
-  //border-bottom: 2px solid #CCCCCC;
   font-size: 1.8rem;
 }
 
@@ -54,30 +89,22 @@ hr {
   background-color: #CCCCCC;
 }
 
-p, blockquote, ul, ol, dl, li, table, pre {
-  margin: 1.5rem 0;
-}
-
+//////////////////////////////     段落的样式      //////////////////////
 p {
   margin: 1rem 0;
 }
 
+//////////////////////////////     代码块的样式      //////////////////////
 pre {
-  background-color: #F8F8F8;
-  border: 1px solid #CCCCCC;
-  border-radius: 0.3rem;
+  //background-color: #F8F8F8;
+  //border: 1px solid #CCCCCC;
+  //border-radius: 0.3rem;
   overflow: auto;
   padding: 0.5rem;
   white-space: pre-wrap; /*css-3*/
   white-space: -moz-pre-wrap; /*Mozilla,since1999*/
   white-space: -o-pre-wrap; /*Opera7*/
   word-wrap: break-word; /*InternetExplorer5.5+*/
-}
-
-pre code {
-  background-color: #F8F8F8;
-  border: none;
-  padding: 0;
 }
 
 code {
@@ -87,14 +114,12 @@ code {
   border-radius: 0.3rem;
   padding: 0 0.2em;
   line-height: 1;
+  //padding: 0.2rem 0.4rem;
+  color: #d14;
+  white-space: pre-wrap;
 }
 
-pre > code {
-  border: 0;
-  margin: 0;
-  padding: 0;
-}
-
+///////////////////////////    链接的样式   ////////////////////////////////////
 a {
   color: #0645ad;
   text-decoration: none;
@@ -120,6 +145,8 @@ a:hover, a:active {
   outline: 0;
 }
 
+
+/////////////////////////////   被选中的文本的样式   ///////////////////////
 ::-moz-selection {
   background: rgba(255, 255, 0, 0.3);
   color: #000
@@ -140,6 +167,7 @@ a::selection {
   color: #0645ad
 }
 
+///////////////////////////////    条目的样式    /////////////////////
 blockquote {
   color: #666666;
   margin: 0;
@@ -160,6 +188,7 @@ dd {
   margin: 0 0 0 2em;
 }
 
+/////////////////////////   图片的样式   ////////////////////////
 img {
   border: 0;
   -ms-interpolation-mode: bicubic;
@@ -167,53 +196,7 @@ img {
   max-width: 100%;
 }
 
-@media only screen and (min-width: 48rem) {
-  body {
-    font-size: 1.4rem;
-  }
-}
-
-@media only screen and (min-width: 76.8rem) {
-  body {
-    font-size: 1.6rem;
-  }
-}
-
-.title {
-  //border-bottom: 1px solid rgb(217, 217, 217);
-  color: rgb(51, 51, 51);
-  font-family: "Microsoft Yahei, 微软雅黑, Tahoma, Arial, Helvetica, STHeiti";
-  font-size: 2.4rem;
-  font-weight: bold;
-  text-align: left;
-  text-rendering: optimizeLegibility;
-  text-size-adjust: 100%;
-  height: 4rem;
-  line-height: 4rem;
-  margin: 1rem 0rem 1rem 3rem;
-  padding-bottom: 2rem;
-  padding-top: 3rem;
-}
-
-.content {
-  padding-top: 1rem;
-  word-break: break-all;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  font-size: 1.6rem;
-  line-height: 1.7rem;
-  margin-left: 3rem;
-}
-
-code {
-  padding: 0.2rem 0.4rem;
-  color: #d14;
-  white-space: nowrap;
-  background-color: #f7f7f9;
-  border: 1px solid #e1e1e8;
-  border-radius: 0.3rem;
-}
-
+/////////////////////////   表格的样式   ////////////////////////
 table {
   border-collapse: collapse;
   border-spacing: 0;
