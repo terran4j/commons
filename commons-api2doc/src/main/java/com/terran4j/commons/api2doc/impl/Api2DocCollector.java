@@ -540,9 +540,12 @@ public class Api2DocCollector implements BeanPostProcessor {
         }
 
         // Date 类型返回为 long 格式。
-        if (paramType.equals(Date.class)
-                || paramType.equals(java.sql.Date.class)
-                || paramType.equals(Long.class)) {
+        ApiDataType dataType = DateConverter.dateAsLongType(paramType);
+        if (dataType != null) {
+            return dataType;
+        }
+
+        if (paramType.equals(Long.class)) {
             return ApiDataType.LONG;
         }
 

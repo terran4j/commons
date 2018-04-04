@@ -3,6 +3,7 @@ package com.terran4j.commons.api2doc.impl;
 import com.terran4j.commons.api2doc.Api2DocMocker;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.domain.ApiDataType;
+import com.terran4j.commons.api2doc.domain.DateConverter;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.Enums;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -12,10 +13,7 @@ import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * 根据类上的 Api2Doc 注解信息，创建 JavaBean、数组、列表等对象。
@@ -27,11 +25,14 @@ public class Api2DocObjectFactory {
     public static Object createObject(ApiDataType dataType,
                                       Class<?> elementType, String defaultValue) {
         if (dataType.isArrayType()) {
-            int size = getArraySize(defaultValue, 2);
+            int size = getArraySize(defaultValue, 1);
             return createList(elementType, size);
         } else if (dataType.isObjectType()) {
             return createBean(elementType);
         } else {
+            if (DateConverter.isDateType(elementType)) {
+                return DateConverter.dateAsLongValue(elementType);
+            }
             if (StringUtils.hasText(defaultValue)) {
                 return defaultValue;
             } else {
@@ -288,6 +289,9 @@ public class Api2DocObjectFactory {
         }
         if (Float.class.equals(targetType) || float.class.equals(targetType)) {
             return Float.parseFloat(sourceValue.toString());
+        }
+        if (DateConverter.isDateType(targetType)) {
+            return DateConverter.dateAsLongValue(targetType);
         }
 
         if (targetType.isEnum()) {

@@ -1,12 +1,9 @@
 package com.terran4j.commons.api2doc.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.terran4j.commons.api2doc.Api2DocMocker;
-import com.terran4j.commons.api2doc.domain.ApiDataType;
 import com.terran4j.commons.api2doc.domain.ApiDocObject;
 import com.terran4j.commons.api2doc.domain.ApiFolderObject;
-import com.terran4j.commons.api2doc.domain.ApiResultObject;
 import com.terran4j.commons.restpack.HttpResult;
+import com.terran4j.commons.restpack.RestPackConfiguration;
 import com.terran4j.commons.util.Strings;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ext.spec.example.SpecExampleExtension;
@@ -28,7 +25,6 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -158,9 +154,12 @@ public class DocPageBuilder {
             if (folder.isRestPack()) {
                 mockResult = HttpResult.successFully(mockResult);
             }
-            String resultJson = Strings.toString(mockResult);
-            if (StringUtils.hasText(resultJson)) {
-                model.put("resultJson", resultJson);
+            if (mockResult != null) {
+                String resultJson = RestPackConfiguration.getObjectMapper()
+                        .writeValueAsString(mockResult);
+                if (StringUtils.hasText(resultJson)) {
+                    model.put("resultJson", resultJson);
+                }
             }
 
             String folderId = folder.getId();

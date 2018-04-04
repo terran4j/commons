@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.terran4j.commons.util.Jsons;
-import javafx.beans.binding.ObjectExpression;
-
-import java.util.Date;
 
 /**
  * api的基本数据类型。
@@ -246,8 +243,9 @@ public enum ApiDataType {
     public static ApiDataType toDataType(Class<?> clazz) {
 
         // 日期类型，按 long 返回。
-        if (clazz == Date.class || clazz == java.sql.Date.class) {
-            return ApiDataType.LONG;
+        ApiDataType dataType = DateConverter.dateAsLongType(clazz);
+        if (dataType != null) {
+            return dataType;
         }
 
         try {

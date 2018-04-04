@@ -2,6 +2,7 @@ package com.terran4j.commons.api2doc.codewriter;
 
 import com.terran4j.commons.api2doc.domain.ApiDataType;
 import com.terran4j.commons.api2doc.domain.ApiResultObject;
+import com.terran4j.commons.api2doc.domain.DateConverter;
 import com.terran4j.commons.api2doc.impl.ClasspathFreeMarker;
 import freemarker.template.Template;
 import org.apache.commons.collections4.map.HashedMap;
@@ -132,10 +133,7 @@ public class JavaBeanCodeWriter {
 
     private Class<?> getSourceType(ApiResultObject result) {
         Class<?> sourceType = result.getSourceType();
-        if (sourceType == Date.class || sourceType == java.sql.Date.class) {
-            sourceType = Long.class;
-        }
-        return sourceType;
+        return DateConverter.dateAsLongClass(sourceType);
     }
 
     private String toTypeName(ApiResultObject result) {

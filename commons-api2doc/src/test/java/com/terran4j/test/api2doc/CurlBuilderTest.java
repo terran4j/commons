@@ -14,23 +14,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.bind.annotation.*;
 
 @Api2Doc(id = "curl")
-@RestController
 @RequestMapping(value = "/api/v1/curl")
-@RunWith(SpringJUnit4ClassRunner.class)
-public class CurlBuilderTest {
-
-    private String serverURL = "http://localhost:8080";
-
-    private Api2DocCollector collector = new Api2DocCollector();
-
-    private ApiDocObject loadDoc(String methodName) throws BusinessException {
-        ApiFolderObject folder = collector.toApiFolder(
-                new CurlBuilderTest(),
-                "curlBuilderTest");
-        ApiDocObject doc = folder.getDoc(methodName);
-        Assert.assertNotNull(doc);
-        return doc;
-    }
+public class CurlBuilderTest extends BaseApi2DocTest {
 
     @RequestMapping(value = "/getting", method = RequestMethod.GET)
     public void withGet(
