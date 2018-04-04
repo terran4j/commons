@@ -44,7 +44,7 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 			return body;
 		}
 		
-		HttpResult result = null;
+		HttpResult result;
 		Exception e = ExceptionHolder.get();
 		if (e != null) {
 			BusinessException be = convert(e);
@@ -112,7 +112,8 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
             }
 		}
 
-		return new BusinessException(CommonErrorCode.UNKNOWN_ERROR, e);
+		return new BusinessException(ErrorCodes.UNKNOWN_ERROR, e)
+                .setMessage(e.getClass().getName() + ": " + e.getMessage());
 	}
 
 }

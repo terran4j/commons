@@ -60,10 +60,34 @@ public class RestPackAspect {
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
-    public void httpResultPackAspect() {
+    public void doRequestMapping() {
     }
 
-    @After("httpResultPackAspect()")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
+    public void doGetMapping() {
+    }
+
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
+    public void doPostMapping() {
+    }
+
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping)")
+    public void doPutMapping() {
+    }
+
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
+    public void doDeleteMapping() {
+    }
+
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PatchMapping)")
+    public void doPatchMapping() {
+    }
+
+    private static final String POINTCUT_EXP = "doRequestMapping() " +
+            "|| doGetMapping() || doPostMapping() || doPutMapping()" +
+            "|| doDeleteMapping() || doPatchMapping()";
+
+    @After(POINTCUT_EXP)
     public void doAfter(JoinPoint point) {
         if (isRestPack()) {
             RequestAttributes servlet = RequestContextHolder.getRequestAttributes();
@@ -78,7 +102,7 @@ public class RestPackAspect {
      *
      * @param point
      */
-    @Before("httpResultPackAspect()")
+    @Before(POINTCUT_EXP)
     public void doBefore(JoinPoint point) {
         ServletRequestAttributes servlet = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = servlet.getRequest();
@@ -127,7 +151,7 @@ public class RestPackAspect {
      * 记录异常对象，以便于后续处理转化成<code>HttpResult</code>对象。
      * @param e 异常对象
      */
-    @AfterThrowing(pointcut = "httpResultPackAspect()", throwing = "e")
+    @AfterThrowing(pointcut = POINTCUT_EXP, throwing = "e")
     public void handleThrowing(Exception e) {
         Logger log = bufferLog.get();
         if (log != null && log.isInfoEnabled()) {
@@ -137,7 +161,7 @@ public class RestPackAspect {
         ExceptionHolder.set(e);
     }
 
-    String generateRequestId() {
+    static String generateRequestId() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 

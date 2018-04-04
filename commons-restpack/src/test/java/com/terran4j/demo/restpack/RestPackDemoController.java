@@ -2,12 +2,9 @@ package com.terran4j.demo.restpack;
 
 import com.terran4j.commons.restpack.RestPackController;
 import com.terran4j.commons.util.error.BusinessException;
-import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -19,57 +16,36 @@ public class RestPackDemoController {
 
     /**
      * http://localhost:8080/demo/restpack/echo?msg=abc
-     *
-     * @param msg
-     * @return
-     * @throws BusinessException
+     * curl "http://localhost:8080/demo/restpack/echo?msg=abc"
+     * TODO: 不知为什么，当使用 @GetMapping 时，框架不能自动设置
+     * Content-Type 为 application/json;charset=UTF-8 ，
+     * 因此这里用 produces 参数手动设置一下。
      */
-    @RequestMapping(value = "/echo", method = RequestMethod.GET)
+    @GetMapping(value = "/echo", produces = "application/json;charset=UTF-8")
     public String echo(@RequestParam(value = "msg") String msg) throws BusinessException {
         log.info("echo, msg = {}", msg);
         return msg;
     }
 
+    /**
+     * http://localhost:8080/demo/restpack/date?time=1522812467402
+     */
     @RequestMapping(value = "/date", method = RequestMethod.GET)
-    public Date toDate(Date time) throws BusinessException {
-        log.info("echo, time = {}", time);
-        return new Date(time.getTime() + 1000);
+    public Date toDate(long time) throws BusinessException {
+        Date date = new Date(time);
+        log.info("echo, date = {}", date);
+        return new Date(date.getTime() + 1000);
     }
 
     /**
-     * http://localhost:8080/demo/restpack/void?msg=abc
+     * curl -d "msg=abc" "http://localhost:8080/demo/restpack/void"
      *
      * @param msg
      * @throws BusinessException
      */
-    @RequestMapping(value = "/void", method = RequestMethod.GET)
+    @PostMapping(value = "/void")
     public void doVoid(@RequestParam(value = "msg") String msg) throws BusinessException {
         log.info("doVoid, msg = {}", msg);
-    }
-
-    /**
-     * http://localhost:8080/demo/restpack/error?msg=abc
-     *
-     * @param msg
-     * @throws BusinessException
-     */
-    @RequestMapping(value = "/error", method = RequestMethod.GET)
-    public void toError(@RequestParam(value = "msg") String msg) throws BusinessException {
-        log.info("error, msg = {}", msg);
-        throw new BusinessException(ErrorCodes.INVALID_PARAM)
-                .setMessage("无效的输入: ${msg}").put("msg", msg);
-    }
-
-    /**
-     * http://localhost:8080/demo/restpack/error2?msg=abc
-     *
-     * @param msg
-     * @throws Exception
-     */
-    @RequestMapping(value = "/error2", method = RequestMethod.GET)
-    public void toError2(@RequestParam(value = "msg") String msg) throws Exception {
-        log.info("error, msg = {}", msg);
-        throw new RuntimeException("error msg.");
     }
 
     /**
