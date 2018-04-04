@@ -1,5 +1,6 @@
 package com.terran4j.commons.api2doc.controller;
 
+import com.terran4j.commons.api2doc.impl.Api2DocProperties;
 import com.terran4j.commons.api2doc.impl.Api2DocService;
 import com.terran4j.commons.api2doc.impl.DocMenuBuilder;
 import com.terran4j.commons.api2doc.impl.DocPageBuilder;
@@ -24,15 +25,6 @@ public class Api2DocController {
 
     private static final Logger log = LoggerFactory.getLogger(Api2DocController.class);
 
-    @Value("${service.name:}")
-    private String serviceName;
-
-    @Value("${api2doc.title:}")
-    private String api2docTitle;
-
-    @Value("${api2doc.icon:}")
-    private String api2docIcon;
-
     @Autowired
     private DocMenuBuilder docMenuBuilder;
 
@@ -42,6 +34,9 @@ public class Api2DocController {
     @Autowired
     private Api2DocService apiDocService;
 
+    @Autowired
+    private Api2DocProperties api2DocProperties;
+
     /**
      * http://localhost:8080/api2doc/home.html
      * 整个文档页面，包含顶部标题栏、左侧菜单栏、右侧用 iframe 嵌入的内容区。
@@ -50,8 +45,9 @@ public class Api2DocController {
     public String home(@RequestParam(value = "p", required = false) String p,
                        Map<String, Object> model) throws Exception {
 
-        String title = api2docTitle;
+        String title = api2DocProperties.getApi2docTitle();
         if (StringUtils.isEmpty(title)) {
+            String serviceName = api2DocProperties.getServiceName();
             if (StringUtils.hasText(serviceName)) {
                 title = serviceName.trim() + "——接口文档";
             }
@@ -61,7 +57,7 @@ public class Api2DocController {
         }
         model.put("title", title);
 
-        String icon = api2docIcon;
+        String icon = api2DocProperties.getApi2docIcon();
         if (StringUtils.hasText(icon)) {
             model.put("icon", icon);
         }

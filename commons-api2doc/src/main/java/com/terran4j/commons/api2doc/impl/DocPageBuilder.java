@@ -35,8 +35,8 @@ public class DocPageBuilder {
 
     private static final String FILE_DOC_HTML = "doc.html";
 
-    @Value("${server.url:http://localhost:8080}")
-    private String serverURL;
+    @Autowired
+    private Api2DocProperties api2DocProperties;
 
     @Autowired
     private Api2DocService apiDocService;
@@ -140,6 +140,7 @@ public class DocPageBuilder {
             model.put("folder", folder);
             model.put("doc", doc);
 
+            String serverURL = api2DocProperties.getServerURL();
             String curl = CurlBuilder.toCurl(doc, serverURL);
             if (StringUtils.hasText(curl)) {
                 model.put("curl", curl);

@@ -43,9 +43,6 @@
 ${curl}
 ```
 
-注：curl 是一款很强大的 http 命令行工具，可以模拟客户端向服务端发起 HTTP/HTTPS 请求。
- - 如果是 Linux / MAC 系统，一般系统都自带了 curl （如果没有安装也很简单，请自行百度）。
- - 如果是 Windows 系统，建议先安装 Cygwin64 ，然后在 Cygwin64 中安装使用 curl （参见文档）。
 </#if>
 
 <br/>
