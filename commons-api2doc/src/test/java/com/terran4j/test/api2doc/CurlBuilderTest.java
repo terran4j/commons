@@ -43,7 +43,7 @@ public class CurlBuilderTest {
         ApiDocObject doc = loadDoc("withGet");
         String curl = CurlBuilder.toCurl(doc, serverURL);
         Assert.assertEquals(
-                "curl \\\n" +
+                "curl -X GET \\\n" +
                         " \"http://localhost:8080/api/v1/curl/getting?k1=%E9%94%AE1&k2=%E9%94%AE2\"",
                 curl);
     }
@@ -63,7 +63,7 @@ public class CurlBuilderTest {
         ApiDocObject doc = loadDoc("simple");
         String curl = CurlBuilder.toCurl(doc, serverURL);
         Assert.assertEquals(
-                "curl \\\n" +
+                "curl -X POST \\\n" +
                         " -H \"myHeader: myHeader\" \\\n" +
                         " -b \"myCookie=myCookie\" \\\n" +
                         " -d \"myParam=myParam\" \\\n" +
@@ -95,7 +95,7 @@ public class CurlBuilderTest {
         ApiDocObject doc = loadDoc("withComment");
         String curl = CurlBuilder.toCurl(doc, serverURL);
         Assert.assertEquals(
-                "curl \\\n" +
+                "curl -X POST \\\n" +
                         " -H \"k2: false\" \\\n" +
                         " -b \"k3=5.86\" \\\n" +
                         " -d \"k1=k123\" \\\n" +

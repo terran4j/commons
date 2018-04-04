@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api2Doc(id = "demo", name = "用户接口", order = 0)
+@Api2Doc(id = "demo", name = "演示Api2Doc基本用法", order = 0)
 @ApiComment(seeClass = User.class)
 @RestController
 @RequestMapping(value = "/api2doc/demo")

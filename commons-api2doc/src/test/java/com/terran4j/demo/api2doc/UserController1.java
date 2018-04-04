@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api2Doc(id = "demo1", name = "用户接口1")
+@Api2Doc(id = "demo1", name = "演示 seeClass 的用法")
 @ApiComment(seeClass = User.class)
 @RestController
 @RequestMapping(value = "/api2doc/demo1")

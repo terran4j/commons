@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api2Doc(id = "demo3", name = "用户接口3")
+@Api2Doc(id = "demo3", name = "演示添加补充文档的用法")
 @RestController
 @RequestMapping(value = "/api2doc/demo3")
 public class UserController3 {

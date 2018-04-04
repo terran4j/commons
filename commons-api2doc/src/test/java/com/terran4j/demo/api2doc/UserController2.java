@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api2Doc(id = "demo2", name = "用户接口2", order = 1)
+@Api2Doc(id = "demo2", name = "演示用 order 给文档排序的用法", order = 1)
 @ApiComment(seeClass = User.class)
 @RestController
 @RequestMapping(value = "/api2doc/demo2")
