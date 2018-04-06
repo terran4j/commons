@@ -1,18 +1,19 @@
 
 ## 统一修改版本号
-mvn versions:set "-DnewVersion=1.0.2-SNAPSHOT"
+mvn versions:set "-DnewVersion=1.0.2"
 mvn versions:commit
 
 ## 当版本为 SNAPSHOT 时的部署：
 mvn clean deploy -DskipTests
 
 ## 所有项目一起部署太慢了，容易失败，所有分开部署：
-mvn clean deploy -DskipTests -P release -pl commons-util -am
-mvn clean deploy -DskipTests -P release -pl commons-website
-mvn clean deploy -DskipTests -P release -pl commons-restpack
-mvn clean deploy -DskipTests -P release -pl commons-api2doc
-mvn clean deploy -DskipTests -P release -pl commons-hedis
-mvn clean deploy -DskipTests -P release -pl commons-jfinger
-mvn clean deploy -DskipTests -P release -pl commons-hi
-mvn clean deploy -DskipTests -P release -pl commons-test
-mvn clean deploy -DskipTests -P release -pl commons-dsql
+## 建议在早上 10:00 以后执行（这会美国是晚上，网络稍好点）
+mvn clean deploy -DskipTests -P release -pl commons-util -am     // 03:33
+mvn clean deploy -DskipTests -P release -pl commons-website     // 02:27
+mvn clean deploy -DskipTests -P release -pl commons-restpack    // 02:11
+mvn clean deploy -DskipTests -P release -pl commons-api2doc     // 12:58
+mvn clean deploy -DskipTests -P release -pl commons-hedis         // 03:05
+mvn clean deploy -DskipTests -P release -pl commons-jfinger       // 02:06
+mvn clean deploy -DskipTests -P release -pl commons-hi               // 03:12
+mvn clean deploy -DskipTests -P release -pl commons-test            // 02:00
+mvn clean deploy -DskipTests -P release -pl commons-dsql           // 03:14
