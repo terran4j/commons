@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Api2DocMocker {
 
-    public static <T> T mockObject(Class<T> clazz) {
+    public static <T> T mockBean(Class<T> clazz) {
         return Api2DocObjectFactory.createBean(clazz);
     }
 

@@ -20,7 +20,7 @@ public class UserController {
     @RequestMapping(name = "查询单个用户",
             value = "/user/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable("id") Long id) {
-        return Api2DocMocker.mockObject(User.class);
+        return Api2DocMocker.mockBean(User.class);
     }
 
     // http://localhost:8080/api2doc/demo/users
@@ -38,7 +38,7 @@ public class UserController {
     @RequestMapping(name = "查询用户组",
             value = "/group/{group}", method = RequestMethod.GET)
     public UserGroup getGroup(@PathVariable("group") String group) {
-        return Api2DocMocker.mockObject(UserGroup.class);
+        return Api2DocMocker.mockBean(UserGroup.class);
     }
 
     // http://localhost:8080/api2doc/demo/user
@@ -47,7 +47,7 @@ public class UserController {
     @RequestMapping(name = "新增用户",
             value = "/user", method = RequestMethod.POST)
     public User addUser(String group, String name, UserType type) {
-        return Api2DocMocker.mockObject(User.class);
+        return Api2DocMocker.mockBean(User.class);
     }
 
     /**
