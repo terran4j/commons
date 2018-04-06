@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.github.terran4j</groupId>
         <artifactId>terran4j-commons-parent</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>terran4j-commons-api2page</artifactId>
