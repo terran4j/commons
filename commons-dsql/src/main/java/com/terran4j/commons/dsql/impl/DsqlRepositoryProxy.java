@@ -1,15 +1,16 @@
 package com.terran4j.commons.dsql.impl;
 
 import com.terran4j.commons.dsql.DsqlExecutor;
+import com.terran4j.commons.dsql.DsqlModifying;
 import com.terran4j.commons.dsql.DsqlQuery;
 import com.terran4j.commons.dsql.DsqlRepository;
-import com.terran4j.commons.dsql.DsqlModifying;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.ErrorCodes;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import org.springframework.data.repository.query.Param;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -77,17 +78,44 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
         DsqlQuery query = method.getAnnotation(DsqlQuery.class);
         if (query != null) {
             String sqlName = query.value();
+            if (StringUtils.isEmpty(sqlName)) {
+                sqlName = method.getName();
+            }
             return doQuery(sqlName, context, method, executor);
         }
 
         DsqlModifying modifying = method.getAnnotation(DsqlModifying.class);
         if (modifying != null) {
             String sqlName = modifying.value();
+            if (StringUtils.isEmpty(sqlName)) {
+                sqlName = method.getName();
+            }
             return doModifying(sqlName, context, method, executor);
         }
 
-        throw new IllegalStateException(method +
-                " MUST has @DsqlQuery or @DsqlModifying annotation.");
+        String methodName = method.getName();
+        if (methodName.startsWith("query") || methodName.startsWith("get")
+                || methodName.startsWith("list") || methodName.startsWith("find")
+                || methodName.startsWith("select") || methodName.startsWith("read")
+                || methodName.startsWith("count") || methodName.startsWith("load")) {
+            return doQuery(methodName, context, method, executor);
+        }
+
+        if (methodName.startsWith("update") || methodName.startsWith("delete")
+                || methodName.startsWith("remove") || methodName.startsWith("edit")
+                || methodName.startsWith("write") || methodName.startsWith("modify")
+                || methodName.startsWith("change") || methodName.startsWith("create")
+                || methodName.startsWith("set") || methodName.startsWith("alter")) {
+            return doModifying(methodName, context, method, executor);
+        }
+
+        String msg = "在接口 %s 中的 %s 方法状态不正确：\n" +
+                "要么方法上用 @DsqlQuery 或 @DsqlModifying 注解修饰；\n" +
+                "要么方法名用约定的单词开头：\n" +
+                "如果是查询类操作，用 query,get,list,find,select,read,count,load 开头；\n" +
+                "如果是修改/删除类操作，用 update,delete,remove,edit,write," +
+                "modify,change,create,set,alter 开头。";
+        throw new IllegalStateException(msg);
     }
 
     private Object doModifying(String sqlName, Map<String, Object> args,

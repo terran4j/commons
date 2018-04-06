@@ -27,7 +27,7 @@ public class DsqlRepositoryConfigRegistrar implements ImportBeanDefinitionRegist
 
     private static final Logger log = LoggerFactory.getLogger(DsqlRepositoryConfigRegistrar.class);
 
-    private static final String BEAN_NAME_DSQL_EXECUTOR = "dsqlExecutor";
+//    private static final String BEAN_NAME_DSQL_EXECUTOR = "dsqlExecutor";
 
     private static ApplicationContext applicationContext = null;
 

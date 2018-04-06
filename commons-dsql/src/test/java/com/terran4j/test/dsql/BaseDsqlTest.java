@@ -4,12 +4,16 @@ import com.terran4j.commons.dsql.DsqlExecutor;
 import com.terran4j.commons.dsql.EnableDsqlRepositories;
 import com.terran4j.commons.dsql.config.DsqlConfiguration;
 import com.terran4j.commons.dsql.impl.DsqlExecutorImpl;
-import com.terran4j.commons.test.*;
+import com.terran4j.commons.test.BaseSpringBootTest;
+import com.terran4j.commons.test.DatabaseInitializer;
+import com.terran4j.commons.test.DatabaseTestConfig;
+import com.terran4j.commons.test.TruncateTable;
 import com.terran4j.test.dsql.dao.Location;
 import com.terran4j.test.dsql.dao.LocationDAO;
 import com.terran4j.test.dsql.dao1.LocationDsqlDAO;
 import com.terran4j.test.dsql.dao2.LocationDistanceDAO;
 import com.terran4j.test.dsql.dao3.DistancedLocationDAO;
+import com.terran4j.test.dsql.dao4.LocationAutoDAO;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,9 +25,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestExecutionListeners;
 
 @TruncateTable(basePackageClass = Location.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = {
-        BaseDsqlTest.Application.class
-})
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.NONE,
+        classes = {BaseDsqlTest.Application.class}
+)
 @TestExecutionListeners({DatabaseInitializer.class})
 public abstract class BaseDsqlTest extends BaseSpringBootTest {
 
@@ -33,6 +38,7 @@ public abstract class BaseDsqlTest extends BaseSpringBootTest {
             LocationDsqlDAO.class,
             LocationDistanceDAO.class,
             DistancedLocationDAO.class,
+            LocationAutoDAO.class
     })
     @Import({
             DsqlConfiguration.class,
@@ -65,7 +71,6 @@ public abstract class BaseDsqlTest extends BaseSpringBootTest {
         locationDAO.save(loc2);
         DsqlExecutorImpl executor = new DsqlExecutorImpl(jdbcTemplate);
         this.dsqlExecutor = executor;
-
     }
 
 
