@@ -9,6 +9,7 @@ import com.terran4j.commons.util.error.ErrorCodes;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.StringUtils;
 
@@ -41,6 +42,9 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
     private Class<?> elementType;
 
     private final Class<?> proxyInterface;
+
+    private final LocalVariableTableParameterNameDiscoverer paramNameDiscoverer
+            = new LocalVariableTableParameterNameDiscoverer();
 
     private DsqlRepositoryProxy(Class<?> proxyInterface) {
         this.proxyInterface = proxyInterface;
@@ -190,9 +194,15 @@ public class DsqlRepositoryProxy implements MethodInterceptor {
             }
         }
 
+        String[] paramNames = paramNameDiscoverer.getParameterNames(method);
         for (int i = 0; i < params.length; i++) {
             Parameter param = params[i];
             String key = param.getName();
+
+            // 利用 Spring 提供的工具，获取参数名。
+            if (paramNames != null && paramNames.length >= i + 1) {
+                key = paramNames[i];
+            }
 
             Param paramAnnotation = param.getAnnotation(Param.class);
             if (paramAnnotation != null) {

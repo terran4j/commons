@@ -43,4 +43,11 @@ public class DsqlAutoTest extends BaseDsqlTest {
         Assert.assertEquals(1, size);
     }
 
+    @Test
+    public void testGetNearestLocation() throws Exception {
+        Location location = locationAutoDAO.getNearestLocation(loc1.getLat(), loc1.getLon());
+        Assert.assertNotNull(location);
+        Assert.assertEquals(loc1.getName(), location.getName());
+    }
+
 }
