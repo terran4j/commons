@@ -37,11 +37,12 @@
     <div class="doc-top">
     <#if icon??>
         <div class="doc-icon">
-            <img class="doc-icon-img" src="${icon}">
+            <img class="doc-icon-img" src="${icon}"
+                 onclick="location.href='/api2doc/home.html';">
         </div>
     </#if>
         <div class="doc-title">
-            <a href="/api2doc/home.html">${title}</a>
+            <span>${title}</span>
         </div>
         <div class="doc-end"></div>
     </div>
@@ -73,66 +74,14 @@
         <!-- 页面内容区域 -->
         <div class="doc-content">
             <iframe id="doc-frame-id" name="doc-frame-name" class="doc-frame"
-                    scrolling="no" frameborder="0" seamless="seamless"
-                    onload="setIFrameHeight(this)"
+                    scrolling="yes" frameborder="0" seamless="seamless"
                     src="${docPath}"></iframe>
         </div>
 
         <div class="doc-end"></div>
     </div>
 </div>
-</body>
-<script>
-
-    // 当页面加载时，调节子框架的高度。
-    function setIFrameHeight(iframe) {
-        if (iframe) {
-            var iFrameWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
-            if (iFrameWin.document.body) {
-                iframe.height = iFrameWin.document.documentElement.scrollHeight
-                        || iFrameWin.document.body.scrollHeight;
-            }
-        }
-    };
-
-    jQuery(function () {
-        var docMenus = jQuery('#doc-menus');
-
-        // 文档加载后，存储初始与顶部的距离
-        var initTop = docMenus.offset().top;
-        docMenus.attr('initTop', initTop);
-
-        function setMenusHeight() {
-            // 窗口可视部分高度，简称“视口高度”
-            var viewHeight = window.innerHeight || document.body.clientHeight;
-            var currentTop = Math.max(document.body.scrollTop || document.documentElement.scrollTop);
-            var initTop = parseInt(docMenus.attr('initTop'));
-            if (currentTop > initTop) {
-                if (docMenus.css('position') != 'fixed') {
-                    docMenus.css({'position': 'fixed', top: 0})
-
-                    // 悬浮状态下，父元素为文档根元素。
-                    docMenus.css({'width': '20%'})
-
-                    // 悬浮状态下，菜单占整个视口高度。
-                    var menusHeight = viewHeight;
-                    docMenus.css({'height': menusHeight + "px"})
-                }
-            } else if (docMenus.css('position') != 'static') {
-                docMenus.css({'position': 'static'})
-
-                // 非悬浮状态下，父元素为 doc-left 的 div。
-                docMenus.css({'width': '100%'})
-
-                // 悬浮状态下，菜单占整个视口高度。
-                var menusHeight = viewHeight - (initTop - currentTop);
-                docMenus.css({'height': menusHeight + "px"})
-            }
-        }
-        jQuery(window).scroll(function () {
-            setMenusHeight();
-        });
-    });
+<script type="text/javascript">
 
     // 如果网速不给力导致加载太慢时，
     // 会让页面先出现一个“拼命加载中...”的提示，
@@ -150,7 +99,6 @@
             _self.loading = false;
         }
     });
-
 </script>
-
+</body>
 </html>

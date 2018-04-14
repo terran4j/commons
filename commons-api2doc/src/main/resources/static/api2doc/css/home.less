@@ -1,82 +1,104 @@
+@menu-color: white; //#eef1f6;
 
-.doc-end {
-	clear: both;
-	display: none;
+html {
+  overflow: hidden;
 }
 
 .doc-app {
-	width: 100%;
+  width: 99.52%;
+  margin: 0px;
+  padding: 0px;
 }
 
 .doc-top {
-	width: 99%;
-	height: 5rem;
-	border-bottom-color: rgb(221, 221, 221);
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-	border-bottom-color: rgb(221, 221, 221);
+  width: 100%;
+  height: 5rem;
+  border-bottom-color: rgb(221, 221, 221);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(221, 221, 221);
 }
 
 .doc-icon {
-	float: left;
-	position: relative;
-	text-align: center;
-	margin-left: 2rem;
-    margin-top: 0.7rem;
-	background-position: center center;
+  float: left;
+  position: relative;
+  text-align: center;
+  margin-left: 2rem;
+  margin-top: 0.7rem;
+  background-position: center center;
 }
 
 .doc-icon-img {
-	width: 3rem;
-	height: 3rem;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
 }
 
 .doc-title {
-	float: left;
-	position: relative;
-	font-size: 2rem;
-	font-weight: bold;
-	line-height: 4rem;
-	height: 4rem;
-	margin-left: 2rem;
-	text-align: center;
-	vertical-align: middle;
-	overflow:hidden;
+  float: left;
+  position: relative;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 4rem;
+  height: 4rem;
+  margin-left: 2rem;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
 }
 
 .doc-body, .doc-left, .doc-middle {
 }
 
 .doc-body {
-	width: 100%;
+  width: 100%;
+  position: absolute;
+  top: 5rem;
+  bottom: 0px;
+  left: 0px;
+  margin-bottom: 1rem;
+  margin-top: 0.673rem;
 }
 
 .doc-left {
-	width: 20%;
-	float: left;
-	position: relative;
-	padding-top: 1rem;
-    border-right: 1px solid rgb(221, 221, 221);
-	display: block;
-	background-color: #eef1f6;
+  width: 20%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  float: left;
+  position: relative;
+  display: block;
+  background-color: @menu-color;
 }
 
 #doc-menus {
   width: 100%;
-  overflow-y: auto;
-}
-
-.doc-split {
-  width: 2%;
-  float: left;
+  margin-top: 1rem;
 }
 
 .doc-content {
-	width: 78%;
-	float: left;
+  width: 79%;
+  height: 100%;
+  float: left;
+  overflow: hidden;
 }
 
 .doc-frame {
-	width: 100%;
-	overflow: visible;
+  width: 100%;
+  height: 100%;
+}
+
+.doc-end {
+  clear: both;
+  display: none;
+}
+
+//////////////////////  重新定义菜单栏的颜色 ////////////////////
+
+.el-menu {
+  background-color: @menu-color;
+}
+
+.el-submenu .el-menu {
+  background-color: @menu-color;
 }
