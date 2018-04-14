@@ -218,6 +218,7 @@ public class Api2DocCollector implements BeanPostProcessor {
                 throw new BeanDefinitionStoreException(msg);
             }
 
+            doc.setFolder(folder);
             docs.add(doc);
             if (log.isInfoEnabled()) {
                 log.info("add doc: {}/{}", folder.getId(), docId);

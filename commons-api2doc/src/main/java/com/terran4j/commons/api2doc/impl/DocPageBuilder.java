@@ -34,7 +34,7 @@ public class DocPageBuilder {
 
     private static final String FILE_DOC_MD = "doc.md.ftl";
 
-    private static final String FILE_DOC_HTML = "doc.html";
+//    private static final String FILE_DOC_HTML = "doc.html";
 
     @Autowired
     private Api2DocProperties api2DocProperties;
@@ -47,7 +47,7 @@ public class DocPageBuilder {
 
     private Template mdTemplate = null;
 
-    private Template docTemplate = null;
+//    private Template docTemplate = null;
 
     private Parser parser = null;
 
@@ -57,7 +57,7 @@ public class DocPageBuilder {
     public void init() {
         try {
             mdTemplate = freeMarker.getTemplate(DocPageBuilder.class, FILE_DOC_MD);
-            docTemplate = freeMarker.getTemplate(DocPageBuilder.class, FILE_DOC_HTML);
+//            docTemplate = freeMarker.getTemplate(DocPageBuilder.class, FILE_DOC_HTML);
 
             MutableDataSet options = new MutableDataSet();
             options.setFrom(ParserEmulationProfile.GITHUB_DOC);
@@ -89,33 +89,30 @@ public class DocPageBuilder {
         }
     }
 
-    public String md2Html(String content) throws Exception {
-
-        Node document = parser.parse(content);
+    public String md2Html(String md) throws Exception {
+        Node document = parser.parse(md);
         String html = renderer.render(document);
         return html;
     }
 
-    public String md2HtmlPage(String md, String title) throws Exception {
-        String content = md2Html(md);
+//    public String md2HtmlPage(String md, String title) throws Exception {
+//        String content = md2Html(md);
+//
+//        Map<String, Object> model = new HashMap<String, Object>();
+//        if (title != null) {
+//            model.put("title", title);
+//        }
+//        model.put("content", content);
+//        model.put("v", apiDocService.getComponentVersion());
+//
+//        String html = freeMarker.build(docTemplate, model);
+//        return html;
+//    }
 
-        Map<String, Object> model = new HashMap<String, Object>();
-        if (title != null) {
-            model.put("title", title);
-        }
-        model.put("content", content);
-        model.put("v", apiDocService.getComponentVersion());
-
-        String html = freeMarker.build(docTemplate, model);
-        return html;
-    }
-
-    public String doc2HtmlPage(String folderId, String docId) throws Exception {
+    public ApiDocObject getDocObject(String folderId, String docId) throws Exception {
         ApiFolderObject folder = apiDocService.getFolder(folderId);
         if (folder == null) {
-            if (log.isWarnEnabled()) {
-                log.warn("ApiFolder NOT Found: {}", folderId);
-            }
+            log.warn("ApiFolder NOT Found: {}", folderId);
             return null;
         }
 
@@ -127,18 +124,17 @@ public class DocPageBuilder {
             return null;
         }
 
-        String md = doc2Md(folder, doc);
-        String title = doc.getName();
-        return md2HtmlPage(md, title);
+        return doc;
     }
 
-    public String doc2Md(ApiFolderObject folder, ApiDocObject doc) {
-        if (folder == null || doc == null) {
+    public String doc2Md(ApiDocObject doc) {
+        if (doc == null) {
             return null;
         }
+        ApiFolderObject folder = doc.getFolder();
 
         try {
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             model.put("folder", folder);
             model.put("doc", doc);
 
@@ -177,7 +173,7 @@ public class DocPageBuilder {
         }
     }
 
-    public String md2HtmlPageByPath(String path) throws Exception {
+    public String loadMdFromResource(String path) throws Exception {
         if (StringUtils.isEmpty(path)) {
             throw new NullPointerException("path is null.");
         }
@@ -189,10 +185,10 @@ public class DocPageBuilder {
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         String md = Strings.getResourceByPath(path, loader);
-        return md2HtmlPage(md, null);
+        return md;
     }
 
-    public String mdFile2HtmlPage(String folderId, String docId) throws Exception {
+    public String loadMdFromResource(String folderId, String docId) throws Exception {
         ApiFolderObject folder = apiDocService.getFolder(folderId);
         if (folder == null) {
             log.warn("ApiFolder NOT Found: {}", folderId);
@@ -207,8 +203,8 @@ public class DocPageBuilder {
 
         String fileName = mds.get(docId);
         String path = folderId + "/" + fileName;
-        String html = md2HtmlPageByPath(path);
-        return html;
+        String md = loadMdFromResource(path);
+        return md;
     }
 
 }

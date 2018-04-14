@@ -1,5 +1,6 @@
 package com.terran4j.commons.api2doc.controller;
 
+import com.terran4j.commons.api2doc.domain.ApiDocObject;
 import com.terran4j.commons.api2doc.impl.Api2DocProperties;
 import com.terran4j.commons.api2doc.impl.Api2DocService;
 import com.terran4j.commons.api2doc.impl.DocMenuBuilder;
@@ -7,7 +8,6 @@ import com.terran4j.commons.api2doc.impl.DocPageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -90,10 +89,9 @@ public class Api2DocController {
                 docPath = String.format("/api2doc/%s/%s/%s.html",
                         docType, docGroup, docId);
             }
-
         }
 
-        if (docPath == null){
+        if (docPath == null) {
             docPath = "/api2doc/welcome.html";
         }
 
@@ -105,37 +103,53 @@ public class Api2DocController {
      * 文档首页内容。
      */
     @RequestMapping(value = "/welcome.html", method = RequestMethod.GET)
-    public void welcome(HttpServletResponse response) throws Exception {
-        String html = docPageBuilder.md2HtmlPageByPath("welcome.md");
-        writePage(html, response);
+    public String welcome(Map<String, Object> model) throws Exception {
+        String md = docPageBuilder.loadMdFromResource("welcome.md");
+        return md2HtmlPage(md, null, model);
     }
 
     /**
      * http://localhost:8080/api2doc/overview.html
      */
     @RequestMapping(value = "/md/{folderId}/{docId}.html", method = RequestMethod.GET)
-    public void md(@PathVariable("folderId") String folderId,
-                   @PathVariable("docId") String docId,
-                   HttpServletResponse response) throws Exception {
-        String html = docPageBuilder.mdFile2HtmlPage(folderId, docId);
-        writePage(html, response);
+    public String md(@PathVariable("folderId") String folderId,
+                     @PathVariable("docId") String docId,
+                     Map<String, Object> model) throws Exception {
+        String md = docPageBuilder.loadMdFromResource(folderId, docId);
+        return md2HtmlPage(md, null, model);
     }
 
     @RequestMapping(value = "/api/{fid}/{id}.html", method = RequestMethod.GET)
-    public void api2doc(@PathVariable("fid") String folderId,
-                        @PathVariable("id") String id,
-                        HttpServletResponse response) throws Exception {
-        String html = docPageBuilder.doc2HtmlPage(folderId, id);
-        writePage(html, response);
+    public String api2doc(
+            @PathVariable("fid") String folderId, @PathVariable("id") String id,
+            Map<String, Object> model) throws Exception {
+        ApiDocObject doc = docPageBuilder.getDocObject(folderId, id);
+        String md = docPageBuilder.doc2Md(doc);
+        String title = doc.getName();
+        return md2HtmlPage(md, title, model);
     }
 
-    // 显示 md 内容。
-    private void writePage(String html, HttpServletResponse response) throws Exception {
-        if (StringUtils.isEmpty(html)) {
-            return;
+    public String md2HtmlPage(String md, String title,
+                              Map<String, Object> model) throws Exception {
+        if (title != null) {
+            model.put("title", title);
         }
-        response.setContentType("text/html;charset=utf-8");
-        response.getWriter().println(html);
+        String html = docPageBuilder.md2Html(md);
+        model.put("content", html);
+
+        model.put("v", apiDocService.getComponentVersion());
+
+        return "api2doc/doc";
     }
+
+//
+//    // 显示 md 内容。
+//    private void writePage(String html, HttpServletResponse response) throws Exception {
+//        if (StringUtils.isEmpty(html)) {
+//            return;
+//        }
+//        response.setContentType("text/html;charset=utf-8");
+//        response.getWriter().println(html);
+//    }
 
 }
