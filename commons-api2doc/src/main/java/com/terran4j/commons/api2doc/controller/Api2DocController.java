@@ -142,14 +142,4 @@ public class Api2DocController {
         return "api2doc/doc";
     }
 
-//
-//    // 显示 md 内容。
-//    private void writePage(String html, HttpServletResponse response) throws Exception {
-//        if (StringUtils.isEmpty(html)) {
-//            return;
-//        }
-//        response.setContentType("text/html;charset=utf-8");
-//        response.getWriter().println(html);
-//    }
-
 }
