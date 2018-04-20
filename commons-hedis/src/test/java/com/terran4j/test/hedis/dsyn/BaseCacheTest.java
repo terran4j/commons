@@ -35,11 +35,11 @@ public abstract class BaseCacheTest extends BaseSpringBootTest {
 	public void setUp() {
 		cacheService.remove("home-" + key);
 		homeService.clear();
-		log.info(StringUtils.center(" test start ", 50, "="));
+		log.info(StringUtils.center(" test start ", 30, "="));
 	}
 
 	@After
 	public void tearDown() {
-		log.info(StringUtils.center(" test end ", 50, "="));
+		log.info(StringUtils.center(" test end ", 30, "="));
 	}
 }

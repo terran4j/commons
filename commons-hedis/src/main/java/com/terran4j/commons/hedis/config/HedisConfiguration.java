@@ -109,10 +109,16 @@ public class HedisConfiguration {
     RedissonClient redisson() throws IOException {
         Config config = new Config();
         SingleServerConfig serverConfig = config.useSingleServer();
-        serverConfig.setAddress(host + ":" + port);
-        serverConfig.setPassword(password);
+        serverConfig.setAddress("redis://" + host + ":" + port);
+        if (StringUtils.hasText(password)) {
+            serverConfig.setPassword(password);
+        }
         serverConfig.setConnectionPoolSize(maxTotal);
         serverConfig.setConnectionMinimumIdleSize(minIdle);
+
+        if (log.isInfoEnabled()) {
+            log.info("Redisson config done:\n{}", Strings.toString(config));
+        }
         return Redisson.create(config);
     }
 
