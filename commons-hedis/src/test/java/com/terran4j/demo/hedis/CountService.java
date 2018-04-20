@@ -1,54 +1,54 @@
 package com.terran4j.demo.hedis;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Service;
-
 import com.terran4j.commons.hedis.cache.CacheService;
 import com.terran4j.commons.hedis.dsyn.DSynchronized;
 import com.terran4j.commons.util.error.BusinessException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CountService {
 
-	@Value("${demo3.scheduling.sleep:1000}")
-	private long sleepTime;
+    @Autowired
+    private CacheService cacheService;
 
-	@Autowired
-	private CacheService cacheService;
+    /**
+     * 一个没有并发控制的递增计算，需要调用方避免并发访问。
+     */
+    private int doIncrementAndGet(String key) {
+        // 从 Redis 缓存中取出计数器变量：
+        Integer counter;
+        try {
+            counter = cacheService.getObject(key, Integer.class);
+            if (counter == null) {
+                counter = 0;
+            }
+        } catch (BusinessException e1) {
+            throw new RuntimeException(e1);
+        }
 
-	/**
-	 * 一个没有并发控制的递增计算，需要调用方避免并发访问。
-	 */
-	public int incrementAndGet(String key) {
-		Integer value = null;
-		try {
-			value = cacheService.getObject(key, Integer.class);
-			if (value == null) {
-				value = 0;
-			}
-		} catch (BusinessException e1) {
-			throw new RuntimeException(e1);
-		}
+        // 故意让线程休眠一段时间，让并发问题更严重。
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            // ignore.
+        }
 
-		try {
-			Thread.sleep(sleepTime);
-		} catch (InterruptedException e) {
-			// ignore.
-		}
+        // 在本地让计数器变量加 1：
+        counter++;
 
-		value++;
-		cacheService.setObject(key, value, null);
-		return value;
-	}
-	
-	/**
-	 * 对 incrementAndGet 方法加上分布式并发控制。
-	 */
-	@DSynchronized("'demo3-dsyn-' + #key")
-	public int dsynIncrementAndGet(@Param("key") String key) {
-		return incrementAndGet(key);
-	}
+        // 将变量写回 Redis 缓存：
+        cacheService.setObject(key, counter, null);
+        return counter;
+    }
+
+    /**
+     * 对 incrementAndGet 方法加上分布式并发控制。
+     */
+    @DSynchronized("'incrementAndGet-' + #key")
+    synchronized public int incrementAndGet(@Param("key") String key) {
+        return doIncrementAndGet(key);
+    }
 
 }

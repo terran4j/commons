@@ -201,22 +201,4 @@ public class RedisTemplateCacheService implements CacheService {
 		return success;
 	}
 
-//	@Override
-//	public boolean setObjectIfExisted(String key, Object value, Long expiredMillisecond) {
-//		if (StringUtils.isBlank(key)) {
-//			throw new NullPointerException("key is blank");
-//		}
-//		if (value == null) {
-//			throw new NullPointerException("value is null");
-//		}
-//		
-//		String valueText = g.toJson(value);
-//		boolean success = redisTemplate.opsForValue().set
-//		if (success) {
-//			redisTemplate.expire(key, expiredMillisecond, TimeUnit.MICROSECONDS);
-//		}
-//		
-//		return success;
-//	}
-
 }

@@ -21,7 +21,7 @@ public class DSynchronizedCountService implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 		Random random = new Random();
 		for (int i = 0; i < 10; i++) {
-			int count = countService.dsynIncrementAndGet("count");
+			int count = countService.doIncrementAndGet("count");
 			log.info("\ncount = {}", count);
 
 			int sleepTime = random.nextInt(50);

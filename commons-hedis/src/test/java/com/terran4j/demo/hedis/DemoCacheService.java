@@ -21,15 +21,14 @@ public class DemoCacheService implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("演示如何使用 CacheService 服务");
-        String key = "u1";
-        User value = new User(1, "neo", new Date());
-
 
         //  向缓存写入对象。
-        cacheService.setObject(key, value, null);
+        String key = "u1";
+        User user = new User(1, "neo", new Date());
+        cacheService.setObject(key, user, null);
 
         // 从 缓存中读取对象。
-        value = cacheService.getObject(key, User.class);
+        User value = cacheService.getObject(key, User.class);
         log.info("cache key = {}, value = {}", key, value);
     }
 

@@ -40,16 +40,7 @@ public interface CacheService {
 	 * @return true表示键不存在且写成功， false表示键存在且不写入。
 	 */
 	boolean setObjectIfAbsent(String key, Object value, Long expiredMillisecond);
-	
-//	/**
-//	 * 存一个键值对，只有键存在才能写成功。
-//	 * @param key 键
-//	 * @param value 值
-//	 * @param expiredMillisecond 过期时间，以毫秒为单位，不可以为空。
-//	 * @return true表示键存在且写成功， false表示键不存在且不写入。
-//	 */
-//	boolean setObjectIfExisted(String key, Object value, Long expiredMillisecond);
-	
+
 	/**
 	 * 根据键，获取值对象。
 	 * @param key 键
