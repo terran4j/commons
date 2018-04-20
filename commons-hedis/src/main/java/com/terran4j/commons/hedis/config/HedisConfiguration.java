@@ -1,5 +1,9 @@
 package com.terran4j.commons.hedis.config;
 
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +32,8 @@ import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.io.IOException;
+
 @Configuration
 public class HedisConfiguration {
 
@@ -48,8 +54,8 @@ public class HedisConfiguration {
 	@Value("${spring.redis.pool.min-idle:0}")
 	private int minIdle;
 
-	@Value("${spring.redis.pool.max-active:8}")
-	private int maxActive;
+	@Value("${spring.redis.pool.max-total:8}")
+	private int maxTotal;
 
 	@Value("${spring.redis.pool.max-wait:-1}")
 	private long maxWait;
@@ -76,7 +82,7 @@ public class HedisConfiguration {
 		JedisPoolConfig config = new JedisPoolConfig();
 		config.setMaxIdle(maxIdle);
 		config.setMinIdle(minIdle);
-		config.setMaxTotal(maxActive);
+		config.setMaxTotal(maxTotal);
 		config.setMaxWaitMillis(maxWait);
 		
 		JedisConnectionFactory factory = new JedisConnectionFactory();
@@ -98,6 +104,17 @@ public class HedisConfiguration {
 		Jedis jedis = jedisConnection.getNativeConnection();
 		return jedis;
 	}
+
+    @Bean(destroyMethod="shutdown")
+    RedissonClient redisson() throws IOException {
+        Config config = new Config();
+        SingleServerConfig serverConfig = config.useSingleServer();
+        serverConfig.setAddress(host + ":" + port);
+        serverConfig.setPassword(password);
+        serverConfig.setConnectionPoolSize(maxTotal);
+        serverConfig.setConnectionMinimumIdleSize(minIdle);
+        return Redisson.create(config);
+    }
 
 	@Bean
 	public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {

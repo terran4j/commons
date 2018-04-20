@@ -13,7 +13,6 @@ mvn clean deploy -DskipTests -P release -pl commons-website     // 02:27
 mvn clean deploy -DskipTests -P release -pl commons-restpack    // 02:11
 mvn clean deploy -DskipTests -P release -pl commons-api2doc     // 12:58
 mvn clean deploy -DskipTests -P release -pl commons-hedis         // 03:05
-mvn clean deploy -DskipTests -P release -pl commons-jfinger       // 02:06
 mvn clean deploy -DskipTests -P release -pl commons-hi               // 03:12
 mvn clean deploy -DskipTests -P release -pl commons-test            // 02:00
 mvn clean deploy -DskipTests -P release -pl commons-dsql           // 03:14
