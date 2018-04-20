@@ -7,10 +7,10 @@ import com.terran4j.commons.hedis.config.EnableHedis;
 
 @EnableHedis
 @SpringBootApplication
-public class HedisDemoApplication {
+public class HedisDemoApp {
 	
 	public static void main(String[] args) {
-		SpringApplication app = new SpringApplication(HedisDemoApplication.class);
+		SpringApplication app = new SpringApplication(HedisDemoApp.class);
 		app.setWebEnvironment(false);
 		app.run(args);
 	}

@@ -8,6 +8,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class DemoCacheService implements ApplicationRunner {
 
@@ -19,11 +21,15 @@ public class DemoCacheService implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("演示如何使用 CacheService 服务");
-        String key = "k1";
-        Integer value = 123;
+        String key = "u1";
+        User value = new User(1, "neo", new Date());
+
+
         //  向缓存写入对象。
-        cacheService.setObject(key, 123, null);
-        value = cacheService.getObject(key, Integer.class);
+        cacheService.setObject(key, value, null);
+
+        // 从 缓存中读取对象。
+        value = cacheService.getObject(key, User.class);
         log.info("cache key = {}, value = {}", key, value);
     }
 
