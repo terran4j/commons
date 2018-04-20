@@ -1,6 +1,5 @@
 package com.terran4j.commons.hedis.dsyn;
 
-import com.terran4j.commons.hedis.cache.CacheService;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.ErrorCodes;
@@ -56,9 +55,6 @@ public class DSynchronizedAspect {
             return exp;
         }
     }
-
-    @Autowired
-    private CacheService cacheService;
 
     @Autowired
     private RedissonClient redissonClient;

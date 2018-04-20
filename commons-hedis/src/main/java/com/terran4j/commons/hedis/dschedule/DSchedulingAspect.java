@@ -3,13 +3,14 @@ package com.terran4j.commons.hedis.dschedule;
 import com.terran4j.commons.hedis.cache.CacheService;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.DateTimes;
-import com.terran4j.commons.util.Strings;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.ErrorCodes;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Aspect
 @Component
@@ -43,6 +45,9 @@ public class DSchedulingAspect {
 
     @Autowired
     private CacheService cacheService;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     private EmbeddedValueResolver embeddedValueResolver;
 
@@ -84,7 +89,8 @@ public class DSchedulingAspect {
         }
         DScheduling distributedScheduling = method.getAnnotation(DScheduling.class);
         if (distributedScheduling == null) {
-            log.error("@DistributedScheduling not found, className = {}, methodName = {}", className, methodName);
+            log.error("@DistributedScheduling not found, className = {}," +
+                    " methodName = {}", className, methodName);
             return point.proceed(args);
         }
 
@@ -94,8 +100,10 @@ public class DSchedulingAspect {
             String msg = String.format("${className}.${methodName}方法" +
                             "上有 %s 注解但没有 %s 注解。", DScheduling.class,
                     Scheduled.class);
-            throw new BusinessException(ErrorCodes.INTERNAL_ERROR).put("className", className)
-                    .put("methodName", methodName).setMessage(msg);
+            throw new BusinessException(ErrorCodes.INTERNAL_ERROR)
+                    .put("className", className)
+                    .put("methodName", methodName)
+                    .setMessage(msg);
         }
 
         // 被加上 Scheduled 注解的方法，都是没有参数的，
@@ -105,15 +113,17 @@ public class DSchedulingAspect {
         String value = distributedScheduling.value();
         checkValue(value, method);
         if (log.isInfoEnabled()) {
-            log.info("start to DistributedScheduling '{}' at: {}", value, DateTimes.toString(new Date()));
+            log.info("start to DistributedScheduling '{}' at: {}", value,
+                    DateTimes.toString(new Date()));
         }
 
         // 尝试从 redis 中获取分布式锁，如果没有获取到锁，就不执行本次调度。
-        String jobInfoKey = "hedis.schedule.jobInfo-" + value;
-        String lockKey = "hedis.schedule.lock-" + value;
+        String jobInfoKey = "hedis.sj-" + value;
+        String lockKey = "hedis.sl-" + value;
         long lockExpired = distributedScheduling.lockExpiredSecond() * 1000;
         long jobInfoExpired = lockExpired * 2; // 任务信息保存时间要比锁长，目前设置为 2 倍。
-        boolean locked = cacheService.setObjectIfAbsent(lockKey, instanceId, lockExpired);
+        RLock lock = redissonClient.getLock(lockKey);
+        boolean locked = lock.tryLock(lockExpired, lockExpired, TimeUnit.MILLISECONDS);
         if (!locked) {
             // 没有取到锁，不执行任务。
             if (log.isInfoEnabled()) {
@@ -135,7 +145,7 @@ public class DSchedulingAspect {
                     log.info("job is executed by other instance, but next " +
                             "executing not coming, lastInfo: \n{}", lastInfo);
                 }
-                cacheService.remove(lockKey); // 释放锁。
+                lock.unlock();
                 return null;
             }
         }
@@ -182,7 +192,7 @@ public class DSchedulingAspect {
             }
 
             // 释放锁。
-            cacheService.remove(lockKey);
+            lock.unlock();
         }
 
         if (log.isInfoEnabled()) {
