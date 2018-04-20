@@ -48,19 +48,25 @@ public class HedisConfiguration {
     @Value("${spring.redis.password:}")
     private String password;
 
+    @Value("${spring.redis.pool.max-total:8}")
+    private int maxTotal;
+
 	@Value("${spring.redis.pool.max-idle:8}")
 	private int maxIdle;
 
 	@Value("${spring.redis.pool.min-idle:0}")
 	private int minIdle;
 
-	@Value("${spring.redis.pool.max-total:8}")
-	private int maxTotal;
-
+    /**
+     * 获取连接时的最大等待时间，默认为 -1 表示永久等待。
+     */
 	@Value("${spring.redis.pool.max-wait:-1}")
 	private long maxWait;
 
-	@Value("${spring.redis.defaultExpiration:30}")
+    /**
+     * 对于缓存管理器，设置默认的过期时间。
+     */
+	@Value("${spring.redis.cache.defaultExpirationSecond:30}")
 	private int defaultExpiration;
 	
 	@Bean 
@@ -80,9 +86,25 @@ public class HedisConfiguration {
 
 		// 配置Redis连接池
 		JedisPoolConfig config = new JedisPoolConfig();
-		config.setMaxIdle(maxIdle);
-		config.setMinIdle(minIdle);
+
 		config.setMaxTotal(maxTotal);
+
+		// 最大空闲数，不能大于连接池总大小。
+        if (maxIdle > maxTotal) {
+            maxIdle = maxTotal;
+        }
+		config.setMaxIdle(maxIdle);
+
+        // 最小空闲数，不能大于最大空闲数的一半。
+        if (minIdle < 0) {
+            minIdle = 0;
+        }
+        int maxMinIdle = (maxIdle + 1) / 2;
+        if (minIdle > maxMinIdle) {
+            minIdle = maxMinIdle;
+        }
+		config.setMinIdle(minIdle);
+
 		config.setMaxWaitMillis(maxWait);
 		
 		JedisConnectionFactory factory = new JedisConnectionFactory();
@@ -93,7 +115,7 @@ public class HedisConfiguration {
         }
 		factory.setPoolConfig(config);
 		if (log.isInfoEnabled()) {
-			log.info("Jedis config done:\n{}", Strings.toString(config));
+			log.info("Jedis config done: \n{}", Strings.toString(config));
 		}
 		return factory;
 	}
@@ -106,7 +128,7 @@ public class HedisConfiguration {
 	}
 
     @Bean(destroyMethod="shutdown")
-    RedissonClient redisson() throws IOException {
+    public RedissonClient redisson() throws IOException {
         Config config = new Config();
         SingleServerConfig serverConfig = config.useSingleServer();
         serverConfig.setAddress("redis://" + host + ":" + port);
@@ -125,7 +147,7 @@ public class HedisConfiguration {
 	@Bean
 	public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
 		StringRedisTemplate template = new StringRedisTemplate(factory);
-		Jackson2JsonRedisSerializer<Object> jackson = new Jackson2JsonRedisSerializer<Object>(Object.class);
+		Jackson2JsonRedisSerializer<Object> jackson = new Jackson2JsonRedisSerializer<>(Object.class);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 		objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
