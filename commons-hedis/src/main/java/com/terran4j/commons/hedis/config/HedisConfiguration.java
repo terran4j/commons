@@ -117,7 +117,7 @@ public class HedisConfiguration {
         serverConfig.setConnectionMinimumIdleSize(minIdle);
 
         if (log.isInfoEnabled()) {
-            log.info("Redisson config done:\n{}", Strings.toString(config));
+            log.info("Redisson config done: \n{}", Strings.toString(config));
         }
         return Redisson.create(config);
     }
