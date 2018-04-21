@@ -16,7 +16,12 @@
     简称 DSQL，是一款从 SQL 到对象的自动映射框架，它尤其擅长动态复杂 SQL 的处理。
     它结合了现在两大主流持久层框架 JPA 及 MyBatis 的优点，
     从而更进一步的提高了持久层的开发效率。
-
+* [commons-hedis](https://github.com/terran4j/commons/tree/master/commons-hedis):  
+    简称 Hedis，是 Happy for using Redis 之意。它集成了当前主流的 Redis 客户端，
+    如：spring-data-redis，Jedis，Redisson 等。
+    Hedis 的目标是让 Redis 的使用更容易，并用 Redis 解决具体场景中的问题，
+    比如说，它提供了缓存服务、分布式同步、轻量级分布式定时调度，等功能。 
+    
 
 ## 适用用户
 
