@@ -64,7 +64,7 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 
         RestPackAspect.clearThreadLocal();
 
-        return httpResultMapper.toMap(result);
+        return httpResultMapper.convert(result);
     }
 
 

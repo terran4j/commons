@@ -1,11 +1,11 @@
 package com.terran4j.commons.restpack;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 @ConfigurationProperties(prefix = "terran4j.restpack.renaming")
 @Service
@@ -133,4 +133,16 @@ public class HttpResultMapper {
 
         return map;
     }
+
+    @Autowired(required = false)
+    private HttpResultConverter httpResultConverter;
+
+    public Object convert(HttpResult httpResult) {
+        if (httpResultConverter != null) {
+            return httpResultConverter.convert(httpResult);
+        } else {
+            return toMap(httpResult);
+        }
+    }
+
 }

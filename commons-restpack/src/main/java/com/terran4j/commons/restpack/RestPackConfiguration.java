@@ -147,6 +147,11 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
         return new RestPackAdvice();
     }
 
+//    @Bean
+//    public HttpResultMapper httpResultMapper() {
+//        return new HttpResultMapper();
+//    }
+
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
 

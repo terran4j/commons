@@ -1,5 +1,6 @@
 package com.terran4j.test.restpack;
 
+import com.terran4j.commons.restpack.EnableRestPack;
 import com.terran4j.commons.restpack.HttpResult;
 import com.terran4j.commons.restpack.HttpResultMapper;
 import com.terran4j.commons.util.error.BusinessException;
@@ -10,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,12 +19,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootTest(
-        classes = {RestPackApp.class}
+        classes = {HttpResultMapperTest.RestPackApp.class}
 )
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HttpResultMapperTest {
 
     private static final Logger log = LoggerFactory.getLogger(HttpResultMapperTest.class);
+
+    @EnableRestPack
+    @SpringBootApplication
+    public static class RestPackApp {
+    }
 
     @Autowired
     private HttpResultMapper httpResultMapper;

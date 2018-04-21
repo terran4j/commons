@@ -8,6 +8,7 @@
 * 启用 RestPack
 * @RestPackController 注解
 * RestPack 异常处理
+* 重命名返回字段
 * 日志输出
 * 资源分享与技术交流
 
@@ -250,9 +251,14 @@ abc
 比如我们在上面的 RestPackDemoController 类中添加如下方法：
 
 ```java
-@RequestMapping(value = "/void", method = RequestMethod.GET)
-public void doVoid(@RequestParam(value = "msg") String msg) throws BusinessException {
-    log.info("doVoid, msg = {}", msg);
+@RestPackController
+@RequestMapping("/demo/restpack")
+public class RestPackDemoController {
+    
+    @RequestMapping(value = "/void", method = RequestMethod.GET)
+    public void doVoid(@RequestParam(value = "msg") String msg) throws BusinessException {
+        log.info("doVoid, msg = {}", msg);
+    }
 }
 ```
 
@@ -276,14 +282,20 @@ http://localhost:8080/demo/restpack/void?msg=abc
 比如我们再添加如下代码：
 
 ```java
-@RequestMapping(value = "/hello", method = RequestMethod.GET)
-public HelloBean hello(@RequestParam(value = "name") String name) throws BusinessException {
-    log.info("hello, name = {}", name);
-    HelloBean bean = new HelloBean();
-    bean.setName(name);
-    bean.setMessage("Hello, " + name + "!");
-    bean.setTime(new Date());
-    return bean;
+
+@RestPackController
+@RequestMapping("/demo/restpack")
+public class RestPackDemoController {
+    
+    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    public HelloBean hello(@RequestParam(value = "name") String name) throws BusinessException {
+        log.info("hello, name = {}", name);
+        HelloBean bean = new HelloBean();
+        bean.setName(name);
+        bean.setMessage("Hello, " + name + "!");
+        bean.setTime(new Date());
+        return bean;
+    }
 }
 ```
 
@@ -352,16 +364,21 @@ RestPack 就按业务异常处理，如果不是就按系统异常处理。
 为了查看运行效果，我们添加一个新的方法：
 
 ```java
-@RequestMapping(value = "/regist", method = RequestMethod.GET)
-public void regist(@RequestParam(value = "name") String name) throws BusinessException {
-    log.info("regist, name = {}", name);
-    if (name.length() < 3) {
-        String suggestName = name + "123";
-        throw new BusinessException("name.invalid")
-                .setMessage("您输入的名称太短了，建议为：${suggestName}")
-                .put("suggestName", suggestName);
+@RestPackController
+@RequestMapping("/demo/restpack")
+public class RestPackDemoController {
+    
+    @RequestMapping(value = "/regist", method = RequestMethod.GET)
+    public void regist(@RequestParam(value = "name") String name) throws BusinessException {
+        log.info("regist, name = {}", name);
+        if (name.length() < 3) {
+            String suggestName = name + "123";
+            throw new BusinessException("name.invalid")
+                    .setMessage("您输入的名称太短了，建议为：${suggestName}")
+                    .put("suggestName", suggestName);
+        }
+        log.info("regist done, name = {}", name);
     }
-    log.info("regist done, name = {}", name);
 }
 ```
 
@@ -386,6 +403,55 @@ http://localhost:8080/demo/restpack/regist?name=ne
   }
 }
 ```
+
+## 重命名返回字段
+
+或许你的项目对返回的通用字段已经有一套对于 RestPack 定义的返回字段，如果：
+```yaml
+terran4j:
+  restpack:
+    renaming:
+      requestId: requestCode
+      serverTime: currentTime
+      spendTime: spend
+      resultCode: status
+      data: result
+      message: msg
+      props: data
+      success: OK
+```
+
+
+```json
+{
+  "requestId" : "22e5651199f645628fdf724e9f0826a3",
+  "serverTime" : 1502627761012,
+  "spendTime" : 1,
+  "resultCode" : "name.invalid",
+  "message" : "您输入的名称太短了，建议为：ne123",
+  "props" : {
+    "suggestName" : "ne123"
+  }
+}
+```
+
+或：
+
+```json
+{
+  "requestId" : "ab5c43c3415042b682b290e17fad1358",
+  "serverTime" : 1502957833154,
+  "spendTime" : 30,
+  "resultCode" : "success",
+  "data" : {
+    "name" : "neo",
+    "message" : "Hello, neo!",
+    "time" : "2017-08-17 16:17:13"
+  }
+}
+```
+
+
 
 ## 日志输出
 

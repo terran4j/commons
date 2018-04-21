@@ -73,7 +73,7 @@ public class HttpErrorHandler {
         long t = System.currentTimeMillis();
         result.setServerTime(t);
         result.setSpendTime(t - t0);
-        return httpResultMapper.toMap(result);
+        return httpResultMapper.convert(result);
     }
 
 }
