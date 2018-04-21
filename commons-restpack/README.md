@@ -8,7 +8,7 @@
 * 启用 RestPack
 * @RestPackController 注解
 * RestPack 异常处理
-* 重命名返回字段
+* 自定义数据格式
 * 日志输出
 * 资源分享与技术交流
 
@@ -404,9 +404,13 @@ http://localhost:8080/demo/restpack/regist?name=ne
 }
 ```
 
-## 重命名返回字段
+## 自定义数据格式
 
-或许你的项目对返回的通用字段已经有一套对于 RestPack 定义的返回字段，如果：
+或许你的项目需要自定义返回报文的数据格式，而不是使用 RestPack 默认的这一套数据格式，
+可以有两种做法：
+
+第一，对这些通用字段进行重命名，在 application.yml 配置文件中定义如下：
+
 ```yaml
 terran4j:
   restpack:
@@ -420,37 +424,54 @@ terran4j:
       props: data
       success: OK
 ```
+terran4j.restpack.renaming 下的配置项是对相应的字符进行重命名，
+如： requestId 被改成 requestCode，serverTime 被改成 serverTime......
+其中最后一个 `success: OK` 表示对请求成功时的返回码重命名为"OK"(默认为"success")。
 
-
-```json
-{
-  "requestId" : "22e5651199f645628fdf724e9f0826a3",
-  "serverTime" : 1502627761012,
-  "spendTime" : 1,
-  "resultCode" : "name.invalid",
-  "message" : "您输入的名称太短了，建议为：ne123",
-  "props" : {
-    "suggestName" : "ne123"
-  }
-}
-```
-
-或：
+重命名后数据的组织结构没有变，只是字段名改了，如下所示：
 
 ```json
 {
-  "requestId" : "ab5c43c3415042b682b290e17fad1358",
-  "serverTime" : 1502957833154,
-  "spendTime" : 30,
-  "resultCode" : "success",
-  "data" : {
+  "requestCode" : "22e5651199f645628fdf724e9f0826a3",
+  "currentTime" : 1502627761012,
+  "spend" : 1,
+  "status" : "OK",
+  "result" : {
     "name" : "neo",
     "message" : "Hello, neo!",
     "time" : "2017-08-17 16:17:13"
   }
 }
 ```
+ 
+如果你希望连数据结构也自定义，则需要使用第二种方式了。
 
+第二种方式：编写一个服务实现 HttpResultConverter 接口，并注册到 Spring 容器中，
+如下代码所示：
+
+```java
+
+package com.terran4j.demo.restpack;
+
+import com.terran4j.commons.restpack.HttpResult;
+import com.terran4j.commons.restpack.HttpResultConverter;
+import org.springframework.stereotype.Service;
+
+@Service
+public class DemoHttpResultConverter implements HttpResultConverter {
+
+    @Override
+    public Object convert(HttpResult httpResult) {
+        // 这里可以将 HttpResult 对象转成你需要的格式
+        // RestPack 框架会将本方法的返回对象转成 JSON 串返回给请求方。
+        return httpResult;
+    }
+}
+
+```
+
+注意，整个应用程序不可以注册多个 HttpResultConverter 接口的实现对象，
+否则 RestPack 不知道使用哪个就会在启动时报错。
 
 
 ## 日志输出
