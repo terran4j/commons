@@ -339,7 +339,7 @@ com.terran4j.demo.hedis.CountService::incrementAndGet(java.lang.String)
 ## 实现轻量级分布式定时调度
 
 在业务系统中，我们经常需要在后台执行一些定时任务调度，
-用 Spring Scheduling 框架可以很容易的实现，如999999下代码所示：
+用 Spring Scheduling 框架可以很容易的实现，如下代码所示：
 
 ```java
 
@@ -356,7 +356,7 @@ public class LoopIncrementJob {
 
 	private static final Logger log = LoggerFactory.getLogger(LoopIncrementJob.class);
 
-	private static final String key = "demo3-scheduling-counter";
+	private static final String key = "demo3-counter";
 
 	@Autowired
 	private CountService countService;
@@ -372,16 +372,17 @@ public class LoopIncrementJob {
 ```
 
 @Scheduled 是 Spring Scheduling 框架提供的注解，cron = "0/1 * * * * *" 是每秒执行一次的意思，
-因此 @Scheduled(cron = "0/1 * * * * *") 就是 Spring Scheduling 框架会
-每秒调用一次 loopIncrement() 方法的意思。
+因此 @Scheduled(cron = "0/1 * * * * *") 的意思就是：
+ Spring Scheduling 框架会每秒调用一次 loopIncrement() 方法。
  
 但 Spring Scheduling 框架是不支持分布式的，也就是说：
-当应用程序部署到一个集群环境上时，每个节点都会独立的执行这个定时调度。
+当应用程序部署到一个多个节点时，每个节点都会独立的执行这个定时调度，
+如果代码中要操作共享的资源时，可能会出问题。
  
-业界有许多提供分布式任务调度的开源项目，如： quartz、TBSchedule、
-elastic-job、Saturn 等，大都偏重量级，资源占用多，部署复杂，学习成本高。
+业界有许多提供分布式任务调度的开源项目，如： quartz、TBSchedule、elastic-job、Saturn 等，
+但都比较重量级，如：资源占用多，部署复杂，学习成本高。
 所以 Hedis 提供了一种非常简单的方式进行分布式调度，
-简单到只加一个 @DScheduling 注解就可以了，如下代码所示：
+简单到只加一个 @DScheduling 注解就搞定了，如下代码所示：
  
  ```java
 
@@ -416,12 +417,12 @@ public class LoopIncrementJob {
 ```
  
 @DScheduling 必须修饰在有 @Scheduled 修饰的方法上，
-表示对这个定时任务采用分布式调度的方法，它的算法为：
-1. 每次调用调度方法（如上面的 loopIncrement() 方法）时，都尝试申请一个分布式锁；
-2. 如果没有获取到锁（通常意味其它节点获取到锁了），则本节点跳过本次执行。
-3. 如果获取到锁了，还是看检查上次任务执行的时间：
-    3.1 如果上次任务执行的时间超过了调度周期，则执行本次调度，并记录本次的执行时间（到Redis）；
-    3.2 如果上次任务执行的时间未超过调度周期，则跳过本次调度。
+表示对这个定时任务采用分布式调度，它的算法为：
+1. 每次调用此方法（如上面的 loopIncrement() 方法）时，都尝试申请一个分布式锁；
+2. 如果没有获取到锁（通常意味其它节点获取到锁了），则本节点跳过此次执行。
+3. 如果获取到锁了，还会检查上次调用的执行时间：
+* 如果上次的执行时间超过了调度周期，则执行本次调度，并记录本次的执行时间（到Redis）；
+* 如果上次的执行时间未超过调度周期，则跳过本次调度。
 
 所谓“调度周期”，是指两次相邻的调度执行的时间差，如 cron = "0/1 * * * * *"
 表示每秒调度一次，则“调度周期”为 1 秒。
