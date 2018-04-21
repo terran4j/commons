@@ -191,7 +191,12 @@ CacheService 提供了以下常用的缓存方法，如：
 
 Hedis 还集成了 [Redisson](https://blog.csdn.net/u014042066/article/details/72778440) 开源项目，
 Redisson 基于 Redis 提供了很多强大的功能，其中就包括“分布式锁”。
-（用Redis 实现分布式锁的原理，请参看 [这里](http://ifeve.com/redis-lock/) ）
+
+用Redis 实现分布式锁的原理，请参看 [这里](http://ifeve.com/redis-lock/) 。
+简单来说，就是在执行同步块代码之前，先用 SETNX 操作向 Redis 写入一个 key - value 记录，
+写入成功，表示获取到一个锁，就可以真正执行同步块中的代码，
+执行完成后，就删除这个 key - value 记录，表示释放了锁。
+
 而 Hedis 则在 Redisson 的基础上，让分布式锁的使用更简单。
 
 只需要在 Spring Bean 的方法上加上 `@DSynchronized`  注解，
@@ -260,11 +265,11 @@ public class CountService {
 synchronized 只是在单个 JVM 范围内实现了多线程同步，而 @DSynchronized
 是在应用的整个集群范围内，也就是多个节点之间实现了多线程同步。
 
-@DSynchronized 内部是用 Redisson 分布式锁的原理实现的，它需要
-提供一个 key 去 Redis 中申请一个锁，具体来讲，它会用这个 key 
+@DSynchronized 内部是用 Redisson 分布式锁的原理实现的，
+它需要提供一个 key 去 Redis 中申请一个锁，具体来讲，它会用这个 key 
 作为键向 Redis 发送一个 SETNX 命令，去写入一个值。
 如果写入成功，就表示获取到这个锁了，但如果有一个节点已写入这个 key，
-其它节点就不能用这个 key 去写入一个值（参见 SETNX 命令的原理）。
+其它节点就不能用相同的 key 去写入值了（参见 SETNX 命令的原理）。
 
 在 @DSynchronized 中，可以用 Spring EL 表达式来定义这个 key ，
 如上面的 `'incrementAndGet-' + #key` ，两个单引号 '' 包裹的是字符串常量，
@@ -292,9 +297,11 @@ public class CountService {
 ```
 
 方法 incrementAndGet 的锁表达式为： 'incrementAndGet-' + #key 。
-比如调用时参数 key = "k1"，则会调用前会申请一个名为 "incrementAndGet-k1" 的锁。
-让参数值参与到锁表达式，这样锁的粒度就更细了，因获取不到锁而被阻塞的情况
-发生的概率就更小了。
+比如调用时参数 key = "k1"，则会调用前会申请一个名为 "incrementAndGet-k1" 的锁，
+申请到这个锁了，才能继续执行此方法，没有申请到锁就只能等待别人执行完后释放锁。
+
+锁表达式可以有参数值，这样锁的粒度就更细了，因获取不到锁而被阻塞的情况，
+其发生的概率就会小很多。
 
 注意：请根据您的业务逻辑小心的定义锁表达式，请尽量的让锁的粒度更细。
 当然你也可以图省事而不定义锁表达式，如下代码所示：
