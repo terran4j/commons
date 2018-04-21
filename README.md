@@ -17,9 +17,9 @@
     它结合了现在两大主流持久层框架 JPA 及 MyBatis 的优点，
     从而更进一步的提高了持久层的开发效率。
 * [commons-hedis](https://github.com/terran4j/commons/tree/master/commons-hedis):  
-    简称 Hedis，是 Happy for using Redis 之意，目标是让 Redis 使用起来更容易，
+    简称 Hedis，是 Happy for using Redis 之意，目标是让 Redis 使用起来更容易。
     Hedis 集成了 spring-data-redis， Jedis，Redisson 等 Redis 客户端框架，
-    并用它们解决一些具体的问题，如：缓存服务、分布式同步、轻量级分布式定时调度等。 
+    并用它们解决一些具体的问题，如：分布式同步、轻量级分布式定时调度等。 
     
 
 ## 适用用户
