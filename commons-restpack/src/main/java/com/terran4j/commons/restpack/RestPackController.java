@@ -14,5 +14,4 @@ import org.springframework.web.bind.annotation.RestController;
 @Target(TYPE)
 @RestController
 public @interface RestPackController {
-
 }

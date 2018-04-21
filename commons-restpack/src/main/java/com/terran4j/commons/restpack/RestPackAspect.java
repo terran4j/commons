@@ -142,8 +142,10 @@ public class RestPackAspect {
                     params.put(key, values);
                 }
             }
-            log.info("request '{}' begin, params:\n{}",
-                    requestPath, Strings.toString(params));
+            if (log.isInfoEnabled()) {
+                log.info("request '{}' begin, params:\n{}",
+                        requestPath, Strings.toString(params));
+            }
         }
     }
 

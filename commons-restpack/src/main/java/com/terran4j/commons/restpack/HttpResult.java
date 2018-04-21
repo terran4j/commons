@@ -13,12 +13,6 @@ import com.terran4j.commons.util.error.ErrorCode;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HttpResult {
 	
-	public static final String KEY_resultCode = "resultCode";
-	
-	public static final String KEY_data = "data";
-	
-	public static final String KEY_message = "message";
-	
 	public static final String SUCCESS_CODE = "success";
 
 	private String requestId;

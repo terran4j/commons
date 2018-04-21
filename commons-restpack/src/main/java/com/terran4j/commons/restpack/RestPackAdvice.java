@@ -27,8 +27,6 @@ import com.terran4j.commons.util.error.CommonErrorCode;
 @ControllerAdvice
 public class RestPackAdvice implements ResponseBodyAdvice<Object> {
 
-//	private static final Logger log = LoggerFactory.getLogger(RestPackAdvice.class);
-
 	@Override
 	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
 		return RestPackAspect.isRestPack();

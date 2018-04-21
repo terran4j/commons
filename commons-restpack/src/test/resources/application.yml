@@ -1,0 +1,13 @@
+
+terran4j:
+  restpack:
+    renaming:
+      requestId: requestCode
+      serverTime: currentTime
+      spendTime: spend
+      resultCode: status
+      data: result
+      message: msg
+      props: data
+      success: OK
+
