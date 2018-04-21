@@ -418,7 +418,7 @@ public class LoopIncrementJob {
  
 @DScheduling 必须修饰在有 @Scheduled 修饰的方法上，
 表示对这个定时任务采用分布式调度，它的算法为：
-1. 每次调用此方法（如上面的 loopIncrement() 方法）时，都尝试申请一个分布式锁；
+1. 每次调度执行此方法（如上面的 loopIncrement() ）前，都尝试申请一个分布式锁；
 2. 如果没有获取到锁（通常意味其它节点获取到锁了），则本节点跳过此次执行。
 3. 如果获取到锁了，还会检查上次调用的执行时间：
 * 如果上次的执行时间超过了调度周期，则执行本次调度，并记录本次的执行时间（到Redis）；
@@ -427,13 +427,14 @@ public class LoopIncrementJob {
 所谓“调度周期”，是指两次相邻的调度执行的时间差，如 cron = "0/1 * * * * *"
 表示每秒调度一次，则“调度周期”为 1 秒。
 @DScheduling 中有一个 lockExpiredSecond 属性，表示分布锁的过期时间，
-建议比调度周期略长，并且要确保任务的执行时间要远小于此 lockExpiredSecond 值。
+建议比调度周期略长，并且要确保任务的执行时间要远小于此 lockExpiredSecond 
+所定义的时长。
 
 
 ## 声明式缓存
 
-Spring Cache 提供了声明式缓存，即在方法上定义一些注解即可对数据进行缓存，
-不清楚的朋友们可先从这篇文章进行了解： [Spring Cache相关注解介绍](https://blog.csdn.net/poorcoder_/article/details/55258253)
+[Spring Cache](https://blog.csdn.net/poorcoder_/article/details/55258253) 提供了声明式缓存，
+即在方法上定义一些注解即可对数据进行缓存。
 
-而 Hedis 注入了 RedisCacheManager 服务，以实现了声明式缓存。
-（其实主要是 Spring Cache 在起作用，本文就不过多介绍了，有问题请百度！）
+而 Hedis 注入了 RedisCacheManager 服务，因此可以直接使用 Spring Cache 。
+（具体怎么使用 Spring Cache，本文就不过多介绍了，有问题请自行百度！）
