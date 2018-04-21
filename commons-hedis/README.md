@@ -1,7 +1,7 @@
 
 本项目基于 Redis 提供两个常用的功能：
-2. 分布式锁；
-3. 轻量级分布式任务调度；
+1. 分布式锁；
+2. 轻量级分布式任务调度；
 
 此项目已经放到 github 中，需要源码的朋友请点击
 [这里](https://github.com/terran4j/commons/tree/master/commons-hedis)
@@ -19,11 +19,11 @@
 ## 项目背景
 
 Redis 是一个高性能的 key-value 数据库。 
-Redis的出现，很大程度补偿了 memcached 这类 key-value 存储的不足，
+Redis的出现，很大程度补偿了 memcache 这类 key-value 存储的不足，
 在部分场合可以对关系数据库起到很好的补充作用。
 
-Redis 的最常用的功能就是缓存数据了，不过它提供的功能已经超越缓存系统了，
-我们可以用 Redis 作更多的事情。
+Redis 的最常用的功能就是缓存数据了，不过它提供的功能已经超越了缓存系统，
+我们可以用 Redis 做更多的事情。
 
 本项目的目标是为了提供一个更简单易用的 Redis 客户端框架，
 它集成了 spring-data-redis， Jedis，Redisson 等多种优秀的 Redis 框架，
@@ -53,7 +53,7 @@ compile "com.github.terran4j:terran4j-commons-hedis:${hedis.version}"
 
 ${hedis.version} **最新稳定版，请参考 [这里](https://github.com/terran4j/commons/blob/master/version.md)**
 
-本教程的示例代码在 src/test/java 目录的 com.terran4j.demo.hedis 中，
+本教程的示例代码在 src/test/java 目录的 com.terran4j.demo.hedis 包中，
 您也可以从 [这里](https://github.com/terran4j/commons/tree/master/commons-hedis/src/test/java/com/terran4j/demo/hedis) 获取到。
 
 
@@ -175,24 +175,24 @@ public class DemoCacheService implements ApplicationRunner {
 CacheService 的实现是基于 Spring 提供的 RedisTemplate 类。
 对象的“序列化 / 反序列化”是用的 Json 的方式，因而具有较高的灵活性。
 
-为了让使用简单，CacheService 只提供了几个常用的缓存方法，如：
+CacheService 提供了以下常用的缓存方法，如：
 * 读取 / 写入 单个对象；
-* 读取 / 写入 整个 Map 数据； 
+* 读取 / 写入 整个 Map 对象； 
 * 读取 / 写入 一个 Map 中的单个条目。
 
-这对于大多数缓存的场景，已经足够了，若需要更多的 Redis 接口，可以直接引用：
+这对于大多数缓存的使用场景已经足够了，若需要更多的 Redis 接口，可以直接引用：
 * RedisTemplate<String, String> 
 * Jedis
 
-这两个服务，里面有更多的接口方法可用。
+这两个服务之一（推荐用 RedisTemplate），里面有更多的接口方法可用。
 
 
 ## 实现分布式同步
 
 Hedis 还集成了 [Redisson](https://blog.csdn.net/u014042066/article/details/72778440) 开源项目，
-Redisson 基于 Redis 提供了很多的功能强大功能，其中就包括“分布式锁”。
+Redisson 基于 Redis 提供了很多强大的功能，其中就包括“分布式锁”。
 （用Redis 实现分布式锁的原理，请参看 [这里](http://ifeve.com/redis-lock/) ）
-而 Hedis 则基于 Redisson 让分布式锁的使用更简单。
+而 Hedis 则在 Redisson 的基础上，让分布式锁的使用更简单。
 
 只需要在 Spring Bean 的方法上加上 `@DSynchronized`  注解，
 就可以对这个方法实现分布式同步控制，如下代码所示：
@@ -214,6 +214,14 @@ public class CountService {
     @Autowired
     private CacheService cacheService;
 
+    /**
+     * 对 incrementAndGet 方法加上分布式并发控制。
+     */
+    @DSynchronized("'incrementAndGet-' + #key")
+    public int incrementAndGet(@Param("key") String key) {
+        return doIncrementAndGet(key);
+    }
+    
     /**
      * 一个没有并发控制的递增计算，需要调用方避免并发访问。
      */
@@ -244,27 +252,19 @@ public class CountService {
         return counter;
     }
 
-    /**
-     * 对 incrementAndGet 方法加上分布式并发控制。
-     */
-    @DSynchronized("'incrementAndGet-' + #key")
-    public int incrementAndGet(@Param("key") String key) {
-        return doIncrementAndGet(key);
-    }
-
 }
 
 ```
 
 @DSynchronized 类似于 java 提供的 synchronized 关键字，不过不同的是：
-synchronized 只是在 JVM 范围内实现了多线程同步，而 @DSynchronized 方法
-是在整个应用程序的集群范围内，也就是多个节点之间实现了多线程同步。
+synchronized 只是在单个 JVM 范围内实现了多线程同步，而 @DSynchronized
+是在应用的整个集群范围内，也就是多个节点之间实现了多线程同步。
 
-@DSynchronized 内部是用 Redisson 分布式锁的原理实现的，所以它需要
-提供一个字符串 key 来定义这个锁，这个 key 非常重要，因为会用这个 key 
-在 Redis 中作为键用 SETNX 命令去写入一个值，写入成功就表示获取到这个锁了。
-但如果有一个节点已写入相同的 key （且还未失效），则按 SETNX 的原理，
-其它节点就无写入这个 key 了。
+@DSynchronized 内部是用 Redisson 分布式锁的原理实现的，它需要
+提供一个 key 去 Redis 中申请一个锁，具体来讲，它会用这个 key 
+作为键向 Redis 发送一个 SETNX 命令，去写入一个值。
+如果写入成功，就表示获取到这个锁了，但如果有一个节点已写入这个 key，
+其它节点就不能用这个 key 去写入一个值（参见 SETNX 命令的原理）。
 
 在 @DSynchronized 中，可以用 Spring EL 表达式来定义这个 key ，
 如上面的 `'incrementAndGet-' + #key` ，两个单引号 '' 包裹的是字符串常量，
@@ -274,7 +274,7 @@ synchronized 只是在 JVM 范围内实现了多线程同步，而 @DSynchronize
 
 这个在 @DSynchronized 中的 Spring EL 表达式，以后我们称为“锁表达式”。
 
-如上面的代码：
+如下面的代码：
 
 ```java
 
