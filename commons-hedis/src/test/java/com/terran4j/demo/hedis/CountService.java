@@ -47,7 +47,7 @@ public class CountService {
      * 对 incrementAndGet 方法加上分布式并发控制。
      */
     @DSynchronized("'incrementAndGet-' + #key")
-    synchronized public int incrementAndGet(@Param("key") String key) {
+    public int incrementAndGet(@Param("key") String key) {
         return doIncrementAndGet(key);
     }
 

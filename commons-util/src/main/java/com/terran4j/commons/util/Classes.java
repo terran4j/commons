@@ -502,7 +502,11 @@ public class Classes {
         sb.append(method.getDeclaringClass().getName()).append("#").append(method.getName()).append("(");
         Class<?>[] paramTypes = method.getParameterTypes();
         if (paramTypes != null && paramTypes.length > 0) {
-            String paramsText = Joiner.on(",").join(paramTypes);
+            String[] paramTypeNames = new String[paramTypes.length];
+            for (int i = 0; i < paramTypes.length; i++) {
+                paramTypeNames[i] = paramTypes[i].getName();
+            }
+            String paramsText = Joiner.on(",").join(paramTypeNames);
             sb.append(paramsText);
         }
         sb.append(")");

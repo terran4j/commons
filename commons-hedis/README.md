@@ -262,4 +262,60 @@ synchronized 只是在 JVM 范围内实现了并发同步，而 @DSynchronized �
 
 在 @DSynchronized 中，可以用 Spring EL 表达式来定义这个 key ，
 如上面的 `'incrementAndGet-' + #key` ，两个单引号 '' 包裹的是字符串常量，
-用 # 号引用的是变量，用 + 号可以把这两部分拼接起来，这些都
+用 # 号引用的是变量，用 + 号可以把这两部分拼接起来，这些都遵守
+[Spring EL 表达式](https://www.jianshu.com/p/25dcb764654e) 的语法。
+在方法中可以用 `@Param` 注解来使参数值成为 Spring EL 中的变量值。
+
+这个在 @DSynchronized 中的 Spring EL 表达式，以后我们称为“锁表达式”。
+
+如上面的代码：
+
+```java
+
+@Service
+public class CountService {
+    
+    // 省略其它代码......
+    
+    @DSynchronized("'incrementAndGet-' + #key")
+    public int incrementAndGet(@Param("key") String key) {
+        return doIncrementAndGet(key);
+    }
+    
+}
+```
+
+方法 incrementAndGet 的锁表达式为： 'incrementAndGet-' + #key 。
+比如调用时参数 key = "k1"，则会调用前会申请一个名为 "incrementAndGet-k1" 的锁。
+让参数值参与到锁表达式，这样锁的粒度就更细了，因获取不到锁而被阻塞的情况
+发生的概率就更小了。
+
+注意：请根据您的业务逻辑小心的定义锁表达式，请尽量的让锁的粒度更细。
+当然你也可以图省事而不定义锁表达式，如下代码所示：
+```java
+
+@Service
+public class CountService {
+    
+    // 省略其它代码......
+    
+    @DSynchronized
+    public int incrementAndGet(String key) {
+        return doIncrementAndGet(key);
+    }
+    
+}
+
+```
+
+这样 Hedis 会自动生成锁表达式 , 格式为：`${类名}#${方法名}(${参数类型列表})`，
+如上面的示例代码，生成的锁表达式为： 
+```
+com.terran4j.demo.hedis.CountService#incrementAndGet(java.lang.String)
+```
+这样生成的锁表达式有两个问题：
+1. 代码重构（如包名、类名、方法名改了）后锁名就自动变了，重上线时会有问题。
+2. 一个线程申请到锁后，会阻塞住所有调用此方法的其它线程，可能性能会很差。
+从概念上讲，这有点像数据库中的表锁与行锁的区别，
+因此，`强烈建议仔细的定义锁表达式，千万不要图省事而省略掉它`。
+
