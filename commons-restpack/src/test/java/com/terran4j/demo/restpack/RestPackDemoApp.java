@@ -9,15 +9,15 @@ import com.terran4j.commons.restpack.EnableRestPack;
 
 @EnableRestPack
 @SpringBootApplication
-public class RestPackDemoApplication {
+public class RestPackDemoApp {
 
-    private static final Logger log = LoggerFactory.getLogger(RestPackDemoApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(RestPackDemoApp.class);
 
     public static void main(String[] args) {
         if (log.isInfoEnabled()) {
-            log.info("Starting RestPackDemoApplication...");
+            log.info("Starting RestPackDemoApp...");
         }
-        SpringApplication.run(RestPackDemoApplication.class, args);
+        SpringApplication.run(RestPackDemoApp.class, args);
     }
 
 }

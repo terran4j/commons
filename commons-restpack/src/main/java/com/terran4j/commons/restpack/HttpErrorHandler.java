@@ -6,6 +6,7 @@ import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -22,10 +23,13 @@ public class HttpErrorHandler {
 
     private static final Logger log = LoggerFactory.getLogger(HttpErrorHandler.class);
 
+    @Autowired
+    private HttpResultMapper httpResultMapper;
+
     @ResponseBody
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.OK)
-    public HttpResult handleMissingServletRequestParameterException(
+    public Object handleMissingServletRequestParameterException(
             MissingServletRequestParameterException e, HttpServletRequest request) {
         return toHttpResult(e, request);
     }
@@ -33,11 +37,11 @@ public class HttpErrorHandler {
     @ResponseBody
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public HttpResult handleAllException(Exception e, HttpServletRequest request) {
+    public Object handleAllException(Exception e, HttpServletRequest request) {
         return toHttpResult(e, request);
     }
 
-    private HttpResult toHttpResult(Exception e, HttpServletRequest request) {
+    private Object toHttpResult(Exception e, HttpServletRequest request) {
 
         long t0 = System.currentTimeMillis();
         if (request == null) {
@@ -69,7 +73,7 @@ public class HttpErrorHandler {
         long t = System.currentTimeMillis();
         result.setServerTime(t);
         result.setSpendTime(t - t0);
-        return result;
+        return httpResultMapper.toMap(result);
     }
 
 }
