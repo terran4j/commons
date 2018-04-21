@@ -9,7 +9,12 @@
 ## 目录
 
 * 项目背景
-* ...
+* 引入 Hedis 依赖
+* 在 application.yml 中配置 Redis 
+* 启用 Hedis 服务
+* 使用 CacheService 缓存服务
+* 实现分布式同步
+* 实现轻量级分布式定时调度
 
 ## 项目背景
 
@@ -52,7 +57,7 @@ ${hedis.version} **最新稳定版，请参考 [这里](https://github.com/terra
 您也可以从 [这里](https://github.com/terran4j/commons/tree/master/commons-hedis/src/test/java/com/terran4j/demo/hedis) 获取到。
 
 
-## 配置 Redis
+## 在 application.yml 中配置 Redis 
 
 在 Spring Boot 应用程序中的 application.yml 文件中配置 Redis 服务器的信息，
 如下所示：
@@ -124,8 +129,8 @@ public class HedisDemoApp {
 
 # 使用 CacheService 缓存服务
 
-Hedis 向 Spring 容器中注册了一个 CacheService 服务，它提供读写缓存数据
-的常用接口方法，CacheService 的用法如下代码所示：
+Hedis 向 Spring 容器中注册了一个 CacheService 服务，
+它提供读写缓存数据的常用接口方法，CacheService 的用法如下代码所示：
 
 ```java
 
@@ -175,13 +180,14 @@ CacheService 的实现是基于 Spring 提供的 RedisTemplate 类。
 * 读取 / 写入 整个 Map 数据； 
 * 读取 / 写入 一个 Map 中的单个条目。
 
-这对于大多数缓存的场景，已经足够了，若需要更多的 Redis 接口，可以直接注入：
+这对于大多数缓存的场景，已经足够了，若需要更多的 Redis 接口，可以直接引用：
 * RedisTemplate<String, String> 
 * Jedis
+
 这两个服务，里面有更多的接口方法可用。
 
 
-## 使用分布式同步方法
+## 实现分布式同步
 
 Hedis 还集成了 [Redisson](https://blog.csdn.net/u014042066/article/details/72778440) 开源项目，
 Redisson 基于 Redis 提供了很多的功能强大功能，其中就包括“分布式锁”。
@@ -251,8 +257,8 @@ public class CountService {
 ```
 
 @DSynchronized 类似于 java 提供的 synchronized 关键字，不过不同的是：
-synchronized 只是在 JVM 范围内实现了并发同步，而 @DSynchronized 方法
-是在整个应用程序的集群范围内，也就是多个节点之间实现了并发的同步控制。
+synchronized 只是在 JVM 范围内实现了多线程同步，而 @DSynchronized 方法
+是在整个应用程序的集群范围内，也就是多个节点之间实现了多线程同步。
 
 @DSynchronized 内部是用 Redisson 分布式锁的原理实现的，所以它需要
 提供一个字符串 key 来定义这个锁，这个 key 非常重要，因为会用这个 key 
@@ -308,14 +314,120 @@ public class CountService {
 
 ```
 
-这样 Hedis 会自动生成锁表达式 , 格式为：`${类名}#${方法名}(${参数类型列表})`，
+这样 Hedis 会自动生成锁表达式 , 格式为：`${类名}::${方法名}(${参数类型列表})`，
 如上面的示例代码，生成的锁表达式为： 
 ```
-com.terran4j.demo.hedis.CountService#incrementAndGet(java.lang.String)
+com.terran4j.demo.hedis.CountService::incrementAndGet(java.lang.String)
 ```
 这样生成的锁表达式有两个问题：
 1. 代码重构（如包名、类名、方法名改了）后锁名就自动变了，重上线时会有问题。
-2. 一个线程申请到锁后，会阻塞住所有调用此方法的其它线程，可能性能会很差。
-从概念上讲，这有点像数据库中的表锁与行锁的区别，
-因此，`强烈建议仔细的定义锁表达式，千万不要图省事而省略掉它`。
+2. 一个线程申请到锁后，会阻塞住所有调用此方法的其它线程，可能性能会很差
+    （从概念上讲，这有点像数据库中的表锁与行锁的区别）
 
+因此：`强烈建议仔细的定义锁表达式，千万不要图省事而省略掉它`。
+
+当然，对方法的同步虽然简单，也能满足于大多数同步的需求，
+但还是有不少场景对分布式锁的控制有更复杂的逻辑，
+你可以直接引用`RedissonClient` （Hedis 已经将它注入到 Spring 容器中）服务来实现。
+
+
+## 实现轻量级分布式定时调度
+
+在业务系统中，我们经常需要在后台执行一些定时任务调度，
+用 Spring Scheduling 框架可以很容易的实现，如999999下代码所示：
+
+```java
+
+package com.terran4j.demo.hedis;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+@Service
+public class LoopIncrementJob {
+
+	private static final Logger log = LoggerFactory.getLogger(LoopIncrementJob.class);
+
+	private static final String key = "demo3-scheduling-counter";
+
+	@Autowired
+	private CountService countService;
+
+	@Scheduled(cron = "0/1 * * * * *")
+	public void loopIncrement() {
+		int count = countService.doIncrementAndGet(key);
+		log.info("\nloopIncrement, counter = {}", count);
+	}
+
+}
+
+```
+
+@Scheduled 是 Spring Scheduling 框架提供的注解，cron = "0/1 * * * * *" 是每秒执行一次的意思，
+因此 @Scheduled(cron = "0/1 * * * * *") 就是 Spring Scheduling 框架会
+每秒调用一次 loopIncrement() 方法的意思。
+ 
+但 Spring Scheduling 框架是不支持分布式的，也就是说：
+当应用程序部署到一个集群环境上时，每个节点都会独立的执行这个定时调度。
+ 
+业界有许多提供分布式任务调度的开源项目，如： quartz、TBSchedule、
+elastic-job、Saturn 等，大都偏重量级，资源占用多，部署复杂，学习成本高。
+所以 Hedis 提供了一种非常简单的方式进行分布式调度，
+简单到只加一个 @DScheduling 注解就可以了，如下代码所示：
+ 
+ ```java
+
+package com.terran4j.demo.hedis;
+
+import com.terran4j.commons.hedis.dschedule.DScheduling;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+@Service
+public class LoopIncrementJob {
+
+    private static final Logger log = LoggerFactory.getLogger(LoopIncrementJob.class);
+
+    private static final String key = "demo3-scheduling-counter";
+
+    @Autowired
+    private CountService countService;
+
+    @DScheduling(lockExpiredSecond = 3)
+    @Scheduled(cron = "0/1 * * * * *")
+    public void loopIncrement() {
+        int count = countService.doIncrementAndGet(key);
+        log.info("\nloopIncrement, counter = {}", count);
+    }
+
+}
+
+```
+ 
+@DScheduling 必须修饰在有 @Scheduled 修饰的方法上，
+表示对这个定时任务采用分布式调度的方法，它的算法为：
+1. 每次调用调度方法（如上面的 loopIncrement() 方法）时，都尝试申请一个分布式锁；
+2. 如果没有获取到锁（通常意味其它节点获取到锁了），则本节点跳过本次执行。
+3. 如果获取到锁了，还是看检查上次任务执行的时间：
+    3.1 如果上次任务执行的时间超过了调度周期，则执行本次调度，并记录本次的执行时间（到Redis）；
+    3.2 如果上次任务执行的时间未超过调度周期，则跳过本次调度。
+
+所谓“调度周期”，是指两次相邻的调度执行的时间差，如 cron = "0/1 * * * * *"
+表示每秒调度一次，则“调度周期”为 1 秒。
+@DScheduling 中有一个 lockExpiredSecond 属性，表示分布锁的过期时间，
+建议比调度周期略长，并且要确保任务的执行时间要远小于此 lockExpiredSecond 值。
+
+
+## 声明式缓存
+
+Spring Cache 提供了声明式缓存，即在方法上定义一些注解即可对数据进行缓存，
+不清楚的朋友们可先从这篇文章进行了解： [Spring Cache相关注解介绍](https://blog.csdn.net/poorcoder_/article/details/55258253)
+
+而 Hedis 注入了 RedisCacheManager 服务，以实现了声明式缓存。
+（其实主要是 Spring Cache 在起作用，本文就不过多介绍了，有问题请百度！）

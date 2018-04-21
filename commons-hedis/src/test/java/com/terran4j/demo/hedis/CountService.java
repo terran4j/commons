@@ -16,7 +16,7 @@ public class CountService {
     /**
      * 一个没有并发控制的递增计算，需要调用方避免并发访问。
      */
-    private int doIncrementAndGet(String key) {
+    public int doIncrementAndGet(String key) {
         // 从 Redis 缓存中取出计数器变量：
         Integer counter;
         try {

@@ -20,7 +20,8 @@ public class ClassesTest {
         Method method = Classes.getMethod(ClassesTest.class,
                 "doAction", args, null);
         String methodId = Classes.toIdentify(method);
-        String expectId = "com.terran4j.common.util.ClassesTest#doAction(java.lang.String,java.util.List)";
+        String expectId = "com.terran4j.common.util.ClassesTest::doAction" +
+                "(java.lang.String,java.util.List)";
         Assert.assertEquals(expectId, methodId);
     }
 

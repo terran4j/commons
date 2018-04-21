@@ -108,22 +108,35 @@ public class DSchedulingAspect {
 
         // 被加上 Scheduled 注解的方法，都是没有参数的，
         // 因此可以用“类名 + 方法名”唯一标识一个任务。
-        // 但是“类名 + 方法名”很长，有的类是动态类，类名不一定一样，
+        // 但是“类名 + 方法名”很长，
         // 应用方需要自己设置distributedScheduling 的唯一标识。
         String value = distributedScheduling.value();
-        checkValue(value, method);
+        if (StringUtils.isEmpty(value)) {
+            value = Classes.toIdentify(method);
+        } else {
+            checkValue(value, method);
+        }
         if (log.isInfoEnabled()) {
             log.info("start to DistributedScheduling '{}' at: {}", value,
                     DateTimes.toString(new Date()));
         }
 
+        // 计算锁的超时时间。
+        long lockExpiredSecond = distributedScheduling.lockExpiredSecond();
+        if (lockExpiredSecond <= 0) {
+            lockExpiredSecond = 24 * 3600; // 当小于 0 时，设置一个超大的值。
+        }
+        long lockExpired = lockExpiredSecond * 1000;
+        // 获取锁的等待时间较短，长时间等待会阻塞当前线程。
+        long lockWaitTime = Math.max(lockExpired * 2 / 3, 3000);
+        // 任务信息保存时间要比锁要长一些。
+        long jobInfoExpired = lockExpired * 4 / 3;
+
         // 尝试从 redis 中获取分布式锁，如果没有获取到锁，就不执行本次调度。
         String jobInfoKey = "hedis.sj-" + value;
         String lockKey = "hedis.sl-" + value;
-        long lockExpired = distributedScheduling.lockExpiredSecond() * 1000;
-        long jobInfoExpired = lockExpired * 2; // 任务信息保存时间要比锁长，目前设置为 2 倍。
         RLock lock = redissonClient.getLock(lockKey);
-        boolean locked = lock.tryLock(lockExpired, lockExpired, TimeUnit.MILLISECONDS);
+        boolean locked = lock.tryLock(lockWaitTime, lockExpired, TimeUnit.MILLISECONDS);
         if (!locked) {
             // 没有取到锁，不执行任务。
             if (log.isInfoEnabled()) {
@@ -132,9 +145,7 @@ public class DSchedulingAspect {
             }
             return null;
         } else {
-            if (log.isInfoEnabled()) {
-                log.info("get the lock by instance: {}", instanceId);
-            }
+            log.info("get the lock by instance: {}", instanceId);
         }
 
         // 查看上次的执行时间，如果没到这次的执行时间，也应该避免。

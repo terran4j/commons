@@ -499,7 +499,7 @@ public class Classes {
 
     public static final String toIdentify(Method method) {
         StringBuffer sb = new StringBuffer();
-        sb.append(method.getDeclaringClass().getName()).append("#").append(method.getName()).append("(");
+        sb.append(method.getDeclaringClass().getName()).append("::").append(method.getName()).append("(");
         Class<?>[] paramTypes = method.getParameterTypes();
         if (paramTypes != null && paramTypes.length > 0) {
             String[] paramTypeNames = new String[paramTypes.length];
