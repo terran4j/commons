@@ -1,4 +1,4 @@
-package com.terran4j.commons.restpack;
+package com.terran4j.commons.restpack.impl;
 
 public class ExceptionHolder {
 

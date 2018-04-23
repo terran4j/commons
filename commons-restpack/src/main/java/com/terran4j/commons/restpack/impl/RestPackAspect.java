@@ -1,5 +1,6 @@
-package com.terran4j.commons.restpack;
+package com.terran4j.commons.restpack.impl;
 
+import com.terran4j.commons.restpack.RestPackController;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.Strings;
 import org.aspectj.lang.JoinPoint;

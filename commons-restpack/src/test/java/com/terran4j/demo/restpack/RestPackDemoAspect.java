@@ -1,6 +1,5 @@
 package com.terran4j.demo.restpack;
 
-import com.terran4j.commons.restpack.ExceptionHolder;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.ErrorCodes;
 import org.aspectj.lang.JoinPoint;

@@ -3,6 +3,7 @@ package com.terran4j.commons.restpack;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.terran4j.commons.restpack.impl.RestPackAspect;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;

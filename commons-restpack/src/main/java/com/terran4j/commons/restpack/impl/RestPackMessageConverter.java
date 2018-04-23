@@ -1,4 +1,4 @@
-package com.terran4j.commons.restpack;
+package com.terran4j.commons.restpack.impl;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;

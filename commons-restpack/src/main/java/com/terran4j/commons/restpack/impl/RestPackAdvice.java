@@ -1,5 +1,6 @@
-package com.terran4j.commons.restpack;
+package com.terran4j.commons.restpack.impl;
 
+import com.terran4j.commons.restpack.HttpResult;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;

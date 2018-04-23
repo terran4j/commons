@@ -1,5 +1,6 @@
 package com.terran4j.commons.restpack;
 
+import com.terran4j.commons.restpack.config.RestPackConfiguration;
 import com.terran4j.commons.website.config.WebsiteConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -15,7 +16,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @EnableWebMvc
-@Import({RestPackConfiguration.class, WebsiteConfiguration.class})
+@Import({
+        RestPackConfiguration.class,
+        WebsiteConfiguration.class
+})
 public @interface EnableRestPack {
 
 }

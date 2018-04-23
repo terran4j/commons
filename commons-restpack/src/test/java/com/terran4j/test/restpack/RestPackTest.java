@@ -1,7 +1,7 @@
 package com.terran4j.test.restpack;
 
 import com.terran4j.commons.restpack.RestPackIgnore;
-import com.terran4j.commons.restpack.RestPackUtils;
+import com.terran4j.commons.restpack.impl.RestPackUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

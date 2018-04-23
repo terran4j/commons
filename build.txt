@@ -3,6 +3,9 @@
 mvn versions:set "-DnewVersion=1.0.2-SNAPSHOT"
 mvn versions:commit
 
+## 当版本为 SNAPSHOT 时的测试：
+mvn clean test
+
 ## 当版本为 SNAPSHOT 时的部署：
 mvn clean deploy -DskipTests
 

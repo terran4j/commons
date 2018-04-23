@@ -3,7 +3,7 @@ package com.terran4j.test.restpack;
 import com.terran4j.commons.restpack.EnableRestPack;
 import com.terran4j.commons.restpack.HttpResult;
 import com.terran4j.commons.restpack.HttpResultConverter;
-import com.terran4j.commons.restpack.HttpResultMapper;
+import com.terran4j.commons.restpack.impl.HttpResultMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

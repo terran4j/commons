@@ -1,5 +1,8 @@
-package com.terran4j.commons.restpack;
+package com.terran4j.commons.restpack.impl;
 
+import com.terran4j.commons.restpack.HttpResult;
+import com.terran4j.commons.restpack.HttpResultConverter;
+import com.terran4j.commons.restpack.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
@@ -8,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ConfigurationProperties(prefix = "terran4j.restpack.renaming")
-@Service
 public class HttpResultMapper {
 
     private String requestId = "requestId";
@@ -91,6 +93,7 @@ public class HttpResultMapper {
         this.success = success;
     }
 
+    @Log
     public Map<String, Object> toMap(HttpResult httpResult) {
         if (httpResult == null) {
             throw new NullPointerException("httpResult is null.");

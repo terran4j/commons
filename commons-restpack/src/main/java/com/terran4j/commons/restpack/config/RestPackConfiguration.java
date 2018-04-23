@@ -1,4 +1,4 @@
-package com.terran4j.commons.restpack;
+package com.terran4j.commons.restpack.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.terran4j.commons.restpack.impl.*;
+import com.terran4j.commons.restpack.log.RestPackLogAspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
@@ -147,10 +150,15 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
         return new RestPackAdvice();
     }
 
-//    @Bean
-//    public HttpResultMapper httpResultMapper() {
-//        return new HttpResultMapper();
-//    }
+    @Bean
+    public RestPackLogAspect restPackLogAspect() {
+        return new RestPackLogAspect();
+    }
+
+    @Bean
+    public HttpResultMapper httpResultMapper() {
+        return new HttpResultMapper();
+    }
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {

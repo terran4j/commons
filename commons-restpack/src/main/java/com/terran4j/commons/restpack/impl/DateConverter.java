@@ -1,4 +1,4 @@
-package com.terran4j.commons.restpack;
+package com.terran4j.commons.restpack.impl;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.StringUtils;

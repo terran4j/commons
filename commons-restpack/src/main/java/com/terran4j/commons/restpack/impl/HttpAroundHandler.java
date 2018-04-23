@@ -1,8 +1,9 @@
-package com.terran4j.commons.restpack;
+package com.terran4j.commons.restpack.impl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.terran4j.commons.restpack.HttpResult;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 /**

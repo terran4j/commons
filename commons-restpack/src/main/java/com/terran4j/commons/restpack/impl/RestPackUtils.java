@@ -1,7 +1,7 @@
-package com.terran4j.commons.restpack;
+package com.terran4j.commons.restpack.impl;
 
+import com.terran4j.commons.restpack.RestPackIgnore;
 import com.terran4j.commons.util.Beans;
-import com.terran4j.commons.util.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
