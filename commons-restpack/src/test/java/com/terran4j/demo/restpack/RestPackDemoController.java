@@ -1,7 +1,7 @@
 package com.terran4j.demo.restpack;
 
 import com.terran4j.commons.restpack.RestPackController;
-import com.terran4j.commons.restpack.log.Log;
+import com.terran4j.commons.restpack.Log;
 import com.terran4j.commons.util.error.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class RestPackDemoController {
 
     /**
      * http://localhost:8080/demo/restpack/echo?msg=abc
-     * curl "http://localhost:8080/demo/restpack/echo?msg=abc"
+     * curl -H "DEBUG=true" "http://localhost:8080/demo/restpack/echo?msg=abc"
      * TODO: 不知为什么，当使用 @GetMapping 时，框架不能自动设置
      * Content-Type 为 application/json;charset=UTF-8 ，
      * 因此这里用 produces 参数手动设置一下。

@@ -2,7 +2,6 @@ package com.terran4j.demo.restpack;
 
 import com.terran4j.commons.restpack.HttpResult;
 import com.terran4j.commons.restpack.HttpResultConverter;
-import com.terran4j.commons.restpack.log.Log;
 import org.springframework.stereotype.Service;
 
 @Service

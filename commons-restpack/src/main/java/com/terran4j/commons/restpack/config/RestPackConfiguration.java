@@ -20,7 +20,6 @@ import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
@@ -153,6 +152,11 @@ public class RestPackConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public RestPackLogAspect restPackLogAspect() {
         return new RestPackLogAspect();
+    }
+
+    @Bean
+    public RestPackConfig restPackConfig() {
+        return new RestPackConfig();
     }
 
     @Bean

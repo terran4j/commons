@@ -1,6 +1,7 @@
 package com.terran4j.commons.restpack.impl;
 
 import com.terran4j.commons.restpack.RestPackController;
+import com.terran4j.commons.restpack.log.RestPackLogAppender;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.Strings;
 import org.aspectj.lang.JoinPoint;
@@ -22,12 +23,11 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * 本切面拦截有<code>@RequestMapping</code>注解，并且类上有<code>HttpResultPackController</code>注解的方法：<br>
+ * 本切面拦截有<code>@RequestMapping</code>注解，
+ * 并且类上有<code>HttpResultPackController</code>注解的方法：<br>
  * 1. 生成并记录 requestId.<br>
  * 2. 记录开始时间。<br>
  * 3. 记录异常对象。
- *
- * @author jiangwei
  */
 @Aspect
 @Order(1)
@@ -55,6 +55,9 @@ public class RestPackAspect {
     public static final Logger getLog() {
         return bufferLog.get();
     }
+
+//    @Autowired
+//    private RestPackConfig restPackConfig;
 
     public RestPackAspect() {
         super();
@@ -100,8 +103,6 @@ public class RestPackAspect {
 
     /**
      * 记录请求日志、requestId、开始处理时间。
-     *
-     * @param point
      */
     @Before(POINTCUT_EXP)
     public void doBefore(JoinPoint point) {
@@ -114,6 +115,15 @@ public class RestPackAspect {
 
         // 写入 ThreadLocal 数据之前，先清除以前的历史数据（如果有的话）。
         clearThreadLocal();
+
+        // 如果探测到 RestPackLogAppender 被启用，才启用 debug 模式
+        if (RestPackLogAppender.isActive()) {
+            String logEnabled = request.getHeader(RestPackLogAppender.KEY_LOG_ENABLED);
+            if ("true".equals(logEnabled)) {
+                String logPattern = request.getHeader(RestPackLogAppender.KEY_LOG_PATTERN);
+                RestPackLogAppender.logEnabled(logPattern);
+            }
+        }
 
         // 只有类上或父类上有 @HttpResultPackController 注解的，才需要打包返回结果。
         Object target = point.getTarget();
@@ -165,7 +175,8 @@ public class RestPackAspect {
     }
 
     public static String generateRequestId() {
-        return UUID.randomUUID().toString().replace("-", "");
+        return UUID.randomUUID().toString().replace("-",
+                "");
     }
 
     static void clearThreadLocal() {
@@ -173,5 +184,6 @@ public class RestPackAspect {
         bufferBeginTime.remove();
         ExceptionHolder.remove();
         bufferLog.remove();
+        RestPackLogAppender.logClear();
     }
 }

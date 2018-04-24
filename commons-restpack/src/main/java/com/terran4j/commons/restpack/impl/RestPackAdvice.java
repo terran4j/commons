@@ -1,6 +1,9 @@
 package com.terran4j.commons.restpack.impl;
 
+import ch.qos.logback.classic.PatternLayout;
 import com.terran4j.commons.restpack.HttpResult;
+import com.terran4j.commons.restpack.log.RestPackLogAppender;
+import com.terran4j.commons.restpack.LogItem;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.ErrorCodes;
 import org.slf4j.Logger;
@@ -15,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+
+import java.util.List;
 
 /**
  * 本类负责将原始返回值、或异常类包裹在 HttpResult 对象中。
@@ -74,12 +79,16 @@ public class RestPackAdvice implements ResponseBodyAdvice<Object> {
         if (requestId != null) {
             result.setRequestId(requestId);
         }
+
         Long beginTime = RestPackAspect.getBeginTime();
         if (beginTime != null) {
             result.setServerTime(beginTime);
             long spendTime = System.currentTimeMillis() - beginTime;
             result.setSpendTime(spendTime);
         }
+
+        List<String> logs = RestPackLogAppender.getLogs();
+        result.setLogs(logs);
     }
 
     BusinessException convert(Throwable e) {

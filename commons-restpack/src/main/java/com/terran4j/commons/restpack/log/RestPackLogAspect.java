@@ -1,5 +1,6 @@
 package com.terran4j.commons.restpack.log;
 
+import com.terran4j.commons.restpack.Log;
 import com.terran4j.commons.util.Classes;
 import com.terran4j.commons.util.Strings;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -23,7 +24,7 @@ import java.lang.reflect.Method;
 @Component
 public class RestPackLogAspect {
 
-    @Around("@annotation(com.terran4j.commons.restpack.log.Log)")
+    @Around("@annotation(com.terran4j.commons.restpack.Log)")
     public Object doLog(ProceedingJoinPoint point) throws Throwable {
 
         Object target = point.getTarget();
@@ -52,7 +53,7 @@ public class RestPackLogAspect {
             if (args != null && args.length > 0) {
                 String argsText = Strings.toString(args);
                 if (argsText.length() > 100) {
-                    argsText = argsText.substring(0, 100) + "...";
+                    argsText = argsText.substring(0, 100) + "......";
                 }
                 log.info("{} begin, args = {}", actionName, argsText);
             } else {
