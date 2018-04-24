@@ -129,6 +129,18 @@ public class Api2DocController {
         return md2HtmlPage(md, title, model);
     }
 
+    @RequestMapping(value = "/test/{fid}/{id}.html", method = RequestMethod.GET)
+    public String api2test(
+            @PathVariable("fid") String folderId, @PathVariable("id") String id,
+            Map<String, Object> model) throws Exception {
+        ApiDocObject doc = docPageBuilder.getDocObject(folderId, id);
+        model.put("doc", doc);
+        model.put("v", apiDocService.getComponentVersion());
+//        String md = docPageBuilder.doc2Md(doc);
+//        String title = doc.getName();
+        return "api2doc/test";
+    }
+
     public String md2HtmlPage(String md, String title,
                               Map<String, Object> model) throws Exception {
         if (title != null) {

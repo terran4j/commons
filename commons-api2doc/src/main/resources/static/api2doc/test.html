@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Api2Doc 接口测试</title>
+
+    <!--
+        使用 rem 布局，使 H5 页面能适配不同设备屏幕尺寸
+        flexible-lite-1.0.js 用于计算 html 根元素的 font-size 大小
+        然后 css 或 less 中所有的尺寸值一定要用 rem 单位，而不是 px 或其它单位。
+    -->
+    <meta charset="UTF-8" name="viewport"
+          content="width=device-width,initial-scale=1,user-scalable=0"/>
+    <script src="./flexible-lite/flexible-lite-1.0.js"></script>
+    <script type="text/javascript">
+        flex(1000);
+    </script>
+
+    <!-- 使用了 element-ui 实现一些控件，element-ui 又用了 vue，因此都要引用 -->
+    <link href="./element-ui/element-ui.min.css" rel="stylesheet">
+    <script src="./vue/vue-2.5.10.min.js"></script>
+    <script src="./element-ui/element-ui.min.js"></script>
+
+    <!--
+            务必确保在 less.js 之前加载你的样式表。
+            如果加载多个 .less 样式表文件，每个文件都会被单独编译。
+            因此，一个文件中所定义的任何变量、mixin 或命名空间都无法在其它文件中访问。
+    -->
+    <link href="./css/test.less" rel="stylesheet/less" type="text/css">
+    <script src="./less/less-1.7.0.js" type="text/javascript"></script>
+
+    <!-- 使代码根据语法显示样式（如：高亮等） -->
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+
+</head>
+<body>
+
+<div id="app" class="test-app" v-loading.fullscreen.lock="loading"
+     element-loading-text="拼命加载中...">
+
+    <h2>XXX接口测试</h2>
+
+    <div class="request">
+        <div class="request-method">
+            <el-select v-model="defaultHttpMethod">
+                <el-option
+                        v-for="item in httpMethods"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                </el-option>
+            </el-select>
+        </div>
+        <div class="request-url">
+            <el-input v-model="url" placeholder="请输入URL"></el-input>
+        </div>
+        <div class="request-send">
+            <el-button type="primary">发送</el-button>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="param">
+        <h3 class="param-title">请求参数</h3>
+        <div class="item" v-for="item in params">
+            <div class="item-key">
+                <el-input v-model="item.key" placeholder="参数名" />
+            </div>
+            <div class="item-value">
+                <el-input v-model="item.value" placeholder="参数值" />
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+    <div class="header">
+        <h3 class="header-title">Header</h3>
+        <div class="item" v-for="item in headers">
+            <div class="item-key">
+                <el-input v-model="item.key" placeholder="参数名" />
+            </div>
+            <div class="item-value">
+                <el-input v-model="item.value" placeholder="参数值" />
+            </div>
+            <div class="clear"></div>
+        </div>
+        <el-button type="primary" @click="newHeader()">+</el-button>
+    </div>
+
+    <div class="send">
+        <el-button type="primary">发送</el-button>
+    </div>
+
+
+</div>
+<script type="text/javascript">
+
+    // 如果网速不给力导致加载太慢时，
+    // 会让页面先出现一个“拼命加载中...”的提示，
+    // 加载完成后再显示文档内容。
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                loading: true,
+                httpMethods: ['GET', 'POST'],
+                defaultHttpMethod: 'GET',
+                url: "http://localhost:8080/",
+                params: [
+                    { key: "k1", value: "v1"},
+                    { key: "k2", value: "v2"},
+                ],
+                headers: [
+                    { key: "h1", value: "v1"},
+                    { key: "h2", value: "v2"},
+                ]
+            }
+        },
+        methods: {
+            newHeader: function () {
+                console.log("newHeader");
+                this.headers.push({key: "", value: ""});
+            }
+        },
+        created: function () {
+            var _self = this;
+            _self.loading = false;
+        }
+    });
+</script>
+
+</body>
+</html>
