@@ -58,47 +58,88 @@
         <div class="request-url">
             <el-input v-model="url" placeholder="请输入URL"></el-input>
         </div>
-        <div class="request-send">
-            <el-button type="primary">发送</el-button>
+        <div class="clear"></div>
+    </div>
+
+    <div class="params">
+        <h3>请求参数</h3>
+        <div class="item-list">
+            <div class="item" v-for="item in params">
+                <div class="item-key">
+                    <el-input v-model="item.key" placeholder="参数名"/>
+                </div>
+                <div class="item-value">
+                    <el-input v-model="item.value" placeholder="参数值"/>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="item-new">
+            <el-button type="primary" @click="newParam()">+</el-button>
         </div>
         <div class="clear"></div>
     </div>
 
-    <div class="param">
-        <h3 class="param-title">请求参数</h3>
-        <div class="item" v-for="item in params">
-            <div class="item-key">
-                <el-input v-model="item.key" placeholder="参数名" />
+    <div class="headers">
+        <h3>请求Header</h3>
+        <div class="item-list">
+            <div class="item" v-for="item in headers">
+                <div class="item-key">
+                    <el-input v-model="item.key" placeholder="参数名"/>
+                </div>
+                <div class="item-value">
+                    <el-input v-model="item.value" placeholder="参数值"/>
+                </div>
+                <div class="clear"></div>
             </div>
-            <div class="item-value">
-                <el-input v-model="item.value" placeholder="参数值" />
-            </div>
-            <div class="clear"></div>
         </div>
-    </div>
-
-    <div class="header">
-        <h3 class="header-title">Header</h3>
-        <div class="item" v-for="item in headers">
-            <div class="item-key">
-                <el-input v-model="item.key" placeholder="参数名" />
-            </div>
-            <div class="item-value">
-                <el-input v-model="item.value" placeholder="参数值" />
-            </div>
-            <div class="clear"></div>
+        <div class="item-new">
+            <el-button type="primary" @click="newHeader()">+</el-button>
         </div>
-        <el-button type="primary" @click="newHeader()">+</el-button>
+        <div class="clear"></div>
     </div>
 
     <div class="send">
         <el-button type="primary">发送</el-button>
     </div>
 
+    <div class="response">
+        <h3>返回结果</h3>
+        <pre class="response-code"><code class="language-json hljs">
+{
+  "requestId" : "a22c721867984258846686b89dbf82db",
+  "serverTime" : 1524039750370,
+  "spendTime" : 5,
+  "resultCode" : "success"
+}
+        </code></pre>
+    </div>
+
+    <div class="output">
+        <h3>输出日志</h3>
+        <pre class="output-logs"><code>
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v1.5.9.RELEASE)
+
+2018-04-26 10:42:19.193  INFO 2328 --- [           main] c.terran4j.demo.api2doc.Api2DocDemoApp   : Starting Api2DocDemoApp on DESKTOP-32DF0L3 with PID 2328 (C:\Users\jiangwei\IdeaProjects\commons\commons-api2doc\target\test-classes started by jiangwei in C:\Users\jiangwei\IdeaProjects\commons)
+2018-04-26 10:42:19.200  INFO 2328 --- [           main] c.terran4j.demo.api2doc.Api2DocDemoApp   : No active profile set, falling back to default profiles: default
+2018-04-26 10:42:19.479  INFO 2328 --- [           main] ationConfigEmbeddedWebApplicationContext : Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@4a22f9e2: startup date [Thu Apr 26 10:42:19 CST 2018]; root of context hierarchy
+2018-04-26 10:42:24.188  INFO 2328 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'api2DocService' of type [com.terran4j.commons.api2doc.impl.Api2DocService] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-04-26 10:42:26.506  INFO 2328 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat initialized with port(s): 8080 (http)
+2018-04-26 10:42:26.529  INFO 2328 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2018-04-26 10:42:26.531  INFO 2328 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.23
+2018-04-26 10:42:27.034  INFO 2328 --- [ost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+        </code></pre>
+    </div>
 
 </div>
 <script type="text/javascript">
-
     // 如果网速不给力导致加载太慢时，
     // 会让页面先出现一个“拼命加载中...”的提示，
     // 加载完成后再显示文档内容。
@@ -111,16 +152,20 @@
                 defaultHttpMethod: 'GET',
                 url: "http://localhost:8080/",
                 params: [
-                    { key: "k1", value: "v1"},
-                    { key: "k2", value: "v2"},
+                    {key: "k1", value: "v1"},
+                    {key: "k2", value: "v2"},
                 ],
                 headers: [
-                    { key: "h1", value: "v1"},
-                    { key: "h2", value: "v2"},
+                    {key: "h1", value: "v1"},
+                    {key: "h2", value: "v2"},
                 ]
             }
         },
         methods: {
+            newParam: function () {
+                console.log("newParam");
+                this.params.push({key: "", value: ""});
+            },
             newHeader: function () {
                 console.log("newHeader");
                 this.headers.push({key: "", value: ""});

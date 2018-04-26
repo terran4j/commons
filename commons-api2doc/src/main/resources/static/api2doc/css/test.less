@@ -1,36 +1,26 @@
-@menu-color: white;
+@left-space: 1rem;
 
-//html {
-//  overflow: hidden;
+h2 {
+  margin-left: @left-space;
+}
+
+//h3 {
+//  margin-left: @left-space;
 //}
 
 .clear {
   clear: both;
 }
 
-.request {
-  width: 100%;
-}
+//////////////////////////////////////////////////////////////////
 
-.request-method {
-  width: 7rem;
-  margin-left: 1rem;
+.item-list {
   float: left;
 }
 
-.request-url {
-  width: 52.6rem;
+.item-new {
   margin-left: 1rem;
   float: left;
-}
-
-.request-send {
-  margin-left: 1rem;
-  float: left;
-}
-
-.param {
-  margin-top: 2rem;
 }
 
 .item {
@@ -49,3 +39,61 @@
   float: left;
 }
 
+/////////////////////////////////////////////////////////////////
+
+.request {
+  width: 80%;
+  margin-left: @left-space;
+}
+
+.request-method {
+  width: 7rem;
+  margin-left: @left-space;
+  float: left;
+}
+
+.request-url {
+  width: 52.6rem;
+  margin-left: 1rem;
+  float: left;
+}
+
+.params {
+  margin-top: 2rem;
+  margin-left: @left-space;
+}
+
+.headers {
+  margin-top: 2rem;
+  margin-left: @left-space;
+}
+
+.send {
+  margin-left: @left-space;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+/////////////////////////////////////////////////////////////////
+
+.response {
+  margin-left: @left-space;
+  width: 80%;
+}
+
+.response-code {
+  margin-left: @left-space;
+}
+
+//////////////////////////////////////////////////////////
+
+.output {
+  margin-left: @left-space;
+  width: 80%;
+}
+
+pre.output-logs {
+  margin-left: @left-space;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
