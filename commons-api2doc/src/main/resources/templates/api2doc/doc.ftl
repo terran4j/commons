@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <#if title ??>
-        <title>${title}</title>
-    </#if>
+<#if title ??>
+    <title>${title}</title>
+</#if>
     <!--
         使用 rem 布局，使 H5 页面能适配不同设备屏幕尺寸
         flexible-lite-1.0.js 用于计算 html 根元素的 font-size 大小
@@ -20,6 +20,7 @@
             如果加载多个 .less 样式表文件，每个文件都会被单独编译。
             因此，一个文件中所定义的任何变量、mixin 或命名空间都无法在其它文件中访问。
     -->
+    <link rel="stylesheet/less" type="text/css" href="/api2doc/css/doc.less?v=${v}">
     <link rel="stylesheet/less" type="text/css" href="/api2doc/css/md.less?v=${v}">
     <script type="text/javascript" src="/website/less/less-1.7.0.js"></script>
 
@@ -33,9 +34,13 @@
 
 </head>
 <body>
+<div class="test-entry">
+    <a href="/api2doc/test.html">接口测试</a>
+</div>
+<div class="clear"/>
 <#if title ??>
-    <div class="title">${title}</div>
+<div class="title">${title}</div>
 </#if>
-    <div class="content">${content}</div>
+<div class="content">${content}</div>
 </body>
 </html>
