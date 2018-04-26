@@ -1,4 +1,5 @@
 @left-space: 1rem;
+@font-base-size: 1rem;
 
 h2 {
   margin-left: @left-space;
@@ -14,32 +15,55 @@ h2 {
 
 //////////////////////////////////////////////////////////////////
 
-.item-list {
-  float: left;
+.items {
+  margin-top: 2rem;
+  margin-left: @left-space;
 }
 
-.item-new {
-  margin-left: 1rem;
+.items-desc {
+  font-size: @font-base-size;
+  margin-left: @left-space;
+  margin-bottom: 0.5rem;
+}
+
+.item-list {
   float: left;
+  width: 95%;
 }
 
 .item {
   margin-bottom: 0.5rem;
+  margin-right: 2rem;
+  width: 45%;
+  float: left;
 }
 
 .item-key {
-  width: 20rem;
-  margin-left: 1rem;
+  width: 25%;
+  margin-left: @left-space;
+  float: left;
+}
+
+.item-split {
+  margin-top: 0.7rem;
+  margin-left: 0.3rem;
+  font-size: @font-base-size;
   float: left;
 }
 
 .item-value {
-  width: 40rem;
-  margin-left: 0.5rem;
+  width: 65%;
+  margin-left: 0.1rem;
   float: left;
 }
 
-/////////////////////////////////////////////////////////////////
+.item-new {
+  margin-left: @left-space;
+  float: left;
+  clear: both;
+}
+
+////////////////////////////////////////////////////////////////////////
 
 .request {
   width: 80%;
@@ -58,26 +82,23 @@ h2 {
   float: left;
 }
 
-.params {
-  margin-top: 2rem;
+.request-send {
   margin-left: @left-space;
+  float: left;
 }
+
+/////////////////////////////////////////////////////////////////////////
 
 .headers {
   margin-top: 2rem;
   margin-left: @left-space;
 }
 
-.send {
-  margin-left: @left-space;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-}
-
-/////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 .response {
   margin-left: @left-space;
+  margin-top: 4rem;
   width: 95%;
 }
 
@@ -85,7 +106,7 @@ h2 {
   margin-left: @left-space;
 }
 
-//////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
 
 .output {
   margin-left: @left-space;
@@ -96,4 +117,5 @@ pre.output-logs {
   margin-left: @left-space;
   white-space: pre-wrap;
   word-wrap: break-word;
+  background-color: #F0F0F0;
 }

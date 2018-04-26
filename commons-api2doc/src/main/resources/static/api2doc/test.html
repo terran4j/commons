@@ -20,6 +20,9 @@
     <script src="./vue/vue-2.5.10.min.js"></script>
     <script src="./element-ui/element-ui.min.js"></script>
 
+    <!-- 使用 jQuery 来操作页面元素，ajax 加载数据。 -->
+    <script src="./jquery/jquery-3.3.1.min.js"></script>
+
     <!--
             务必确保在 less.js 之前加载你的样式表。
             如果加载多个 .less 样式表文件，每个文件都会被单独编译。
@@ -46,28 +49,33 @@
 
     <div class="request">
         <div class="request-method">
-            <el-select v-model="defaultHttpMethod">
-                <el-option
-                        v-for="item in httpMethods"
-                        :key="item"
-                        :label="item"
-                        :value="item">
+            <el-select v-model="apiInfo.defaultMethod">
+                <el-option v-for="item in apiInfo.methods"
+                           :key="item" :label="item" :value="item">
                 </el-option>
             </el-select>
         </div>
         <div class="request-url">
-            <el-input v-model="url" placeholder="请输入URL"></el-input>
+            <el-input v-model="apiInfo.url" placeholder="请输入URL"></el-input>
+        </div>
+        <div class="request-send">
+            <el-button type="primary">发送</el-button>
         </div>
         <div class="clear"></div>
     </div>
 
-    <div class="params">
+    <div class="items">
         <h3>请求参数</h3>
+        <div class="items-desc">
+            如果是 POST 方法，这些请求参数会放在 Body 中；
+            如果是其它方法（如：GET / PUT / DELETE / PATCH 等），则会放在 URL 的 Query 串中。
+        </div>
         <div class="item-list">
-            <div class="item" v-for="item in params">
+            <div class="item" v-for="item in apiInfo.params">
                 <div class="item-key">
                     <el-input v-model="item.key" placeholder="参数名"/>
                 </div>
+                <div class="item-split">：</div>
                 <div class="item-value">
                     <el-input v-model="item.value" placeholder="参数值"/>
                 </div>
@@ -80,13 +88,14 @@
         <div class="clear"></div>
     </div>
 
-    <div class="headers">
+    <div class="items">
         <h3>请求Header</h3>
         <div class="item-list">
-            <div class="item" v-for="item in headers">
+            <div class="item" v-for="item in apiInfo.headers">
                 <div class="item-key">
                     <el-input v-model="item.key" placeholder="参数名"/>
                 </div>
+                <div class="item-split">：</div>
                 <div class="item-value">
                     <el-input v-model="item.value" placeholder="参数值"/>
                 </div>
@@ -97,10 +106,6 @@
             <el-button type="primary" @click="newHeader()">+</el-button>
         </div>
         <div class="clear"></div>
-    </div>
-
-    <div class="send">
-        <el-button type="primary">发送</el-button>
     </div>
 
     <div class="response">
@@ -117,7 +122,7 @@
 
     <div class="output">
         <h3>输出日志</h3>
-        <pre class="output-logs"><code>
+        <pre class="output-logs">
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -135,7 +140,7 @@
 2018-04-26 10:42:26.529  INFO 2328 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
 2018-04-26 10:42:26.531  INFO 2328 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.23
 2018-04-26 10:42:27.034  INFO 2328 --- [ost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-        </code></pre>
+        </pre>
     </div>
 
 </div>
@@ -148,31 +153,40 @@
         data: function () {
             return {
                 loading: true,
-                httpMethods: ['GET', 'POST'],
-                defaultHttpMethod: 'GET',
-                url: "http://localhost:8080/",
-                params: [
-                    {key: "k1", value: "v1"},
-                    {key: "k2", value: "v2"},
-                ],
-                headers: [
-                    {key: "h1", value: "v1"},
-                    {key: "h2", value: "v2"},
-                ]
+                apiInfo: {
+                    methods: ['GET', 'POST'],
+                    defaultMethod: 'GET',
+                    url: "http://localhost:8080/",
+                    params: [
+                        {key: "k1", value: "v1"},
+                        {key: "k2", value: "v2"},
+                    ],
+                    headers: [
+                        {key: "h1", value: "v1"},
+                        {key: "h2", value: "v2"},
+                    ]
+                }
             }
         },
         methods: {
             newParam: function () {
                 console.log("newParam");
-                this.params.push({key: "", value: ""});
+                this.apiInfo.params.push({key: "", value: ""});
             },
             newHeader: function () {
                 console.log("newHeader");
-                this.headers.push({key: "", value: ""});
+                this.apiInfo.headers.push({key: "", value: ""});
             }
         },
         created: function () {
             var _self = this;
+//            jQuery.ajax({
+//                type: 'GET',
+//                url: '...',
+//                success: function (data) {
+//                    _self.apiInfo = JSON.stringify(data);
+//                }
+//            });
             _self.loading = false;
         }
     });
