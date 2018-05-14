@@ -58,9 +58,6 @@
         <div class="request-url">
             <el-input v-model="apiInfo.url" placeholder="请输入URL"></el-input>
         </div>
-        <div class="request-send">
-            <el-button type="primary">发送</el-button>
-        </div>
         <div class="clear"></div>
     </div>
 
@@ -104,6 +101,13 @@
         </div>
         <div class="item-new">
             <el-button type="primary" @click="newHeader()">+</el-button>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="send">
+        <div class="send-button">
+            <el-button type="primary">发送</el-button>
         </div>
         <div class="clear"></div>
     </div>
