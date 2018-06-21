@@ -144,8 +144,8 @@ public class UserController {
 @RequestMapping(value = "/api2doc/demo2")
 public class UserController2 {
 
-    @ApiComment("向用户组中添加用户，可以指定用户的类型")
-    @RequestMapping(name = "添加用户",
+    @ApiComment("添加一个新的用户。")
+    @RequestMapping(name = "新增用户",
             value = "/user", method = RequestMethod.POST)
     public User addUser(String group, String name, String type) {
         return null; // TODO:  还未实现。
