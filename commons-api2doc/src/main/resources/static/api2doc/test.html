@@ -184,14 +184,15 @@
         },
         created: function () {
             var _self = this;
-//            jQuery.ajax({
-//                type: 'GET',
-//                url: '...',
-//                success: function (data) {
-//                    _self.apiInfo = JSON.stringify(data);
-//                }
-//            });
-            _self.loading = false;
+            jQuery.ajax({
+                type: 'GET',
+                url: '/api2doc/meta/apiInfo/params/requestParam',
+                success: function (data) {
+                    console.log(data);
+                    _self.apiInfo = JSON.stringify(data).data;
+                    _self.loading = false;
+                }
+            });
         }
     });
 </script>

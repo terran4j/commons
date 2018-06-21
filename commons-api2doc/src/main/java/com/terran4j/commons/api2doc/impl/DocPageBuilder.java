@@ -34,8 +34,6 @@ public class DocPageBuilder {
 
     private static final String FILE_DOC_MD = "doc.md.ftl";
 
-//    private static final String FILE_DOC_HTML = "doc.html";
-
     @Autowired
     private Api2DocProperties api2DocProperties;
 
@@ -47,8 +45,6 @@ public class DocPageBuilder {
 
     private Template mdTemplate = null;
 
-//    private Template docTemplate = null;
-
     private Parser parser = null;
 
     private HtmlRenderer renderer = null;
@@ -57,7 +53,6 @@ public class DocPageBuilder {
     public void init() {
         try {
             mdTemplate = freeMarker.getTemplate(DocPageBuilder.class, FILE_DOC_MD);
-//            docTemplate = freeMarker.getTemplate(DocPageBuilder.class, FILE_DOC_HTML);
 
             MutableDataSet options = new MutableDataSet();
             options.setFrom(ParserEmulationProfile.GITHUB_DOC);
@@ -108,24 +103,24 @@ public class DocPageBuilder {
 //        String html = freeMarker.build(docTemplate, model);
 //        return html;
 //    }
-
-    public ApiDocObject getDocObject(String folderId, String docId) throws Exception {
-        ApiFolderObject folder = apiDocService.getFolder(folderId);
-        if (folder == null) {
-            log.warn("ApiFolder NOT Found: {}", folderId);
-            return null;
-        }
-
-        ApiDocObject doc = folder.getDoc(docId);
-        if (doc == null) {
-            if (log.isWarnEnabled()) {
-                log.warn("ApiDoc NOT Found: {}", folderId);
-            }
-            return null;
-        }
-
-        return doc;
-    }
+//
+//    public ApiDocObject getDocObject(String folderId, String docId) throws Exception {
+//        ApiFolderObject folder = apiDocService.getFolder(folderId);
+//        if (folder == null) {
+//            log.warn("ApiFolder NOT Found: {}", folderId);
+//            return null;
+//        }
+//
+//        ApiDocObject doc = folder.getDoc(docId);
+//        if (doc == null) {
+//            if (log.isWarnEnabled()) {
+//                log.warn("ApiDoc NOT Found: {}", folderId);
+//            }
+//            return null;
+//        }
+//
+//        return doc;
+//    }
 
     public String doc2Md(ApiDocObject doc) {
         if (doc == null) {

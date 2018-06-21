@@ -1,16 +1,18 @@
 package com.terran4j.commons.api2doc.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.terran4j.commons.api2doc.meta.ClassMeta;
-import org.springframework.stereotype.Service;
-
+import com.terran4j.commons.api2doc.domain.ApiDocObject;
 import com.terran4j.commons.api2doc.domain.ApiFolderObject;
 import com.terran4j.commons.util.value.KeyedList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class Api2DocService {
+
+    private static final Logger log = LoggerFactory.getLogger(Api2DocService.class);
 
     private static final String v = String.valueOf(System.currentTimeMillis());
 	
@@ -49,6 +51,24 @@ public class Api2DocService {
 
     public String getComponentVersion() {
 	    return v;
+    }
+
+    public ApiDocObject getDocObject(String folderId, String docId) throws Exception {
+        ApiFolderObject folder = getFolder(folderId);
+        if (folder == null) {
+            log.warn("ApiFolder NOT Found: {}", folderId);
+            return null;
+        }
+
+        ApiDocObject doc = folder.getDoc(docId);
+        if (doc == null) {
+            if (log.isWarnEnabled()) {
+                log.warn("ApiDoc NOT Found: {}", folderId);
+            }
+            return null;
+        }
+
+        return doc;
     }
 
 }

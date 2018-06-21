@@ -271,6 +271,10 @@ public class RetrofitCodeWriter {
             } else {
                 return "Query";
             }
+        } else if (location == ApiParamLocation.CookieValue) {
+            return "Header";
+        } else if (location == ApiParamLocation.RequestPart) {
+            return "Part";
         } else {
             throw new RuntimeException("ApiParamLocation" +
                     " location unsupported: " + location);

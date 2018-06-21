@@ -123,7 +123,7 @@ public class Api2DocController {
     public String api2doc(
             @PathVariable("fid") String folderId, @PathVariable("id") String id,
             Map<String, Object> model) throws Exception {
-        ApiDocObject doc = docPageBuilder.getDocObject(folderId, id);
+        ApiDocObject doc = apiDocService.getDocObject(folderId, id);
         String md = docPageBuilder.doc2Md(doc);
         String title = doc.getName();
         return md2HtmlPage(md, title, model);
@@ -133,7 +133,7 @@ public class Api2DocController {
     public String api2test(
             @PathVariable("fid") String folderId, @PathVariable("id") String id,
             Map<String, Object> model) throws Exception {
-        ApiDocObject doc = docPageBuilder.getDocObject(folderId, id);
+        ApiDocObject doc = apiDocService.getDocObject(folderId, id);
         model.put("doc", doc);
         model.put("v", apiDocService.getComponentVersion());
 //        String md = docPageBuilder.doc2Md(doc);

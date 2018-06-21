@@ -1,7 +1,10 @@
 package com.terran4j.commons.api2doc.meta;
 
+import com.terran4j.commons.api2doc.controller.ApiEntry;
+import com.terran4j.commons.api2doc.controller.ApiInfo;
 import com.terran4j.commons.api2doc.domain.ApiDocObject;
 import com.terran4j.commons.api2doc.domain.ApiFolderObject;
+import com.terran4j.commons.api2doc.domain.ApiParamLocation;
 import com.terran4j.commons.api2doc.domain.ApiParamObject;
 import com.terran4j.commons.api2doc.impl.Api2DocService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,34 @@ public class ApiMetaService {
 
     @Autowired
     private Api2DocService api2DocService;
+
+    public ApiInfo toApiInfo(String folderId, String docId) throws Exception {
+        ApiDocObject doc = api2DocService.getDocObject(folderId, docId);
+        ApiInfo apiInfo = new ApiInfo();
+        apiInfo.setUrl(doc.getPaths()[0]);
+        apiInfo.setDefaultMethod(doc.getMethods()[0].name());
+
+        List<ApiParamObject> apiParamObjects = doc.getParams();
+        if (apiParamObjects != null && apiParamObjects.size() > 0) {
+            List<ApiEntry> params = new ArrayList<>();
+            List<ApiEntry> headers = new ArrayList<>();
+            for (ApiParamObject apiParamObject : apiParamObjects) {
+                ApiEntry entry = new ApiEntry();
+                entry.setKey(apiParamObject.getId());
+                entry.setValue(apiParamObject.getSample().getValue());
+                ApiParamLocation paramLocation = apiParamObject.getLocation();
+                if (paramLocation == ApiParamLocation.RequestParam) {
+                    params.add(entry);
+                } else if (paramLocation == ApiParamLocation.RequestHeader) {
+                    headers.add(entry);
+                }
+            }
+            apiInfo.setParams(params);
+            apiInfo.setHeaders(headers);
+        }
+
+        return apiInfo;
+    }
 
     public List<ClassMeta> toClassMetaList() {
         List<ClassMeta> classes = new ArrayList<>();

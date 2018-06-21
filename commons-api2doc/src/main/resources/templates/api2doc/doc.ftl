@@ -35,7 +35,7 @@
 </head>
 <body>
 <div class="test-entry">
-    <a href="/api2doc/test.html">接口测试</a>
+    <a href="/api2doc/test.html?v=${v}">接口测试</a>
 </div>
 <div class="clear"/>
 <#if title ??>
