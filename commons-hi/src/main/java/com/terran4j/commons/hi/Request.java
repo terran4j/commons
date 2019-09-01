@@ -249,6 +249,7 @@ public final class Request {
         // 获取实际的入参。
         final Map<String, String> actualParams = getActualParams();
         request.setParam(actualParams);
+        request.setContent(this.content.toString());
 
         RequestMethod method = RequestMethod.GET;
         String methodName = action.getMethod();
