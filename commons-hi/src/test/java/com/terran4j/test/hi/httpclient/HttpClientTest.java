@@ -108,4 +108,24 @@ public class HttpClientTest {
         request.input("number", "5");
         Assert.assertEquals("5", request.getActualParams().get("b"));
     }
+
+    /**
+     * 从 request 中获取实际的 URL 及参数、Header 等信息。
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testRequestContent() throws Exception {
+        HttpClient client = create();
+        Session session = client.createSession();
+        Request request = session.createRequest("plus");
+
+        String url = "http://localhost:8080/calculator/plus";
+        Assert.assertEquals(url, request.getActualURL());
+
+        request.content("{a=1,b=5}");
+
+        Assert.assertEquals("{a=1,b=5}", request.getActualContent().toString());
+
+    }
 }

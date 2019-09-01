@@ -27,6 +27,11 @@ public final class Request {
 
     private final Map<String, String> inputs = new HashMap<>();
 
+    /**
+     * add by mark for plain content.
+     */
+    private StringBuffer content = new StringBuffer();
+
     private final ValueSources<String, String> context;
 
     public Request(Action action, Session session, ApplicationContext applicationContext) {
@@ -86,6 +91,11 @@ public final class Request {
 
     public Request param(String key, String value) {
         params.put(key, value);
+        return this;
+    }
+
+    public Request content(String content){
+        this.content = new StringBuffer(content);
         return this;
     }
 
@@ -198,6 +208,17 @@ public final class Request {
         Map<String, String> actionParams = parseValues(action.getParams());
         actionParams.putAll(actualParams);
         return actionParams;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public StringBuffer getActualContent() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(this.content);
+        sb.trimToSize();
+        return sb;
     }
 
     public Map<String, String> getActualHeaders() {

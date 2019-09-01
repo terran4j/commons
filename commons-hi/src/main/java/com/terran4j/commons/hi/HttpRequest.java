@@ -29,6 +29,8 @@ public final class HttpRequest {
 
     private final Map<String, String> params = new HashMap<String, String>();
 
+    private StringBuffer content = new StringBuffer();
+
     private RequestMethod method = RequestMethod.GET;
 
     public RequestMethod getMethod() {
@@ -63,6 +65,11 @@ public final class HttpRequest {
         return this;
     }
 
+    public HttpRequest setContent(String content) {
+        this.content = new StringBuffer(content);
+        return this;
+    }
+
     public Map<String, String> getParams() {
         return this.params;
     }
@@ -88,7 +95,18 @@ public final class HttpRequest {
                 httpRequest = httpGet;
             } else if (method == RequestMethod.POST) {
                 final HttpPost httpPost = new HttpPost(url);
-                if (MapUtils.isNotEmpty(params)) {
+                if (this.content.length() > 0){
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(this.content);
+                    String content = sb.toString();
+                    if (log.isInfoEnabled()) {
+                        log.info("Http Post Content:\n{}", content);
+                    }
+                    ContentType contentType = ContentType.TEXT_PLAIN
+                            .withCharset(Charset.forName(ApacheHttpClientBuilder.CHARSET));
+                    httpPost.setEntity(new StringEntity(content, contentType));
+                    System.out.println(httpPost);
+                } else if (MapUtils.isNotEmpty(params)) {
                     StringBuilder sb = new StringBuilder();
                     sb.append(toUrlQuery(params));
                     String content = sb.toString();
