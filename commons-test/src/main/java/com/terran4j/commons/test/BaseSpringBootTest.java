@@ -9,4 +9,5 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 public abstract class BaseSpringBootTest {
 
+
 }

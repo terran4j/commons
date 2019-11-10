@@ -125,7 +125,7 @@ public class RestPackAspect {
             }
         }
 
-        // 只有类上或父类上有 @HttpResultPackController 注解的，才需要打包返回结果。
+        // 只有类上或父类上有 @ResultPackController 注解的，才需要打包返回结果。
         Object target = point.getTarget();
         Class<?> clazz = Classes.getTargetClass(target);
         RestPackController pack = clazz.getAnnotation(RestPackController.class);

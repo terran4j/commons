@@ -5,7 +5,9 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
-@PropertySource("classpath:com/terran4j/commons/test/database.properties")
+@PropertySource({
+        "classpath:com/terran4j/commons/test/database.properties",
+})
 public class DatabaseTestConfig {
 
 }
