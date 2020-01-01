@@ -86,4 +86,5 @@ public class JsonConfigElement implements ConfigElement {
     public String asText() {
         return null;
     }
+
 }
