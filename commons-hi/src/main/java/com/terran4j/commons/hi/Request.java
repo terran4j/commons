@@ -1,8 +1,11 @@
 package com.terran4j.commons.hi;
 
-import com.google.gson.*;
+import com.google.gson.JsonParser;
 import com.terran4j.commons.util.Strings;
-import com.terran4j.commons.util.value.JsonValueSource;
+import com.terran4j.commons.util.config.ConfigElement;
+import com.terran4j.commons.util.config.JsonConfigElement;
+import com.terran4j.commons.util.config.XmlConfigElement;
+import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.value.ValueSource;
 import com.terran4j.commons.util.value.ValueSources;
 import org.springframework.context.ApplicationContext;
@@ -94,7 +97,7 @@ public final class Request {
         return this;
     }
 
-    public Request content(String content){
+    public Request content(String content) {
         this.content = new StringBuffer(content);
         return this;
     }
@@ -211,7 +214,6 @@ public final class Request {
     }
 
     /**
-     *
      * @return
      */
     public StringBuffer getActualContent() {
@@ -240,7 +242,7 @@ public final class Request {
         return newMap;
     }
 
-    public Response exe() throws HttpException {
+    public Response exe() throws BusinessException {
 
         // 获取实际的 URL。
         String actualURL = getActualURL();
@@ -263,6 +265,9 @@ public final class Request {
         }
         request.setMethod(method);
 
+        request.setPostBody(action.getPostBody());
+        request.setResponseBody(action.getResponseBody());
+
         Map<String, String> actualHeaders = getActualHeaders();
         request.setHeaders(actualHeaders);
 
@@ -275,28 +280,23 @@ public final class Request {
             response = listener.afterExecute(request, response);
         }
 
-        JsonElement result;
-        try {
-            result = parser.parse(response);
-        } catch (JsonSyntaxException e) {
-            // 不是 json 串，就按普通的字符串来处理。
-            result = new JsonPrimitive(response);
+        ConfigElement root = null;
+        if ("XML".equalsIgnoreCase(request.getResponseBody())) {
+            root = new XmlConfigElement(response);
+        } else {
+            root = new JsonConfigElement(response);
         }
 
         List<Write> writes = action.getWrites();
         if (writes != null && writes.size() > 0) {
-            JsonObject resultObject = null;
-            if (result.isJsonObject()) {
-                resultObject = result.getAsJsonObject();
-            }
-            context.push(new JsonValueSource(resultObject));
+            context.push(root);
             for (Write write : writes) {
                 write.doWrite(session, context);
             }
             context.pop();
         }
 
-        return new Response(result, session);
+        return new Response(root, session);
     }
 
 }

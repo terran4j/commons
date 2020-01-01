@@ -17,6 +17,10 @@ public class Action {
 
     private String url;
 
+    private String postBody;
+
+    private String responseBody;
+
     private String method = RequestMethod.GET.name();
 
     private Map<String, String> params = new HashMap<>();
@@ -97,4 +101,19 @@ public class Action {
         this.writes = writes;
     }
 
+    public String getPostBody() {
+        return postBody;
+    }
+
+    public void setPostBody(String postBody) {
+        this.postBody = postBody;
+    }
+
+    public String getResponseBody() {
+        return responseBody;
+    }
+
+    public void setResponseBody(String responseBody) {
+        this.responseBody = responseBody;
+    }
 }

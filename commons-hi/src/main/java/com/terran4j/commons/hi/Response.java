@@ -1,5 +1,6 @@
 package com.terran4j.commons.hi;
 
+import com.terran4j.commons.util.config.ConfigElement;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -14,52 +15,45 @@ public final class Response {
 	
 	private final Session session;
 
-	private final JsonElement result;
+	private final ConfigElement result;
 	
-	private final JsonValueSource values;
-	
-	public Response(JsonElement result, Session session) {
+	public Response(ConfigElement result, Session session) {
 		super();
 		this.session = session;
 		this.result = result;
-		if (result != null && result.isJsonObject()) {
-            this.values = new JsonValueSource(result.getAsJsonObject());
-        } else {
-		    this.values = null;
-        }
 	}
 	
-	public JsonElement getResult() {
+	public ConfigElement getResult() {
 		return result;
 	}
 
-    public <T> T getResult(Class<T> clazz) {
-	    if (result == null) {
-	        return null;
-        }
-        return gson.fromJson(result, clazz);
-    }
-	
-	public JsonElement getJson(String key) {
-		JsonElement jsonElement = values.getElement(key);
-		return jsonElement;
-	}
-	
-	public JsonElement getJson(String key, int index) {
-		JsonElement jsonElement = values.getElement(key);
-		if (!jsonElement.isJsonArray()) {
-			return null;
-		}
-		return jsonElement.getAsJsonArray().get(index);
-	}
-	
-	public <T> T getObject(String key, Class<T> clazz) {
-		JsonElement jsonElement = values.getElement(key);
-		if (jsonElement == null) {
-			return null;
-		}
-		return gson.fromJson(jsonElement, clazz);
-	}
+//    public <T> T getResult(Class<T> clazz) {
+//	    if (result == null) {
+//	        return null;
+//        }
+//        return result.createObject();
+//    }
+//
+//	public JsonElement getJson(String key) {
+//		JsonElement jsonElement = values.getElement(key);
+//		return jsonElement;
+//	}
+//
+//	public JsonElement getJson(String key, int index) {
+//		JsonElement jsonElement = values.getElement(key);
+//		if (!jsonElement.isJsonArray()) {
+//			return null;
+//		}
+//		return jsonElement.getAsJsonArray().get(index);
+//	}
+//
+//	public <T> T getObject(String key, Class<T> clazz) {
+//		JsonElement jsonElement = values.getElement(key);
+//		if (jsonElement == null) {
+//			return null;
+//		}
+//		return gson.fromJson(jsonElement, clazz);
+//	}
 
 //
 //	public Response assertEqual(String key, String expectValue) {
@@ -85,17 +79,17 @@ public final class Response {
 //		session.setAttribute(key, actualValue);
 //		return this;
 //	}
-	
-	public String getByPath(String path) {
-		return values.get(path);
-	}
-	
-	public long getByPath(String path, long defaultValue) {
-		try {
-			return Long.parseLong(values.get(path));
-		} catch (NumberFormatException e) {
-			return defaultValue;
-		}
-	}
+//
+//	public String getByPath(String path) {
+//		return result.get(path);
+//	}
+//
+//	public long getByPath(String path, long defaultValue) {
+//		try {
+//			return Long.parseLong(values.get(path));
+//		} catch (NumberFormatException e) {
+//			return defaultValue;
+//		}
+//	}
 
 }

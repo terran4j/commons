@@ -25,13 +25,17 @@ public final class HttpRequest {
 
     private final String url;
 
-    private final Map<String, String> headers = new HashMap<String, String>();
+    private final Map<String, String> headers = new HashMap<>();
 
-    private final Map<String, String> params = new HashMap<String, String>();
+    private final Map<String, String> params = new HashMap<>();
 
     private StringBuffer content = new StringBuffer();
 
     private RequestMethod method = RequestMethod.GET;
+
+    private String postBody;
+
+    private String responseBody;
 
     public RequestMethod getMethod() {
         return method;
@@ -107,14 +111,21 @@ public final class HttpRequest {
                     httpPost.setEntity(new StringEntity(content, contentType));
                     System.out.println(httpPost);
                 } else if (MapUtils.isNotEmpty(params)) {
+                    ContentType contentType = null;
                     StringBuilder sb = new StringBuilder();
-                    sb.append(toUrlQuery(params));
+                    if ("XML".equalsIgnoreCase(postBody)) {
+                        sb.append(toXml(params));
+                        contentType = ContentType.TEXT_XML
+                                .withCharset(Charset.forName(ApacheHttpClientBuilder.CHARSET));
+                    } else {
+                        sb.append(toUrlQuery(params));
+                        contentType = ContentType.APPLICATION_FORM_URLENCODED
+                                .withCharset(Charset.forName(ApacheHttpClientBuilder.CHARSET));
+                    }
                     String content = sb.toString();
                     if (log.isInfoEnabled()) {
                         log.info("Http Post Body:\n{}", content);
                     }
-                    ContentType contentType = ContentType.APPLICATION_FORM_URLENCODED
-                            .withCharset(Charset.forName(ApacheHttpClientBuilder.CHARSET));
                     httpPost.setEntity(new StringEntity(content, contentType));
                 }
                 httpRequest = httpPost;
@@ -184,6 +195,21 @@ public final class HttpRequest {
         }
     }
 
+    public static final String toXml(Map<String, String> params) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("<xml>");
+        Iterator<String> it = params.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            String value = params.get(key);
+            sb.append("\t<").append(key).append("><![CDATA[")
+                    .append(value)
+                    .append("]]>\n");
+        }
+        sb.append("</xml>");
+        return sb.toString();
+    }
+
     public static final String toUrlQuery(Map<String, String> params) {
         StringBuffer sb = new StringBuffer();
         boolean first = true;
@@ -236,4 +262,19 @@ public final class HttpRequest {
         return sb.toString();
     }
 
+    public String getPostBody() {
+        return postBody;
+    }
+
+    public void setPostBody(String postBody) {
+        this.postBody = postBody;
+    }
+
+    public String getResponseBody() {
+        return responseBody;
+    }
+
+    public void setResponseBody(String responseBody) {
+        this.responseBody = responseBody;
+    }
 }

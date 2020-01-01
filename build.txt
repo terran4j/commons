@@ -9,6 +9,9 @@ mvn clean test
 ## 当版本为 SNAPSHOT 时的部署：
 mvn clean deploy -DskipTests
 
+## 本地构建打包。
+mvn clean install -DskipTests
+
 ## 所有项目一起部署太慢了，容易失败，所有分开部署：
 ## 建议在早上 10:00 以后执行（这会美国是晚上，网络稍好点）
 mvn clean deploy -DskipTests -P release -pl commons-util -am     // 03:33
