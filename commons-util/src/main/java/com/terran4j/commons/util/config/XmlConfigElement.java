@@ -187,13 +187,7 @@ public class XmlConfigElement implements ConfigElement {
 		return null;
 	}
 
-	public String getChildText(String eleName) throws BusinessException {
-		ConfigElement c = getChild(eleName);
-		if (c == null) {
-			return null;
-		}
-		return c.getValue();
-	}
+
 
 	public String getName() {
 		return element.getTagName();

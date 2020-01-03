@@ -1,6 +1,5 @@
 package com.terran4j.commons.util.config;
 
-import com.google.gson.JsonElement;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.CommonErrorCode;
 import com.terran4j.commons.util.value.ValueSource;
@@ -89,7 +88,13 @@ public interface ConfigElement extends ValueSource<String, String> {
 
     ConfigElement getChild(String eleName) throws BusinessException;
 
-    String getChildText(String eleName) throws BusinessException;
+    default String getChildText(String eleName) throws BusinessException {
+        ConfigElement c = getChild(eleName);
+        if (c == null) {
+            return null;
+        }
+        return c.getValue();
+    }
 
     String getName();
 
