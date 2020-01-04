@@ -4,6 +4,7 @@ import com.terran4j.commons.hi.HttpClient;
 import com.terran4j.commons.hi.HttpException;
 import com.terran4j.commons.hi.Response;
 import com.terran4j.commons.hi.Session;
+import com.terran4j.commons.util.error.BusinessException;
 import org.junit.Assert;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +13,7 @@ import org.springframework.context.ApplicationContext;
 @SpringBootApplication
 public class HttpClientApp {
 
-    public static void main(String[] args) throws HttpException {
+    public static void main(String[] args) throws BusinessException {
         ApplicationContext context = SpringApplication.run(HttpClientApp.class, args);
 
         // 创建一个 httpClient 对象，它会加载 http.config.json 文件中定义的 HTTP API 信息。
@@ -26,12 +27,12 @@ public class HttpClientApp {
         Response response = session.createRequest("plus").param("input", "3").exe();
 
         // 从返回结果中，取 result 字段的值。
-        int total = response.getJson("result").getAsInt();
+        int total = response.getResult().attr("result", 0);
         Assert.assertEquals(3, total);
 
         // 再调用一次，发现返回结果的确在累加。
         response = session.createRequest("plus").param("input", "5").exe();
-        total = response.getJson("result").getAsInt();
+        total = response.getResult().attr("result", 0);
         Assert.assertEquals(8, total);
     }
 

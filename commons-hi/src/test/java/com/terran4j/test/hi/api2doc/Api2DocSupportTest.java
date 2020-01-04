@@ -38,7 +38,7 @@ public class Api2DocSupportTest {
         Session session = createClient().createSession();
         Request request = session.createRequest("test-echo");
         Response response = request.input("msg", "hello").exe();
-        String result = response.getByPath("data");
+        String result = response.getResult().get("data");
         Assert.assertEquals("hello", result);
     }
 
@@ -49,8 +49,8 @@ public class Api2DocSupportTest {
         Response response = request.input("a", "2").input("b", "3").exe();
 
         // 用对象来接收。
-        MultiplyObject plusObject = response.getObject(
-                "data", MultiplyObject.class);
+        MultiplyObject plusObject = response.getResult().getChild("data")
+                .asObject(MultiplyObject.class);
         Assert.assertEquals(2, plusObject.getA());
         Assert.assertEquals(3, plusObject.getB());
         Assert.assertEquals(6, plusObject.getResult());
@@ -61,7 +61,7 @@ public class Api2DocSupportTest {
         Session session = createClient().createSession();
         Request request = session.createRequest("test-put");
         Response response = request.input("id", "1").input("name", "abc").exe();
-        String data = response.getByPath("data");
+        String data = response.getResult().attr("data");
         Assert.assertEquals("1-abc", data);
     }
 
@@ -70,7 +70,7 @@ public class Api2DocSupportTest {
         Session session = createClient().createSession();
         Request request = session.createRequest("test-delete");
         Response response = request.input("id", "1").exe();
-        String resultCode = response.getByPath("resultCode");
+        String resultCode = response.getResult().attr("resultCode");
         Assert.assertEquals("success", resultCode);
     }
 
