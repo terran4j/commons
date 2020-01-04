@@ -35,6 +35,17 @@ public class JsonConfigElement implements ConfigElement {
     }
 
     @Override
+    public int size() {
+        if (element == null) {
+            return 0;
+        }
+        if (!element.isJsonArray()) {
+            return 0;
+        }
+        return element.getAsJsonArray().size();
+    }
+
+    @Override
     public String attr(String attrName) {
         JsonObject jsonObject = asJsonObject(element);
         if (jsonObject == null) {

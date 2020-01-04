@@ -10,6 +10,8 @@ import java.util.Set;
 
 public interface ConfigElement extends ValueSource<String, String> {
 
+    int size();
+
     default String get(String key) {
         String[] array = key.split("\\.");
         ConfigElement current = this;
@@ -52,6 +54,22 @@ public interface ConfigElement extends ValueSource<String, String> {
             return null;
         }
         return Integer.parseInt(attrValue);
+    }
+
+    default Long attrAsLong(String attriName) {
+        String attrValue = attr(attriName);
+        if (attrValue == null || attrValue.trim().length() == 0) {
+            return null;
+        }
+        return Long.parseLong(attrValue);
+    }
+
+    default Double attrAsDouble(String attriName) {
+        String attrValue = attr(attriName);
+        if (attrValue == null || attrValue.trim().length() == 0) {
+            return null;
+        }
+        return Double.parseDouble(attrValue);
     }
 
     ConfigElement[] getChildren();

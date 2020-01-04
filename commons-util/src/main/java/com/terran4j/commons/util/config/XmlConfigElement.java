@@ -85,7 +85,12 @@ public class XmlConfigElement implements ConfigElement {
 		classLoader = getClass().getClassLoader();
 	}
 
-	public String attr(String attriName) {
+    @Override
+    public int size() {
+        return 0; // XML 没有数组结构，因此个数一律返回 0 .
+    }
+
+    public String attr(String attriName) {
 		String value = element.getAttribute(attriName);
 		if (StringUtils.isEmpty(value)) {
 			return null;
