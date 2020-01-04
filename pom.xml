@@ -337,6 +337,12 @@
                 <artifactId>redisson</artifactId>
                 <version>3.6.5</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.8</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -354,6 +360,13 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+
+        <!-- 支持 lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
         </dependency>
         <!--<dependency>-->
         <!--<groupId>org.jetbrains.kotlin</groupId>-->

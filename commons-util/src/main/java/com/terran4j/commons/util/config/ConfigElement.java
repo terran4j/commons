@@ -4,6 +4,8 @@ import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.CommonErrorCode;
 import com.terran4j.commons.util.value.ValueSource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public interface ConfigElement extends ValueSource<String, String> {
@@ -77,11 +79,30 @@ public interface ConfigElement extends ValueSource<String, String> {
     ClassLoader getClassLoader();
 
     default <T> T attr(String attrName, Class<T> clazz) throws BusinessException {
-        String attrValue = attr(attrName);
-        if (attrValue == null || attrValue.trim().length() == 0) {
+        ConfigElement attrValue = getChild(attrName);
+        if (attrValue == null) {
             return null;
         }
-        return (T) createObject(attrName);
+        return attrValue.asObject(clazz);
+    }
+
+    default <T> List<T> getChildren(String attrName, Class<T> clazz) throws BusinessException {
+        ConfigElement[] children = getChildren(attrName);
+        if (children == null) {
+            return null;
+        }
+
+        List<T> result = new ArrayList<>();
+        if (children.length == 0) {
+            return result;
+        }
+
+        for (ConfigElement child : children) {
+            T item = child.asObject(clazz);
+            result.add(item);
+        }
+
+        return result;
     }
 
     <T> T asObject(Class<T> clazz) throws BusinessException;

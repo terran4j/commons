@@ -1,0 +1,23 @@
+{
+  "int": 33,
+  "str": "my text",
+  "bool": false,
+  "item1": {
+    "id": 1,
+    "name": "111"
+  },
+  "item2": {
+    "id": 2,
+    "name": "222"
+  },
+  "items": [
+    {
+      "id": 1,
+      "name": "111"
+    },
+    {
+      "id": 2,
+      "name": "222"
+    }
+  ]
+}
