@@ -122,9 +122,8 @@ public class HttpClientTest extends BaseHiTest {
         Session session = client.createSession();
         Request request = session.createRequest("plus");
         String secretKey = "4BLYkNxktpqJSTdBf9n1IS9AQORFlqpa";
-        request.input("number", "5")
-                .sign("key", secretKey);
-        String sign = request.getActualParams().get("key");
-        Assert.assertEquals("8f026a25a4fed07a3003d8850e943ca1", sign);
+        request.input("number", "5").sign(secretKey);
+        String sign = request.getActualParams().get("sign");
+        Assert.assertEquals("30a2cbd764d159b18141db8b0fb2094f", sign);
     }
 }

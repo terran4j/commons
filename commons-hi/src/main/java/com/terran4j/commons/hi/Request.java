@@ -1,6 +1,5 @@
 package com.terran4j.commons.hi;
 
-import com.google.gson.JsonParser;
 import com.terran4j.commons.util.Strings;
 import com.terran4j.commons.util.config.ConfigElement;
 import com.terran4j.commons.util.config.JsonConfigElement;
@@ -21,8 +20,6 @@ import java.util.concurrent.CountDownLatch;
 
 public final class Request {
 
-    private static final JsonParser parser = new JsonParser();
-
     private final Session session;
 
     private final ApplicationContext applicationContext;
@@ -36,6 +33,8 @@ public final class Request {
     private String signParamKey = null;
 
     private String signSecretKey = null;
+
+    private String signBuildKey = null;
 
     /**
      * add by mark for plain content.
@@ -104,15 +103,23 @@ public final class Request {
         return this;
     }
 
-    public Request sign(String signParamKey, String signSecretKey) {
-        if (StringUtils.isBlank(signParamKey)) {
-            throw new NullPointerException("signParamKey is null.");
+    public Request sign(String secretKey) {
+        return sign(secretKey, "key", "sign");
+    }
+
+    public Request sign(String secretKey, String buildKey, String paramKey) {
+        if (StringUtils.isBlank(secretKey)) {
+            throw new NullPointerException("secretKey is null.");
         }
-        if (StringUtils.isBlank(signSecretKey)) {
-            throw new NullPointerException("signSecretKey is null.");
+        if (StringUtils.isBlank(buildKey)) {
+            throw new NullPointerException("buildKey is null.");
         }
-        this.signParamKey = signParamKey.trim();
-        this.signSecretKey = signSecretKey.trim();
+        if (StringUtils.isBlank(paramKey)) {
+            throw new NullPointerException("paramKey is null.");
+        }
+        this.signParamKey = paramKey.trim();
+        this.signSecretKey = secretKey.trim();
+        this.signBuildKey = buildKey.trim();
         return this;
     }
 
@@ -266,7 +273,7 @@ public final class Request {
 
     private void buildSignParam(Map<String, String> params)
             throws BusinessException {
-        if (signSecretKey == null || signParamKey == null) {
+        if (signSecretKey == null || signParamKey == null || signBuildKey == null) {
             return;
         }
 
@@ -280,8 +287,10 @@ public final class Request {
                     .setMessage("参数key与签名参数重复：${signParamKey}");
         }
 
-        String signValue = MD5Util.signature(params, signSecretKey);
+        String secretKey = String.format("&%s=%s", signBuildKey, signSecretKey);
+        String signValue = MD5Util.signature(params, secretKey);
         params.put(signParamKey, signValue);
+
     }
 
     public Response exe() throws BusinessException {
