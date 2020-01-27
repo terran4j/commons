@@ -1,7 +1,8 @@
 package com.terran4j.demo.restpack;
 
-import com.terran4j.commons.restpack.RestPackController;
 import com.terran4j.commons.restpack.Log;
+import com.terran4j.commons.restpack.RestPackController;
+import com.terran4j.commons.restpack.ServletUtils;
 import com.terran4j.commons.util.error.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,14 @@ public class RestPackDemoController {
     @GetMapping(value = "/echo", produces = "application/json;charset=UTF-8")
     public String echo(@RequestParam(value = "msg") String msg) throws BusinessException {
         return doEcho(msg);
+    }
+
+    /**
+     * http://127.0.0.1:8080/demo/restpack/client/ip
+     */
+    @RequestMapping(value = "/client/ip", method = RequestMethod.GET)
+    public String clientIP() throws BusinessException {
+        return ServletUtils.getClientIP();
     }
 
     /**

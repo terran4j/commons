@@ -1,17 +1,14 @@
 package com.terran4j.demo.restpack;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.terran4j.commons.restpack.EnableRestPack;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.terran4j.commons.restpack.EnableRestPack;
-
+@Slf4j
 @EnableRestPack
 @SpringBootApplication
 public class RestPackDemoApp {
-
-    private static final Logger log = LoggerFactory.getLogger(RestPackDemoApp.class);
 
     public static void main(String[] args) {
         if (log.isInfoEnabled()) {
