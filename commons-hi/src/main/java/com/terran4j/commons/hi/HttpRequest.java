@@ -88,6 +88,32 @@ public final class HttpRequest {
         return this;
     }
 
+    public static final String toXml(Map<String, String> params) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("<xml>");
+        Iterator<String> it = params.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            String value = params.get(key);
+            sb.append("\t<").append(key).append(">")
+                    .append("<![CDATA[").append(value).append("]]>")
+                    .append("</").append(key).append(">");
+        }
+        sb.append("</xml>");
+        return sb.toString();
+    }
+
+    private static final void addParams(URIBuilder uriBuilder, Map<String, String> params) {
+        if (params.size() > 0) {
+            Iterator<String> it = params.keySet().iterator();
+            while (it.hasNext()) {
+                String key = it.next();
+                String value = params.get(key);
+                uriBuilder.addParameter(key, value);
+            }
+        }
+    }
+
     public String execute() throws HttpException {
         HttpUriRequest httpRequest = null;
         try {
@@ -99,7 +125,7 @@ public final class HttpRequest {
                 httpRequest = httpGet;
             } else if (method == RequestMethod.POST) {
                 final HttpPost httpPost = new HttpPost(url);
-                if (this.content.length() > 0){
+                if (this.content.length() > 0) {
                     StringBuilder sb = new StringBuilder();
                     sb.append(this.content);
                     String content = sb.toString();
@@ -172,42 +198,15 @@ public final class HttpRequest {
                     new ApacheHttpClientBuilder.DefaultResponseHandler());
             long t = System.currentTimeMillis() - t0;
             if (log.isInfoEnabled()) {
-                log.info("request curl:\n{}\nresponse:\n{}\nspend {}ms.",
-                        toCurl(httpRequest), response, t);
+                log.info("request spend {}ms, response:\n{}", t, response);
             }
             return response;
         } catch (Exception e) {
-            log.error("http failed: " +e.getMessage(), e);
+            log.error("http failed: " + e.getMessage(), e);
             throw new HttpException(HttpErrorCode.HTTP_REQUEST_ERROR, e)
                     .put("curl", toCurl(httpRequest))
                     .as(HttpException.class);
         }
-    }
-
-    private static final void addParams(URIBuilder uriBuilder, Map<String, String> params) {
-        if (params.size() > 0) {
-            Iterator<String> it = params.keySet().iterator();
-            while (it.hasNext()) {
-                String key = it.next();
-                String value = params.get(key);
-                uriBuilder.addParameter(key, value);
-            }
-        }
-    }
-
-    public static final String toXml(Map<String, String> params) {
-        StringBuffer sb = new StringBuffer();
-        sb.append("<xml>");
-        Iterator<String> it = params.keySet().iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            String value = params.get(key);
-            sb.append("\t<").append(key).append("><![CDATA[")
-                    .append(value)
-                    .append("]]>\n");
-        }
-        sb.append("</xml>");
-        return sb.toString();
     }
 
     public static final String toUrlQuery(Map<String, String> params) {
