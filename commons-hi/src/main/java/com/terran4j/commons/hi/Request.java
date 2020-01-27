@@ -6,10 +6,13 @@ import com.terran4j.commons.util.config.ConfigElement;
 import com.terran4j.commons.util.config.JsonConfigElement;
 import com.terran4j.commons.util.config.XmlConfigElement;
 import com.terran4j.commons.util.error.BusinessException;
+import com.terran4j.commons.util.error.ErrorCodes;
+import com.terran4j.commons.util.security.MD5Util;
 import com.terran4j.commons.util.value.ValueSource;
 import com.terran4j.commons.util.value.ValueSources;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.InvalidParameterException;
@@ -29,6 +32,10 @@ public final class Request {
     private final Map<String, String> params = new HashMap<>();
 
     private final Map<String, String> inputs = new HashMap<>();
+
+    private String signParamKey = null;
+
+    private String signSecretKey = null;
 
     /**
      * add by mark for plain content.
@@ -94,6 +101,18 @@ public final class Request {
 
     public Request param(String key, String value) {
         params.put(key, value);
+        return this;
+    }
+
+    public Request sign(String signParamKey, String signSecretKey) {
+        if (StringUtils.isBlank(signParamKey)) {
+            throw new NullPointerException("signParamKey is null.");
+        }
+        if (StringUtils.isBlank(signSecretKey)) {
+            throw new NullPointerException("signSecretKey is null.");
+        }
+        this.signParamKey = signParamKey.trim();
+        this.signSecretKey = signSecretKey.trim();
         return this;
     }
 
@@ -167,7 +186,7 @@ public final class Request {
     }
 
     public String parseValue(String value) {
-        if (StringUtils.isEmpty(value)) {
+        if (StringUtils.isBlank(value)) {
             return value;
         }
         return Strings.format(value, context, "{", "}", null);
@@ -195,7 +214,7 @@ public final class Request {
     /**
      * @return 实际的参数值
      */
-    public Map<String, String> getActualParams() {
+    public Map<String, String> getActualParams() throws BusinessException {
         // 从入参中取值。
         final Map<String, String> actualParams = new HashMap<>();
         Iterator<String> it = params.keySet().iterator();
@@ -210,6 +229,9 @@ public final class Request {
 
         Map<String, String> actionParams = parseValues(action.getParams());
         actionParams.putAll(actualParams);
+
+        buildSignParam(actionParams);
+
         return actionParams;
     }
 
@@ -242,6 +264,26 @@ public final class Request {
         return newMap;
     }
 
+    private void buildSignParam(Map<String, String> params)
+            throws BusinessException {
+        if (signSecretKey == null || signParamKey == null) {
+            return;
+        }
+
+        if (MapUtils.isEmpty(params)) {
+            return;
+        }
+
+        if (params.containsKey(signParamKey)) {
+            throw new BusinessException(ErrorCodes.INVALID_PARAM)
+                    .put("signParamKey", signParamKey)
+                    .setMessage("参数key与签名参数重复：${signParamKey}");
+        }
+
+        String signValue = MD5Util.signature(params, signSecretKey);
+        params.put(signParamKey, signValue);
+    }
+
     public Response exe() throws BusinessException {
 
         // 获取实际的 URL。
@@ -255,7 +297,7 @@ public final class Request {
 
         RequestMethod method = RequestMethod.GET;
         String methodName = action.getMethod();
-        if (StringUtils.hasText(methodName)) {
+        if (StringUtils.isNotBlank(methodName)) {
             method = RequestMethod.valueOf(methodName);
             if (method == null) {
                 String msg = String.format("http method[%s] not supported in action: %s",

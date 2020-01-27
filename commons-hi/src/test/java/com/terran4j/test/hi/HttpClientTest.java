@@ -1,4 +1,4 @@
-package com.terran4j.test.hi.httpclient;
+package com.terran4j.test.hi;
 
 import com.terran4j.commons.hi.Action;
 import com.terran4j.commons.hi.HttpClient;
@@ -6,27 +6,8 @@ import com.terran4j.commons.hi.Request;
 import com.terran4j.commons.hi.Session;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(
-        classes = {EmptyApp.class},
-        webEnvironment = WebEnvironment.NONE
-)
-public class HttpClientTest {
-
-    @Autowired
-    protected ApplicationContext context;
-
-    private HttpClient create() {
-        return HttpClient.create(HttpClientTest.class,
-                this.getClass().getSimpleName() + ".json", context);
-    }
+public class HttpClientTest extends BaseHiTest {
 
     /**
      * 加载 hi 的配置，测试加载到的数据是否正确。
@@ -125,7 +106,25 @@ public class HttpClientTest {
 
         request.content("{a=1,b=5}");
 
-        Assert.assertEquals("{a=1,b=5}", request.getActualContent().toString());
+        Assert.assertEquals("{a=1,b=5}",
+                request.getActualContent().toString());
 
+    }
+
+    /**
+     * 从 request 中获取实际的 URL 及参数、Header 等信息。
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSign() throws Exception {
+        HttpClient client = create();
+        Session session = client.createSession();
+        Request request = session.createRequest("plus");
+        String secretKey = "4BLYkNxktpqJSTdBf9n1IS9AQORFlqpa";
+        request.input("number", "5")
+                .sign("key", secretKey);
+        String sign = request.getActualParams().get("key");
+        Assert.assertEquals("8f026a25a4fed07a3003d8850e943ca1", sign);
     }
 }

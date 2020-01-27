@@ -32,40 +32,40 @@ public interface ConfigElement extends ValueSource<String, String> {
 
     String attr(String attrName);
 
-    default String attr(String attriName, String defaultValue) {
-        String value = attr(attriName);
+    default String attr(String attrKey, String defaultValue) {
+        String value = attr(attrKey);
         if (value == null) {
             value = defaultValue;
         }
         return value;
     }
 
-    default int attr(String attriName, int defaultValue) {
-        String attrValue = attr(attriName);
+    default int attr(String attrKey, int defaultValue) {
+        String attrValue = attr(attrKey);
         if (attrValue == null || attrValue.trim().length() == 0) {
             return defaultValue;
         }
         return Integer.parseInt(attrValue);
     }
 
-    default Integer attrAsInt(String attriName) {
-        String attrValue = attr(attriName);
+    default Integer attrAsInt(String attrKey) {
+        String attrValue = attr(attrKey);
         if (attrValue == null || attrValue.trim().length() == 0) {
             return null;
         }
         return Integer.parseInt(attrValue);
     }
 
-    default Long attrAsLong(String attriName) {
-        String attrValue = attr(attriName);
+    default Long attrAsLong(String attrKey) {
+        String attrValue = attr(attrKey);
         if (attrValue == null || attrValue.trim().length() == 0) {
             return null;
         }
         return Long.parseLong(attrValue);
     }
 
-    default Double attrAsDouble(String attriName) {
-        String attrValue = attr(attriName);
+    default Double attrAsDouble(String attrKey) {
+        String attrValue = attr(attrKey);
         if (attrValue == null || attrValue.trim().length() == 0) {
             return null;
         }
@@ -78,16 +78,16 @@ public interface ConfigElement extends ValueSource<String, String> {
 
     String getValue();
 
-    default boolean attr(String attriName, boolean defaultValue) {
-        String attrValue = attr(attriName);
+    default boolean attr(String attrKey, boolean defaultValue) {
+        String attrValue = attr(attrKey);
         if (attrValue == null || attrValue.trim().length() == 0) {
             return defaultValue;
         }
         return Boolean.parseBoolean(attrValue);
     }
 
-    default Boolean attrAsBoolean(String attriName) {
-        String attrValue = attr(attriName);
+    default Boolean attrAsBoolean(String attrKey) {
+        String attrValue = attr(attrKey);
         if (attrValue == null || attrValue.trim().length() == 0) {
             return null;
         }
@@ -104,8 +104,8 @@ public interface ConfigElement extends ValueSource<String, String> {
         return attrValue.asObject(clazz);
     }
 
-    default <T> List<T> getChildren(String attrName, Class<T> clazz) throws BusinessException {
-        ConfigElement[] children = getChildren(attrName);
+    default <T> List<T> getChildren(String attrKey, Class<T> clazz) throws BusinessException {
+        ConfigElement[] children = getChildren(attrKey);
         if (children == null) {
             return null;
         }
@@ -139,8 +139,8 @@ public interface ConfigElement extends ValueSource<String, String> {
 
     Set<String> attrSet();
 
-    default Object createObject(String classAttriName) throws BusinessException {
-        String className = attr(classAttriName);
+    default Object createObject(String classAttrKey) throws BusinessException {
+        String className = attr(classAttrKey);
         try {
             Class<?> clazz = getClassLoader().loadClass(className);
             return clazz.newInstance();
