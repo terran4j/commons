@@ -2,9 +2,11 @@ package com.terran4j.commons.util.security;
 
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.CommonErrorCode;
+import com.terran4j.commons.util.error.ErrorCodes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -83,7 +85,7 @@ public class MD5Util {
 
     public static String md5(String text) throws BusinessException {
         try {
-            byte[] input = text.getBytes();
+            byte[] input = text.getBytes("UTF-8");
             byte[] data = getMessageDigest().digest(input);
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < data.length; i++) {
@@ -92,6 +94,9 @@ public class MD5Util {
             return sb.toString();
         } catch (BusinessException e) {
             throw e.put("text", text);
+        } catch (UnsupportedEncodingException e) {
+            throw new BusinessException(ErrorCodes.INTERNAL_ERROR)
+                    .put("text", text).setMessage("输入文本不是UTF-8格式的");
         }
     }
 
