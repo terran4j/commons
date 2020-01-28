@@ -124,6 +124,6 @@ public class HttpClientTest extends BaseHiTest {
         String secretKey = "4BLYkNxktpqJSTdBf9n1IS9AQORFlqpa";
         request.input("number", "5").sign(secretKey);
         String sign = request.getActualParams().get("sign");
-        Assert.assertEquals("30a2cbd764d159b18141db8b0fb2094f", sign);
+        Assert.assertEquals("30A2CBD764D159B18141DB8B0FB2094F", sign);
     }
 }
