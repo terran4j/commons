@@ -76,7 +76,7 @@ public class MD5Util {
         }
 
         String stringSignTemp = stringA + secretKey;
-        log.info("MD5 signature, data: {}", data);
+        log.info("MD5 signature, stringSignTemp: {}", stringSignTemp);
         String signValue = md5(stringSignTemp).toUpperCase();
         return signValue;
     }
