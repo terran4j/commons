@@ -2,6 +2,7 @@ package com.terran4j.commons.hi;
 
 import org.apache.commons.collections4.MapUtils;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -192,10 +193,11 @@ public final class HttpRequest {
             }
         }
 
+        ResponseHandler<String> responseHandler = new ApacheHttpClientBuilder.DefaultResponseHandler();
+
         try {
             long t0 = System.currentTimeMillis();
-            String response = httpClient.execute(httpRequest,
-                    new ApacheHttpClientBuilder.DefaultResponseHandler());
+            String response = httpClient.execute(httpRequest, responseHandler);
             long t = System.currentTimeMillis() - t0;
             if (log.isInfoEnabled()) {
                 log.info("request spend {}ms, response:\n{}", t, response);

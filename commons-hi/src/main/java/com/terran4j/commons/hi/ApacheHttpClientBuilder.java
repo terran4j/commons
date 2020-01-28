@@ -11,7 +11,6 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.SocketConfig;
-import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
@@ -62,10 +61,11 @@ public class ApacheHttpClientBuilder {
 
             // get charset
             Charset charset = Charset.forName(CHARSET);
-            ContentType responseContentType = ContentType.get(httpResponse.getEntity());
-            if (responseContentType != null) {
-                charset = responseContentType.getCharset();
-            }
+            // 有时第三方API返回的 contentType 也不一定对。
+//            ContentType responseContentType = ContentType.get(httpResponse.getEntity());
+//            if (responseContentType != null) {
+//                charset = responseContentType.getCharset();
+//            }
 
             String content = EntityUtils.toString(httpResponse.getEntity(), charset);
             return content;

@@ -288,7 +288,7 @@ public final class Request {
         }
 
         String secretKey = String.format("&%s=%s", signBuildKey, signSecretKey);
-        String signValue = MD5Util.signature(params, secretKey);
+        String signValue = MD5Util.signature(params, secretKey).toUpperCase();
         params.put(signParamKey, signValue);
 
     }
