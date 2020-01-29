@@ -2,26 +2,26 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.github.terran4j</groupId>
-		<artifactId>terran4j-commons-parent</artifactId>
-		<version>1.0.3-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>com.github.terran4j</groupId>
+        <artifactId>terran4j-commons-parent</artifactId>
+        <version>1.0.3-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>terran4j-commons-hedis</artifactId>
-	<packaging>jar</packaging>
-	<name>terran4j-commons-hedis</name>
-	<url>https://github.com/terran4j/commons</url>
+    <artifactId>terran4j-commons-hedis</artifactId>
+    <packaging>jar</packaging>
+    <name>terran4j-commons-hedis</name>
+    <url>https://github.com/terran4j/commons/tree/master/commons-hedis</url>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-cache</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
 		<dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
