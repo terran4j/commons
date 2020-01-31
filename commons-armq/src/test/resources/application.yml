@@ -1,0 +1,7 @@
+##
+aliyun:
+  accessKeyId: LTAI4FfZosomp9kdikja8mSU
+  accessKeySecret: t1vM1W6m96srt8O43RXuKdbFc7UzHp
+  rocketMQ:
+    instanceId: MQ_INST_1709590499000097_Bb8uoMCQ
+    endpoint: http://1709590499000097.mqrest.cn-beijing.aliyuncs.com

@@ -26,7 +26,7 @@
         <module>commons-hi</module>
         <module>commons-test</module>
         <module>commons-dsql</module>
-        <module>commons-mq</module>
+        <module>commons-armq</module>
         <!--<module>commons-reflux</module>-->
         <!--<module>commons-api2page</module>-->
     </modules>

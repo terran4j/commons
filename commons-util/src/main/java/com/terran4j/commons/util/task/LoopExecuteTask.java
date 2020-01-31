@@ -1,16 +1,14 @@
 package com.terran4j.commons.util.task;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 搭建一个永续循环的任务框架，帮助控制循环的节奏、定期打印日志输出报告任务执行情况。
  * @author wei.jiang
  *
  */
+@Slf4j
 public abstract class LoopExecuteTask implements Runnable {
-
-	private static final Logger log = LoggerFactory.getLogger(LoopExecuteTask.class);
 
 	private long sleepTime = 1000;
 
