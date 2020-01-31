@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.*;
 import com.terran4j.commons.util.config.ConfigElement;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -146,6 +147,13 @@ public class Jsons {
         }
 
         return objectMapper.writeValueAsString(obj);
+    }
+
+    public static <T> T toObject(String jsonText, Class<T> clazz) throws JsonProcessingException {
+        if (StringUtils.isBlank(jsonText)) {
+            return null;
+        }
+        return objectMapper.readValue(jsonText, clazz);
     }
 
     public static Object toObject(JsonElement element) {

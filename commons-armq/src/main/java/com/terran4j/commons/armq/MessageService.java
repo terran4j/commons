@@ -23,14 +23,15 @@ public interface MessageService {
      * @param messageEntityClass 消息实体类对象。
      * @param <T>                消息实体类型。
      */
-    <T> void registConsumer(Class<T> messageEntityClass) throws BusinessException;
+    <T> void registConsumer(MessageConsumer<T> consumer,
+                            Class<T> messageEntityClass) throws BusinessException;
 
     /**
      * @param messageEntityClass 消息实体类对象。
      * @param config             对消费者的自定义配置。
      * @param <T>                消息实体类型。
-     * @see MessageService#registConsumer(Class)
+     * @see MessageService#registConsumer(MessageConsumer, Class)
      */
-    <T> void registConsumer(Class<T> messageEntityClass, ConsumerConfig config)
-            throws BusinessException;
+    <T> void registConsumer(MessageConsumer<T> consumer, Class<T> messageEntityClass,
+                            ConsumerConfig config) throws BusinessException;
 }
