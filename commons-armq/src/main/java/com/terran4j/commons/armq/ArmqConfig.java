@@ -24,7 +24,7 @@ public class ArmqConfig {
     private String endpoint;
 
     @Bean
-    private MQClient mqClient() {
+    public MQClient mqClient() {
         MQClient mqClient = new MQClient(
                 endpoint, // 设置HTTP接入域名（此处以公共云生产环境为例）
                 accessKeyId, // AccessKey 阿里云身份验证，在阿里云服务器管理控制台创建

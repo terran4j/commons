@@ -2,11 +2,10 @@ package com.terran4j.test.restpack;
 
 import com.terran4j.commons.restpack.RestPackIgnore;
 import com.terran4j.commons.restpack.impl.RestPackUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
@@ -14,10 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RestPackTest {
-
-    private static final Logger log = LoggerFactory.getLogger(RestPackTest.class);
 
     public static class WrapTypeBean {
 
@@ -73,7 +71,7 @@ public class RestPackTest {
         try {
             RestPackUtils.clearIgnoreFields(bean);
             Assert.fail("应该出错！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             Assert.assertTrue(e.getMessage().contains("不允许修饰在基本类型字段上"));
         }
     }

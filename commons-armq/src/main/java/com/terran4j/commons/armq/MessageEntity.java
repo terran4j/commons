@@ -7,9 +7,9 @@ import java.lang.annotation.*;
  * 此 Topic 名称即类的 SimpleName；<br>
  * 此 Topic 中的消息，均为此类的对象 JSON 序列化的文本数据(UTF-8)。
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
 @Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface MessageEntity {
 
     /**

@@ -77,20 +77,20 @@ public class MessageServiceImpl implements MessageService {
     private static String getTopicName(MessageEntity messageEntity, Class<?> messageEntityClass) {
         String topicName = messageEntity.topicName();
         if (StringUtils.isBlank(topicName)) {
-            topicName = messageEntityClass.getSimpleName();
+            topicName = messageEntityClass.getSimpleName() + "Topic";
         }
         return topicName;
     }
 
-    private static String getGroupId(MessageEntity messageEntity, Class<?> messageEntityClass)
-            throws BusinessException {
-        String topicName = messageEntity.groupId();
-        if (StringUtils.isBlank(topicName)) {
-            throw new BusinessException(ErrorCodes.INTERNAL_ERROR)
-                    .setMessage("注册消息消费者时，消息实体类【${messageEntityClass}】的注解上没有指定 groupId.")
-                    .put("messageEntityClass", messageEntityClass.getName());
+    private static String getGroupId(MessageEntity messageEntity, Class<?> messageEntityClass) {
+        String groupId = messageEntity.groupId();
+        if (StringUtils.isBlank(groupId)) {
+            groupId = "GID_" + messageEntityClass.getSimpleName();
+//            throw new BusinessException(ErrorCodes.INTERNAL_ERROR)
+//                    .setMessage("注册消息消费者时，消息实体类【${messageEntityClass}】的注解上没有指定 groupId.")
+//                    .put("messageEntityClass", messageEntityClass.getName());
         }
-        return topicName;
+        return groupId;
     }
 
     public static final <T> String getTopicName(Class<T> messageEntityClass) throws BusinessException {
@@ -100,43 +100,44 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void send(Object content, String key, String tag) throws BusinessException {
-        if (content == null) {
+    public void send(Object contentObject, String key, String tag) throws BusinessException {
+        if (contentObject == null) {
             throw new NullPointerException("message is null.");
         }
-        Class<?> clazz = content.getClass();
+        Class<?> clazz = contentObject.getClass();
         MQProducer producer = getOrCreateProducer(clazz);
 
-        String messageText;
+        String contentText;
         try {
-            messageText = Jsons.toJsonText(content);
+            contentText = Jsons.toJsonText(contentObject);
         } catch (JsonProcessingException e) {
             throw new BusinessException(ErrorCodes.INTERNAL_ERROR, e)
                     .setMessage("Java对象序列化成JSON串出错：${cause}")
-                    .put("message", content.toString()).put("cause", e.getMessage());
+                    .put("message", contentObject.toString()).put("cause", e.getMessage());
         }
-        if (messageText == null) {
+        if (contentText == null) {
             throw new BusinessException(ErrorCodes.NULL_PARAM)
                     .setMessage("messageText is null.");
         }
 
-        byte[] messageContent;
+        byte[] contentData;
         try {
-            messageContent = messageText.getBytes("UTF-8"); // 消息内容
+            contentData = contentText.getBytes("UTF-8"); // 消息内容
         } catch (UnsupportedEncodingException e) {
             // 理论上不会发生这种情况。
             throw new BusinessException(ErrorCodes.INTERNAL_ERROR, e)
                     .setMessage("字符串不是 UTF-8 编码：${cause}")
-                    .put("cause", e.getMessage()).put("messageText", messageText);
+                    .put("cause", e.getMessage()).put("messageText", contentText);
         }
-        if (messageContent == null) {
+        if (contentData == null) {
             throw new BusinessException(ErrorCodes.NULL_PARAM)
                     .setMessage("messageContent is null.");
         }
 
-        TopicMessage msg = new TopicMessage(messageContent, tag);
-        msg = producer.publishMessage(msg);
-        log.info("publishMessage: {}", msg);
+        TopicMessage msg = new TopicMessage(contentData, tag);
+        msg.setMessageKey(key);
+        producer.publishMessage(msg);
+        log.info("publishMessage, key = {}, content = {}", contentText);
     }
 
     @Override
@@ -174,10 +175,10 @@ public class MessageServiceImpl implements MessageService {
             String groupId = getGroupId(messageEntity, messageEntityClass);
             MQConsumer mqConsumer = mqClient.getConsumer(instanceId,
                     topicName, groupId, config.getMessageTag());
-            MessageConsumerTransfer dispatcher = new MessageConsumerTransfer(
+            MessageConsumerTransfer transfer = new MessageConsumerTransfer(
                     mqConsumer, consumer, messageEntityClass, config);
-            dispatcher.start();
-            consumers.put(consumer, dispatcher);
+            transfer.start();
+            consumers.put(consumer, transfer);
         }
     }
 }

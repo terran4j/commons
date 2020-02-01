@@ -1,6 +1,7 @@
 package com.terran4j.commons.armq.impl;
 
 import com.aliyun.mq.http.MQConsumer;
+import com.aliyun.mq.http.common.AckMessageException;
 import com.aliyun.mq.http.model.Message;
 import com.terran4j.commons.armq.ConsumerConfig;
 import com.terran4j.commons.armq.MessageConsumer;
@@ -8,6 +9,7 @@ import com.terran4j.commons.util.Jsons;
 import com.terran4j.commons.util.task.LoopExecuteTask;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -41,16 +43,52 @@ public class MessageConsumerTask<T> extends LoopExecuteTask {
             } catch (InterruptedException e1) {
                 log.error("InterruptedException: " + e.getMessage());
             }
-            return false; // sleep 一段时间再循环。
-        }
-        if (messages == null || messages.size() == 0) {
+            // 拉取消息出错，sleep 一段时间再循环。
             return false;
         }
+        if (messages == null || messages.size() == 0) {
+            // 没有消息，sleep 一段时间再循环。
+            return false;
+        }
+        int totalSize = messages.size();
+        log.info("Received messages, size = {}", totalSize);
 
+        List<String> handles = new ArrayList<>();
         for (Message message : messages) {
             String key = message.getMessageKey();
             String body = message.getMessageBodyString();
+            log.info("Received message, key = {}, body = {}", key, body);
             T content = Jsons.toObject(body, transfer.getMessageEntityClass());
+            try {
+                realConsumer.onMessage(key, content);
+                handles.add(message.getReceiptHandle());
+            } catch (Throwable e) {
+                log.error("consume message failed: " + e.getMessage(), e);
+            }
+        }
+
+        int successSize = handles.size();
+        if (successSize == 0) {
+            // 全部消息都消费失败了，过一段时间再试。
+            return false;
+        } else {
+            try {
+                mqConsumer.ackMessage(handles);
+                log.info("Ack message success.");
+            } catch (AckMessageException e) {
+                // 某些消息的句柄可能超时了会导致确认不成功
+                AckMessageException errors = (AckMessageException) e;
+                log.error("Ack message fail, requestId is: {}", errors.getRequestId());
+                if (errors.getErrorMessages() != null) {
+                    for (String errorHandle : errors.getErrorMessages().keySet()) {
+                        log.error("Handle: {}, ErrorCode: {}, ErrorMsg: {}",
+                                errorHandle, errors.getErrorMessages().get(errorHandle).getErrorCode(),
+                                errors.getErrorMessages().get(errorHandle).getErrorMessage());
+                    }
+                }
+            } catch (Throwable e) {
+                log.error("Ack message fail: " + e.getMessage());
+            }
         }
 
         return true;

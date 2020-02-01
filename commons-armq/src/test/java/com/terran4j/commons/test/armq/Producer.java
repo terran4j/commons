@@ -1,4 +1,4 @@
-package com.terran4j.commons.test.mmq;
+package com.terran4j.commons.test.armq;
 
 import com.aliyun.mq.http.MQClient;
 import com.aliyun.mq.http.MQProducer;
@@ -19,7 +19,7 @@ public class Producer {
         );
 
         // 所属的 Topic
-        final String topic = "TopicTestMQ";
+        final String topic = "NormalTopicTest";
         // Topic所属实例ID，默认实例为空
         final String instanceId = "";
 
