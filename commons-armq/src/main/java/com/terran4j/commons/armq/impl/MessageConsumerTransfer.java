@@ -4,14 +4,14 @@ import com.aliyun.mq.http.MQConsumer;
 import com.terran4j.commons.armq.ConsumerConfig;
 import com.terran4j.commons.armq.MessageConsumer;
 import com.terran4j.commons.util.error.BusinessException;
-import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 起一组线程，以死循环的方式来拉取消息并执行。
  *
  * @param <T> 消息实例类型。
  */
-@Data
+@Slf4j
 public class MessageConsumerTransfer<T> {
 
     private final MQConsumer mqConsumer;
@@ -25,6 +25,22 @@ public class MessageConsumerTransfer<T> {
     private final MessageConsumerTask[] tasks;
 
     private final Thread[] threads;
+
+    public MessageConsumer<T> getConsumer() {
+        return consumer;
+    }
+
+    public Class<T> getMessageEntityClass() {
+        return messageEntityClass;
+    }
+
+    public ConsumerConfig getConfig() {
+        return config;
+    }
+
+    public MQConsumer getMqConsumer() {
+        return mqConsumer;
+    }
 
     public MessageConsumerTransfer(MQConsumer mqConsumer,
                                    MessageConsumer<T> consumer,
@@ -52,6 +68,17 @@ public class MessageConsumerTransfer<T> {
             Thread thread = threads[i];
             if (thread != null && thread.isAlive()) {
                 thread.interrupt();
+            }
+
+            MessageConsumerTask<T> task = tasks[i];
+            for (int j = 0; j < 10; j++) {
+                if (task.isRunning()) {
+                    try {
+                        Thread.sleep(config.getPollingSecond() * 100);
+                    } catch (InterruptedException e) {
+                        log.error("stop consumer occur InterruptedException: {}", e.getMessage());
+                    }
+                }
             }
             threads[i] = null;
             tasks[i] = null;
