@@ -46,6 +46,18 @@ public class MessageConsumerTransfer<T> {
         threads = new Thread[threadSize];
     }
 
+    public void stop() {
+        for (int i = 0; i < threads.length; i++) {
+            // 如果线程还活着，则标记线程中断。
+            Thread thread = threads[i];
+            if (thread != null && thread.isAlive()) {
+                thread.interrupt();
+            }
+            threads[i] = null;
+            tasks[i] = null;
+        }
+    }
+
     public void start() throws BusinessException {
         for (int i = 0; i < threads.length; i++) {
 

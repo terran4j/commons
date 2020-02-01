@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -180,5 +181,22 @@ public class MessageServiceImpl implements MessageService {
             transfer.start();
             consumers.put(consumer, transfer);
         }
+    }
+
+    @Override
+    public <T> void unregistConsumer(MessageConsumer<T> consumer) {
+        MessageConsumerTransfer<?> transfer = consumers.get(consumer);
+        transfer.stop();
+        consumers.remove(consumer);
+    }
+
+    @Override
+    public void unregistAllConsumers() {
+        Iterator<MessageConsumer<?>> it = consumers.keySet().iterator();
+        while (it.hasNext()) {
+            MessageConsumer<?> consumer = it.next();
+            unregistConsumer(consumer);
+        }
+
     }
 }

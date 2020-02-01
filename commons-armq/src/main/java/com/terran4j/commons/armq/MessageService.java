@@ -20,6 +20,7 @@ public interface MessageService {
      * 如果你希望根据业务情况调整这些参数，请使用方法：<br>
      * <code>registConsumer(Class<T> messageEntityClass, ConsumerConfig config)</code>
      *
+     * @param consumer           消息消息者。
      * @param messageEntityClass 消息实体类对象。
      * @param <T>                消息实体类型。
      */
@@ -34,4 +35,8 @@ public interface MessageService {
      */
     <T> void registConsumer(MessageConsumer<T> consumer, Class<T> messageEntityClass,
                             ConsumerConfig config) throws BusinessException;
+
+    <T> void unregistConsumer(MessageConsumer<T> consumer);
+
+    void unregistAllConsumers();
 }

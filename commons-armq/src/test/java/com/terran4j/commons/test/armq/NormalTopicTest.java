@@ -5,6 +5,7 @@ import com.terran4j.commons.armq.MessageConsumer;
 import com.terran4j.commons.armq.MessageService;
 import com.terran4j.commons.util.error.BusinessException;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,14 +34,19 @@ public class NormalTopicTest implements MessageConsumer<Normal> {
     private CountDownLatch latch = new CountDownLatch(1);
 
     @Before
-    public void init() throws BusinessException {
+    public void setUp() throws BusinessException {
         consumedMessages.clear();
         latch = new CountDownLatch(1);
         messageService.registConsumer(this, Normal.class);
     }
 
+    @After
+    public void tearDown() {
+        messageService.unregistConsumer(this);
+    }
+
     @Override
-    public void onMessage(String key, Normal content) throws BusinessException {
+    public void onMessage(String key, Normal content) {
         consumedMessages.put(key, content);
         latch.countDown();
     }
