@@ -37,14 +37,20 @@ public class MessageConsumerTask<T> extends LoopExecuteTask {
                     config.getPollingSecond() // 长轮询时间3秒（最多可设置为30秒）
             );
         } catch (Throwable e) {
+            // 如果是 InterruptedException ，可能是本消费者被注解了。
+            if (e instanceof InterruptedException) {
+                InterruptedException ie = (InterruptedException) e;
+                return false;
+            }
+
+            // 其他情况，算成拉取消息出错。
             log.error("拉取消息出错：" + e.getMessage(), e);
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e1) {
                 log.error("InterruptedException: " + e.getMessage());
             }
-            // 拉取消息出错，sleep 一段时间再循环。
-            return false;
+            return false; // sleep 一段时间再试。
         }
         if (messages == null || messages.size() == 0) {
             // 没有消息，sleep 一段时间再循环。
