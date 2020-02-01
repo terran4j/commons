@@ -23,7 +23,7 @@ public class ArmqConfig {
     @Value("${aliyun.rocketMQ.endpoint}")
     private String endpoint;
 
-    @Bean(destroyMethod = "close")
+    @Bean // destroyMethod = "close"
     public MQClient mqClient() {
         MQClient mqClient = new MQClient(
                 endpoint, // 设置HTTP接入域名（此处以公共云生产环境为例）

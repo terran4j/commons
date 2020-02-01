@@ -8,6 +8,7 @@ import com.terran4j.commons.armq.MessageConsumer;
 import com.terran4j.commons.util.Jsons;
 import com.terran4j.commons.util.task.LoopExecuteTask;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.ConnectionClosedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,13 @@ public class MessageConsumerTask<T> extends LoopExecuteTask {
         } catch (Throwable e) {
             // 如果是 InterruptedException ，可能是本消费者被注解了。
             if (e instanceof InterruptedException) {
-                InterruptedException ie = (InterruptedException) e;
+                log.warn("MessageConsumerTask was Interrupted, consumer class: {}",
+                        realConsumer.getClass().getName());
+                return false;
+            }
+            // 如果是连接被关闭了，也没办法搞了，只能撤了。
+            if (e instanceof ConnectionClosedException) {
+                log.error("MQ Connection was Closed: {}", e.getMessage());
                 return false;
             }
 

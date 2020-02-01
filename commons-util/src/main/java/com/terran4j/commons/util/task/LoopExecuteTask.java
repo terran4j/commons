@@ -49,26 +49,30 @@ public abstract class LoopExecuteTask implements Runnable {
 	}
 
 	public long getExecuteCount() {
-		return executeCount;
-	}
+        return executeCount;
+    }
 
-	public Thread getThread() {
-		return thread;
-	}
+    public Thread getThread() {
+        return thread;
+    }
 
-	public boolean isRunning() {
-		return running;
-	}
+    public boolean isRunning() {
+        return running;
+    }
 
-	public final LoopExecuteTask setSleepTime(long sleepTime) {
-		this.sleepTime = sleepTime;
-		return this;
-	}
+    public void stop() {
+        thread.interrupt();
+    }
 
-	@Override
-	public final void run() {
-		if (this.thread != null) {
-			throw new IllegalStateException("LoopExecuteTask Object can't be running in multi-thread.");
+    public final LoopExecuteTask setSleepTime(long sleepTime) {
+        this.sleepTime = sleepTime;
+        return this;
+    }
+
+    @Override
+    public final void run() {
+        if (this.thread != null) {
+            throw new IllegalStateException("LoopExecuteTask Object can't be running in multi-thread.");
 		}
 
 		onStart();
