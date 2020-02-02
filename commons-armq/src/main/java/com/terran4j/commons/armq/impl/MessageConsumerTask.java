@@ -46,6 +46,7 @@ public class MessageConsumerTask<T> extends LoopExecuteTask {
             }
             // 如果是连接被关闭了，也没办法搞了，只能撤了。
             if (e instanceof ConnectionClosedException) {
+                this.stop();
                 log.error("MQ Connection was Closed: {}", e.getMessage());
                 return false;
             }
