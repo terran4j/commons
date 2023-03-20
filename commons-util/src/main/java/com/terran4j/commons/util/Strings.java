@@ -524,4 +524,37 @@ public class Strings {
         return result;
     }
 
+
+    /**
+     * 将数字变为固定长度的字符串，不足位补充0
+     * @param number
+     * @param length
+     * @return
+     */
+    public static String formatString(int number, int length){
+        String n = number+"";
+        StringBuffer sb = new StringBuffer();
+        sb.setLength(length);
+        int start = 0;
+        for(int i = length -1 ; i >= 0 ; i -- ){
+            int nlen = n.length() - 1;
+            char c = '0';
+            if(nlen - start >= 0 )
+                c = n.charAt(nlen - start);
+            sb.setCharAt(i, c);
+            start ++;
+        }
+        return  sb.toString();
+    }
+
+    /**
+     * 判断字符串是否为空
+     * @param string
+     * @return
+     */
+    public static boolean isNull(String string){
+        if(string ==null)return true;
+        if(string.trim().equals(""))return true;
+        return false;
+    }
 }

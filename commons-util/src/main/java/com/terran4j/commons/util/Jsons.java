@@ -11,6 +11,9 @@ import com.google.gson.*;
 import com.terran4j.commons.util.config.ConfigElement;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -194,5 +197,23 @@ public class Jsons {
 
         return value;
     }
+
+    public static <T> T readJson(Class<T> clazz, File json) throws IOException {
+        Gson g = new GsonBuilder().disableHtmlEscaping().create();
+        FileReader reader = null;
+        try{
+            reader = new FileReader(json);
+            return g.fromJson(reader, clazz);
+        }finally {
+            if(reader != null)reader.close();
+        }
+    }
+
+    public static <T> void writeJson(T object, File file) throws IOException {
+        Gson g = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        String content = g.toJson(object);
+        IOUtils.setFileContent(file, content);
+    }
+
 
 }

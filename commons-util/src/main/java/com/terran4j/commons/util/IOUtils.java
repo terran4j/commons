@@ -1,9 +1,7 @@
 package com.terran4j.commons.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.Files;
 
 /**
  * 
@@ -76,5 +74,32 @@ public class IOUtils {
             }
         }
     }
+
+    public static String getFileContent(File file){
+        if(file.exists() == false)return "";
+        try{
+            byte[] bytes = Files.readAllBytes(file.toPath());
+            return new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void setFileContent(File file, String content){
+        try{
+            FileWriter out = new FileWriter(file);
+            out.write(content);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 }

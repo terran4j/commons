@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnection;
@@ -30,6 +31,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.IOException;
+import java.time.Duration;
 
 @Slf4j
 @Configuration
@@ -70,13 +72,18 @@ public class HedisConfiguration {
         return new RedisTemplateCacheService(redisTemplate);
     }
 
+//    @Bean
+//    public CacheManager cacheManager(RedisTemplate<?, ?> redisTemplate) {
+//        RedisCacheManager manager = new RedisCacheManager(redisTemplate);
+//        manager.setDefaultExpiration(defaultExpiration); // 设置默认过期时间
+//        return manager;
+//    }
     @Bean
-    public CacheManager cacheManager(RedisTemplate<?, ?> redisTemplate) {
-        RedisCacheManager manager = new RedisCacheManager(redisTemplate);
-        manager.setDefaultExpiration(defaultExpiration); // 设置默认过期时间
-        return manager;
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        Duration expiration = Duration.ofSeconds(defaultExpiration);
+        return RedisCacheManager.builder(redisConnectionFactory)
+                .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(expiration)).build();
     }
-
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
 
