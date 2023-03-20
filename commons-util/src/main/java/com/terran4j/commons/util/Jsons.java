@@ -11,9 +11,9 @@ import com.google.gson.*;
 import com.terran4j.commons.util.config.ConfigElement;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -200,9 +200,9 @@ public class Jsons {
 
     public static <T> T readJson(Class<T> clazz, File json) throws IOException {
         Gson g = new GsonBuilder().disableHtmlEscaping().create();
-        FileReader reader = null;
+        Reader reader = null;
         try{
-            reader = new FileReader(json);
+            reader = new InputStreamReader(new FileInputStream(json), StandardCharsets.UTF_8);
             return g.fromJson(reader, clazz);
         }finally {
             if(reader != null)reader.close();

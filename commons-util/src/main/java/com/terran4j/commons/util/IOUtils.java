@@ -1,6 +1,7 @@
 package com.terran4j.commons.util;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 /**
@@ -90,13 +91,31 @@ public class IOUtils {
     }
 
     public static void setFileContent(File file, String content){
+        Writer fstream = null;
+        BufferedWriter out = null;
         try{
-            FileWriter out = new FileWriter(file);
+            fstream = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
+            out = new BufferedWriter(fstream);
             out.write(content);
-            out.close();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
+        } finally {
+            if(out != null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if(fstream != null){
+                try {
+                    fstream.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
         }
     }
 
