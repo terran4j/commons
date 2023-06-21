@@ -42,7 +42,7 @@ public class BusinessException extends Exception {
 	private final ErrorCode code;
 	
 	public BusinessException(String code) {
-		this(code, Locale.getDefault(), null);
+		this(code, Locale.getDefault(), new Throwable(code));
 	}
 	
 	public BusinessException(String code, Throwable e) {
