@@ -1,5 +1,7 @@
 package com.terran4j.commons.util.value;
 
+import com.terran4j.commons.util.Strings;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +31,9 @@ public class ResourceBundlesProperties implements ValueSource<String, String> {
 		}
 		
 		String cacheKey = path + "_" + locale.getLanguage() + "_" + locale.getCountry();
+		if(Strings.isNull(locale.getCountry())){
+			cacheKey = path + "_" + locale.getLanguage();
+		}
 		ResourceBundlesProperties props = cache.get(cacheKey);
 		if (props != null) {
 			return props;
@@ -56,6 +61,9 @@ public class ResourceBundlesProperties implements ValueSource<String, String> {
 		}
 		
 		String fixedPath = path + "_" + locale.getLanguage() + "_" + locale.getCountry() + ".properties";
+		if(Strings.isNull(locale.getCountry())){
+			fixedPath = path + "_" + locale.getLanguage() + ".properties";
+		}
 		Properties fixedProps = load(fixedPath);
 		if (fixedProps != null) {
 			props.putAll(fixedProps);
@@ -105,6 +113,26 @@ public class ResourceBundlesProperties implements ValueSource<String, String> {
 			return null;
 		}
 		return props.getProperty(key);
+	}
+
+	/**
+	 * 支持 {} 形式的参数
+	 * @param key
+	 * @param args
+	 * @return
+	 */
+	public String get(String key, String... args) {
+		if (key == null || props == null) {
+			return null;
+		}
+		String value = props.getProperty(key);
+		if(args == null)return value;
+
+		for(String arg : args){
+			value =value.replace("{}", arg);
+		}
+
+		return value;
 	}
 
 }

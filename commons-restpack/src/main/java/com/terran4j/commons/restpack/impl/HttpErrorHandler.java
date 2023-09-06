@@ -4,6 +4,8 @@ import com.terran4j.commons.restpack.HttpResult;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.CommonErrorCode;
 import com.terran4j.commons.util.error.ErrorCodes;
+import com.terran4j.commons.util.value.ResourceBundlesProperties;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -16,8 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Locale;
 
 @ControllerAdvice
 public class HttpErrorHandler {
@@ -37,7 +42,7 @@ public class HttpErrorHandler {
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object handleAllException(Exception e, HttpServletRequest request) {
         return toHttpResult(e, request);
     }
@@ -63,7 +68,11 @@ public class HttpErrorHandler {
             be = new BusinessException(ErrorCodes.NULL_PARAM)
                     .put("key", me.getParameterName())
                     .setMessage("参数 ${key} 不能为空！");
-        } else {
+        }else if(e instanceof BusinessException){
+            be = (BusinessException) e;
+            be.setLocale(request.getLocale());
+            log.info("[Handled] business exception message {}", be.getMessage());
+        }else {
             log.error("[Handled] unknown exception", e);
             be = new BusinessException(CommonErrorCode.UNKNOWN_ERROR, e)
                     .setMessage(e.getClass().getName() + ": " + e.getMessage());

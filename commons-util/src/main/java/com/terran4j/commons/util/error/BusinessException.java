@@ -9,10 +9,12 @@ import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
 import com.terran4j.commons.util.value.ResourceBundlesProperties;
 import com.terran4j.commons.util.value.RichProperties;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * 业务异常基类。
@@ -44,16 +46,30 @@ public class BusinessException extends Exception {
 	public BusinessException(String code) {
 		this(code, Locale.getDefault(), new RuntimeException(code));
 	}
+
+	public BusinessException(String code, String... args) {
+		this(code, Locale.getDefault(), new RuntimeException(code), args);
+	}
 	
 	public BusinessException(String code, Throwable e) {
 		this(code, Locale.getDefault(), e);
 	}
-	
-	public BusinessException(String code, Locale locale, Throwable e) {
+
+	private String[] args;
+
+	public BusinessException(String code, Locale locale, Throwable e, String... args) {
 		super(e);
 		this.code = new ResourceErrorCode(code, locale);
 		info.push(new RichProperties());
-		String message = getMessage(code, locale);
+		String message = getMessage(code, locale, args);
+		if (StringUtils.hasText(message)) {
+			info.peek().setMessage(message);
+		}
+		this.args = args;
+	}
+
+	public void setLocale(Locale locale){
+		String message = getMessage(this.code.getName(), locale, args);
 		if (StringUtils.hasText(message)) {
 			info.peek().setMessage(message);
 		}
@@ -63,15 +79,16 @@ public class BusinessException extends Exception {
 		return getMessage(code, Locale.getDefault());
 	}
 	
-	public static final String getMessage(String code, Locale locale) {
+	public static final String getMessage(String code, Locale locale, String... args) {
 		ResourceBundlesProperties props = null;
 		try {
 			props = ResourceBundlesProperties.get("error", locale);
+
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
 		if (props != null && props.get(code) != null) {
-			return props.get(code);
+			return props.get(code, args);
 		}
 		return null;
 	}
