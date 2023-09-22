@@ -1,5 +1,7 @@
 package com.terran4j.commons.hi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.terran4j.commons.util.Jsons;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -144,6 +146,10 @@ public final class HttpRequest {
                         sb.append(toXml(params));
                         contentType = ContentType.TEXT_XML
                                 .withCharset(Charset.forName(ApacheHttpClientBuilder.CHARSET));
+                    } else if("json".equals(postBody)){
+                        sb.append(Jsons.toJsonText(params));
+                        contentType = ContentType.APPLICATION_FORM_URLENCODED
+                                .withCharset(Charset.forName(ApacheHttpClientBuilder.CHARSET));
                     } else {
                         sb.append(toUrlQuery(params));
                         contentType = ContentType.APPLICATION_FORM_URLENCODED
@@ -173,6 +179,8 @@ public final class HttpRequest {
             throw new HttpException(HttpErrorCode.URI_SYNTAX_ERROR, e)
                     .put("url", url).put("params", params)
                     .as(HttpException.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
         if (httpRequest == null) {
             throw new HttpException(HttpErrorCode.UNSUPPORTED_METHOD)

@@ -47,7 +47,7 @@ public class BusinessException extends Exception {
 		this(code, Locale.getDefault(), new RuntimeException(code));
 	}
 
-	public BusinessException(String code, String... args) {
+	public BusinessException(String code, Object... args) {
 		this(code, Locale.getDefault(), new RuntimeException(code), args);
 	}
 	
@@ -55,9 +55,9 @@ public class BusinessException extends Exception {
 		this(code, Locale.getDefault(), e);
 	}
 
-	private String[] args;
+	private Object[] args;
 
-	public BusinessException(String code, Locale locale, Throwable e, String... args) {
+	public BusinessException(String code, Locale locale, Throwable e, Object... args) {
 		super(e);
 		this.code = new ResourceErrorCode(code, locale);
 		info.push(new RichProperties());
@@ -79,7 +79,7 @@ public class BusinessException extends Exception {
 		return getMessage(code, Locale.getDefault());
 	}
 	
-	public static final String getMessage(String code, Locale locale, String... args) {
+	public static final String getMessage(String code, Locale locale, Object... args) {
 		ResourceBundlesProperties props = null;
 		try {
 			props = ResourceBundlesProperties.get("error", locale);

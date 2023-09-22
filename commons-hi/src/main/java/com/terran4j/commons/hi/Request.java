@@ -299,6 +299,7 @@ public final class Request {
         String actualURL = getActualURL();
         HttpRequest request = new HttpRequest(actualURL);
 
+
         // 获取实际的入参。
         final Map<String, String> actualParams = getActualParams();
         request.setParam(actualParams);

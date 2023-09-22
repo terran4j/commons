@@ -121,15 +121,15 @@ public class ResourceBundlesProperties implements ValueSource<String, String> {
 	 * @param args
 	 * @return
 	 */
-	public String get(String key, String... args) {
+	public String get(String key, Object... args) {
 		if (key == null || props == null) {
 			return null;
 		}
 		String value = props.getProperty(key);
 		if(args == null)return value;
 
-		for(String arg : args){
-			value =value.replace("{}", arg);
+		for(Object arg : args){
+			value =value.replace("{}", arg.toString());
 		}
 
 		return value;
