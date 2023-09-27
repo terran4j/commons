@@ -5,12 +5,15 @@ import com.terran4j.commons.restpack.HttpResultConverter;
 import com.terran4j.commons.restpack.LogItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @ConfigurationProperties(prefix = "terran4j.restpack.renaming")
+@Component
 public class HttpResultMapper {
 
     private String requestId = "requestId";

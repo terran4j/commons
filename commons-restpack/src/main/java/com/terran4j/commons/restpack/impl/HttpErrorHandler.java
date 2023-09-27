@@ -4,8 +4,7 @@ import com.terran4j.commons.restpack.HttpResult;
 import com.terran4j.commons.util.error.BusinessException;
 import com.terran4j.commons.util.error.CommonErrorCode;
 import com.terran4j.commons.util.error.ErrorCodes;
-import com.terran4j.commons.util.value.ResourceBundlesProperties;
-import org.apache.tomcat.jni.Local;
+import com.terran4j.commons.util.error.AuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -18,11 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Locale;
 
 @ControllerAdvice
 public class HttpErrorHandler {
@@ -37,6 +33,13 @@ public class HttpErrorHandler {
     @ResponseStatus(HttpStatus.OK)
     public Object handleMissingServletRequestParameterException(
             MissingServletRequestParameterException e, HttpServletRequest request) {
+        return toHttpResult(e, request);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(AuthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Object handleAuthorizedException(Exception e, HttpServletRequest request) {
         return toHttpResult(e, request);
     }
 
