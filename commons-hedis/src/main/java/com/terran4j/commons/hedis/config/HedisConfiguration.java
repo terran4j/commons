@@ -16,15 +16,20 @@ import org.redisson.config.SingleServerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnection;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
@@ -61,6 +66,13 @@ public class HedisConfiguration {
     @Value("${spring.redis.pool.max-wait:-1}")
     private long maxWait;
 
+    @Value("${spring.redis.message.server}")
+    private String serverId;
+
+    @Value("${spring.redis.message.listener}")
+    private String messageListenerClass;
+
+
     /**
      * 对于缓存管理器，设置默认的过期时间。
      */
@@ -70,6 +82,53 @@ public class HedisConfiguration {
     @Bean
     public CacheService cacheService(RedisTemplate<String, String> redisTemplate) {
         return new RedisTemplateCacheService(redisTemplate);
+    }
+
+//    @Bean
+//    public MessageListener getMessageLister(){
+//        if(Strings.isNull(this.messageListenerClass))return null;
+//        try {
+//            return (MessageListener) HedisConfiguration.class.getClassLoader().loadClass(this.messageListenerClass).newInstance();
+//        } catch (ClassNotFoundException e) {
+//            throw new RuntimeException(e);
+//        } catch (InstantiationException e) {
+//            throw new RuntimeException(e);
+//        } catch (IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+    @Bean
+    public RedisMessageListenerContainer container(RedisConnectionFactory redisConnectionFactory, ApplicationContext context) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        // 监听所有库的key过期事件
+        container.setConnectionFactory(redisConnectionFactory);
+        // 所有的订阅消息，都需要在这里进行注册绑定,new PatternTopic(TOPIC_NAME1)表示发布的主题信息
+        // 可以添加多个 messageListener，配置不同的通道
+        if(!Strings.isNull(this.serverId) && !Strings.isNull(this.messageListenerClass)) {
+            try {
+                MessageListener listener = (MessageListener) context.getBean(HedisConfiguration.class.getClassLoader().loadClass(this.messageListenerClass));
+                log.info("rediscontainer.registerlisten {} {}", this.serverId, listener);
+                container.addMessageListener(listener, new PatternTopic(this.serverId));
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+//            MessageListener listener = this.getMessageLister();
+        }
+////        container.addMessageListener(adapter, new PatternTopic(TOPIC_NAME2));
+        /**
+         * 设置序列化对象
+         * 特别注意：1. 发布的时候需要设置序列化；订阅方也需要设置序列化
+         *         2. 设置序列化对象必须放在[加入消息监听器]这一步后面，否则会导致接收器接收不到消息
+         */
+        Jackson2JsonRedisSerializer seria = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        seria.setObjectMapper(objectMapper);
+        container.setTopicSerializer(seria);
+
+        return container;
     }
 
 //    @Bean

@@ -1,6 +1,7 @@
 package com.terran4j.mock.hedis;
 
 import com.terran4j.commons.hedis.cache.CacheService;
+import com.terran4j.commons.util.error.BusinessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -74,6 +75,16 @@ public class MockCacheService implements CacheService {
 	@Override
 	public <T> Map<String, T> getHashMap(String key, Class<T> clazz) {
 		return (Map<String, T>) cache.get(key);
+	}
+
+	@Override
+	public <T> boolean sendMessage(String channel, T message) throws BusinessException {
+		return false;
+	}
+
+	@Override
+	public <T> Object deserialize(byte[] bytes) {
+		return null;
 	}
 
 }

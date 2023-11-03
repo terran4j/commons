@@ -81,5 +81,18 @@ public interface CacheService {
 	 * @return Map 对象。
 	 */
 	<T> Map<String, T> getHashMap(String key, Class<T> clazz) throws BusinessException;
-	
+
+	/**
+	 * 注册消息机制
+	 * @param channel
+	 * @param message
+	 * @return
+	 * @param <T>
+	 * @throws BusinessException
+	 */
+	<T> boolean sendMessage(String channel, T message) throws BusinessException;
+
+
+	<T> Object deserialize(byte[] bytes);
+
 }

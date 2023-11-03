@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.terran4j.commons.util.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -201,4 +202,24 @@ public class RedisTemplateCacheService implements CacheService {
 		return success;
 	}
 
+	@Override
+	public <T> boolean sendMessage(String channel, T message) throws BusinessException {
+		if (Strings.isNull(channel)) {
+			return false;
+		}
+		try {
+			redisTemplate.convertAndSend(channel, message);
+			log.info("发送消息成功，channel：{}，message：{}", channel, message);
+			return true;
+		} catch (Exception e) {
+			log.info("发送消息失败，channel：{}，message：{}", channel, message);
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public Object deserialize(byte[] bytes) {
+		return redisTemplate.getValueSerializer().deserialize(bytes);
+	}
 }

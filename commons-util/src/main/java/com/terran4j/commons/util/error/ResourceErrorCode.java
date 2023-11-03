@@ -3,6 +3,7 @@ package com.terran4j.commons.util.error;
 import java.io.IOException;
 import java.util.Locale;
 
+import com.terran4j.commons.util.Strings;
 import com.terran4j.commons.util.value.ResourceBundlesProperties;
 
 public class ResourceErrorCode implements ErrorCode {
@@ -15,6 +16,7 @@ public class ResourceErrorCode implements ErrorCode {
 	
 	public ResourceErrorCode(String name, Locale locale) {
 		super();
+		if(Strings.isNull(name))name = "";
 		this.value = Math.abs(name.hashCode());
 		this.name = name;
 		

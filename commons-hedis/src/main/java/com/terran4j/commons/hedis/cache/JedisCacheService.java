@@ -195,6 +195,16 @@ public class JedisCacheService implements CacheService {
 	}
 
 	@Override
+	public <T> boolean sendMessage(String channel, T message) throws BusinessException {
+		return false;
+	}
+
+	@Override
+	public <T> T deserialize(byte[] bytes) {
+		return null;
+	}
+
+	@Override
 	public boolean setObjectIfAbsent(String key, Object value, Long expiredMillisecond) {
 		return setObjectNXXX(key, value, expiredMillisecond, "nx");
 	}
