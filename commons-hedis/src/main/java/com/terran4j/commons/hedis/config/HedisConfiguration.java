@@ -66,10 +66,10 @@ public class HedisConfiguration {
     @Value("${spring.redis.pool.max-wait:-1}")
     private long maxWait;
 
-    @Value("${spring.redis.message.server}")
+    @Value("${spring.redis.message.server:}")
     private String serverId;
 
-    @Value("${spring.redis.message.listener}")
+    @Value("${spring.redis.message.listener:}")
     private String messageListenerClass;
 
 
